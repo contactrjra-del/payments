@@ -347,6 +347,9 @@
                 <li><a href="#addacs">ADDACS (Amendment and Cancellation Service)</a></li>
                 <li><a href="#arudd">ARUDD (Return of Unpaid Direct Debits)</a></li>
                 <li><a href="#best-practices">Best Practices</a></li>
+                <li><a href="#direct-participant">Direct Participant Process Flow</a></li>
+                <li><a href="#indirect-participant">Indirect Participant Process Flow</a></li>
+                <li><a href="#comparison">Comparison: Direct vs. Indirect</a></li>
             </ul>
         </nav>
 
@@ -1731,7 +1734,404 @@ CANCELLATION (Code 2):
                 <h3>5. Security</h3>
                 <p>Regularly update certificates and access controls to maintain system security</p>
             </div>
+        </section>
 
+        <!-- Direct Participant Section -->
+        <section id="direct-participant">
+            <h2>Direct Participant Process Flow</h2>
+            <p class="intro-text">
+                A Direct Participant (DP) is a financial institution (e.g., a major bank or building society) that holds a settlement account at the Bank of England and connects directly to the BACS infrastructure. This direct connection provides full control over submission and settlement timing, but requires significant capital investment and regulatory compliance.
+            </p>
+
+            <h3>Key Actors</h3>
+            <ul>
+                <li><strong>Originator:</strong> Company/entity initiating the payment (e.g., employer, utility company)</li>
+                <li><strong>Direct Participant (DP):</strong> The originator's bank, which is a member of BACS</li>
+                <li><strong>BACS Central Infrastructure:</strong> Operated by Pay.UK, processes the payment files</li>
+                <li><strong>Destination DP:</strong> The beneficiary's bank (also a Direct Participant)</li>
+                <li><strong>Beneficiary:</strong> The end recipient of the funds</li>
+            </ul>
+
+            <h3>Process Flow Diagram</h3>
+            <div class="diagram">┌─────────────────────────────────────────────────────────────────────┐
+│                    DIRECT PARTICIPANT PROCESS FLOW                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+    Originator                Direct Participant          BACS Central
+  (e.g., Employer)          (Originator's Bank)          Infrastructure
+                                                            (Pay.UK)
+        │                           │                           │
+        │ 1. Submits Payment File   │                           │
+        │──────────────────────────▶│                           │
+        │                           │                           │
+        │                           │ 2. Validates & Formats    │
+        │                           │    Payment File           │
+        │                           │                           │
+        │                           │ 3. Uploads Submission     │
+        │                           │    File (by 22:30)        │
+        │                           │──────────────────────────▶│
+        │                           │                           │
+        │                           │                           │ 4. Input Day
+        │                           │                           │    (Day 1)
+        │                           │                           │    Processing
+        │                           │                           │
+        │                           │                           │ 5. Validate &
+        │                           │                           │    Sort Payments
+        │                           │                           │
+        │                           │                           │ 6. Distribute Files
+        │                           │                           │    to Destination DPs
+        │                           │                           │
+                                                                │
+    Destination DP              Bank of England            BACS Central
+  (Beneficiary's Bank)          RTGS System              Infrastructure
+        │                           │                           │
+        │ 7. Process & Post Funds   │                           │
+        │◀──────────────────────────┼───────────────────────────│
+        │    to Beneficiary Accounts│                           │
+        │                           │                           │
+        │ 8. Report to BACS         │                           │
+        │───────────────────────────┼──────────────────────────▶│
+        │                           │                           │
+        │                           │                           │ 9. End-of-Day Net
+        │                           │                           │    Settlement
+        │                           │                           │    Calculation
+        │                           │                           │
+        │                           │ 10. Settlement Instructions│
+        │                           │◀───────────────────────────│
+        │                           │                           │
+        │                           │ 10. Settlement Instructions│
+        │◀──────────────────────────┤                           │
+        │                           │                           │
+        │                           │ 11. Final & Irreversible  │
+        │ ┌─────────────────────────┼────Settlement─────────────┤
+        │ │                         │    (CHAPS/RTGS)           │
+        │ │                         │                           │
+        │ │                         │                           │
+        ▼ ▼                         ▼                           ▼
+    
+    Beneficiary
+  (e.g., Employee)
+        │
+        │ 12. Funds Available
+        │     (Day 3 - 09:00 AM)
+        ▼</div>
+
+            <h3>Detailed Steps</h3>
+
+            <h4>1. Submission</h4>
+            <p>An originator (e.g., a large corporate) submits a payment file (via Bacstel-IP or newer API services) to their bank, which is a Direct Participant (DP).</p>
+
+            <h4>2. Validation & Formatting</h4>
+            <p>The DP validates the file, checks the originator's authority and funds, and reformats it to the BACS standard.</p>
+
+            <h4>3. Upload to BACS</h4>
+            <p>The DP uploads the processed submission file to the BACS Central Infrastructure within strict processing deadlines (by 22:30).</p>
+
+            <h4>4. Input Day (Day 1 - Processing)</h4>
+            <p>The day BACS receives the file. The system performs extensive validation checks.</p>
+
+            <h4>5. Processing & Sorting</h4>
+            <p>BACS sorts all transactions by the Destination DP (the beneficiary's bank).</p>
+
+            <h4>6. Distribution</h4>
+            <p>Early on Processing Day (Day 2), BACS sends the output files containing payment instructions to each Destination DP.</p>
+
+            <h4>7. Posting by Destination DP</h4>
+            <p>The Destination DP receives the file, credits the beneficiary's account, and makes the funds "available" (usually showing as pending).</p>
+
+            <h4>8. Reporting</h4>
+            <p>The Destination DP sends a report back to BACS confirming receipt/processing.</p>
+
+            <h4>9. Settlement Calculation</h4>
+            <p>At the end of Processing Day, BACS calculates the net position for every DP (the net sum of all credits and debits they owe/receive).</p>
+
+            <h4>10. Settlement Instruction</h4>
+            <p>These net positions are sent as irrevocable settlement instructions to the Bank of England's RTGS system.</p>
+
+            <h4>11. Final Settlement</h4>
+            <p>On Settlement Day (Day 3), before 9:00 AM, the net amounts are settled between DP settlement accounts at the Bank of England. This is the moment the payment becomes final and risk-free.</p>
+
+            <h4>12. Funds Available</h4>
+            <p>The beneficiary sees the funds as cleared in their account on Settlement Day.</p>
+
+            <h3>Direct Participant Characteristics</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BACS Link</td>
+                            <td>Direct connection (Bacstel-IP, APIs)</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement Account</td>
+                            <td>Holds a settlement account at the Bank of England</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement Process</td>
+                            <td>Settles its own net position directly in RTGS</td>
+                        </tr>
+                        <tr>
+                            <td>Control & Timing</td>
+                            <td>Full control over submission and settlement timing</td>
+                        </tr>
+                        <tr>
+                            <td>Cost & Complexity</td>
+                            <td>High setup cost, operational overhead, and regulatory capital</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Profile</td>
+                            <td>Bears its own settlement risk and manages its own liquidity</td>
+                        </tr>
+                        <tr>
+                            <td>Typical Entities</td>
+                            <td>Major UK banks (Barclays, HSBC, etc.), large building societies</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Indirect Participant Section -->
+        <section id="indirect-participant">
+            <h2>Indirect Participant Process Flow</h2>
+            <p class="intro-text">
+                An Indirect Participant (IP) is a financial institution (e.g., a smaller bank, EMI, or credit union) that does not have a direct link to BACS or a Bank of England settlement account. They must use a Sponsoring Direct Participant as their agent. This model allows smaller institutions to access BACS services without the significant capital and operational requirements of direct membership.
+            </p>
+
+            <h3>Key Actors</h3>
+            <ul>
+                <li><strong>Originator:</strong> Company/entity initiating the payment</li>
+                <li><strong>Indirect Participant (IP):</strong> The originator's bank (e.g., a fintech bank), which is not a BACS member</li>
+                <li><strong>Sponsoring Direct Participant (Sponsor DP):</strong> A DP that provides access to BACS for the IP</li>
+                <li><strong>BACS Central Infrastructure:</strong> As above</li>
+                <li><strong>Destination DP:</strong> The beneficiary's bank</li>
+                <li><strong>Beneficiary:</strong> The end recipient</li>
+            </ul>
+
+            <h3>Process Flow Diagram</h3>
+            <div class="diagram">┌─────────────────────────────────────────────────────────────────────┐
+│                   INDIRECT PARTICIPANT PROCESS FLOW                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+    Originator              Indirect Participant      Sponsoring Direct
+                           (e.g., Fintech Bank)         Participant
+        │                           │                  (Sponsor DP)
+        │ 1. Submits Payment File   │                       │
+        │──────────────────────────▶│                       │
+        │                           │                       │
+        │                           │ 2. Validates & Formats│
+        │                           │    Payment File       │
+        │                           │                       │
+        │                           │ 3. Sends File via     │
+        │                           │    Sponsor's Gateway/ │
+        │                           │    API                │
+        │                           │──────────────────────▶│
+        │                           │                       │
+        │                           │                       │ 4. On-behalf-of
+        │                           │                       │    Validation &
+        │                           │                       │    Sponsor's Risk
+        │                           │                       │    Checks
+        │                           │                       │
+                                                            │
+     BACS Central              Destination DP          Sponsor DP
+    Infrastructure           (Beneficiary's Bank)
+        │                           │                       │
+        │                           │ 5. Uploads to BACS    │
+        │◀──────────────────────────┼───────────────────────┤
+        │                           │    as if its own      │
+        │                           │    submission         │
+        │                           │                       │
+        │ 6. Standard BACS          │                       │
+        │    Processing             │                       │
+        │    Input ▶ Process ▶      │                       │
+        │    Output                 │                       │
+        │                           │                       │
+        │ 7. Process & Post Funds   │                       │
+        │───────────────────────────▶                       │
+        │                           │                       │
+        │                           │                       │
+        │ 8. Net Settlement         │                       │
+        │    Calculation            │                       │
+        │                           │                       │
+        │                           │                       │
+        │ 9. Sponsor DP Settles for │                       │
+        │    NET position of ALL    │                       │
+        │    its IPs + itself       │                       │
+        │───────────────────────────┼───────────────────────▶
+        │                           │                       │
+                                                            │
+    Bank of England                                    Sponsor DP
+      RTGS System
+        │                                                   │
+        │ 10. Final Settlement                              │
+        │◀──────────────────────────────────────────────────┤
+        │                                                   │
+        │                                                   │ 11. Funds Available
+        │                                                   │     (Day 3)
+        │                                                   │
+        │                                                   │ 12. Internal
+        │                                                   │     Accounting &
+        │                                                   │     Funding
+        ▼                                                   │     Arrangements
+                                                            │
+                                                            ▼
+    Beneficiary
+        │
+        │ Funds Available
+        ▼</div>
+
+            <h3>Detailed Steps (Differences from DP Flow)</h3>
+
+            <h4>1. & 2. Submission & Validation</h4>
+            <p>The originator submits to the Indirect Participant (IP). The IP validates and formats the file internally.</p>
+
+            <h4>3. Routing to Sponsor</h4>
+            <p>The IP does not connect to BACS. Instead, it sends the file to its Sponsoring DP via a secure channel (API, gateway, etc.).</p>
+
+            <h4>4. Sponsor's Gateway Processing</h4>
+            <p>This is a critical step. The Sponsor DP performs:</p>
+            <ul>
+                <li><strong>On-behalf-of Validation:</strong> Ensures the file is correctly formatted with the IP's identity</li>
+                <li><strong>Risk & Liquidity Checks:</strong> Monitors the IP's position and pre-funded balances to cover the net debit position of all its submissions. This is a key risk management step for the Sponsor</li>
+            </ul>
+
+            <h4>5. Submission to BACS</h4>
+            <p>The Sponsor DP submits the file to BACS, marking it as being for the IP but under the Sponsor's own BACS identity.</p>
+
+            <h4>6. BACS Processing</h4>
+            <p>BACS processes the file identically to a DP's file. It sees the Sponsor DP as the submitting participant.</p>
+
+            <h4>7. Posting by Destination DP</h4>
+            <p>Unchanged. The beneficiary's bank credits the account.</p>
+
+            <h4>8. Settlement Calculation</h4>
+            <p>BACS calculates a single net position for the Sponsor DP. This net includes all transactions from the Sponsor's own originators plus all transactions from all its Indirect Participants.</p>
+
+            <h4>9. Consolidated Settlement</h4>
+            <p>The Sponsor DP is solely responsible for settling this entire net position with the Bank of England on Settlement Day.</p>
+
+            <h4>10. Final Settlement</h4>
+            <p>Settlement occurs via CHAPS/RTGS at the Bank of England.</p>
+
+            <h4>11. Funds Available</h4>
+            <p>Beneficiaries receive their funds on Day 3.</p>
+
+            <h4>12. Internal Settlement</h4>
+            <p>The IP must have a funding arrangement with its Sponsor DP (e.g., pre-funding a nominated account, using a credit line). After BoE settlement, the Sponsor DP and IP perform internal accounting to reconcile the funds. The IP bears the liquidity timing risk.</p>
+
+            <h3>Indirect Participant Characteristics</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BACS Link</td>
+                            <td>No direct connection. Uses a Sponsor DP</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement Account</td>
+                            <td>No BoE account. Relies on Sponsor's account</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement Process</td>
+                            <td>Flows are aggregated into the Sponsor DP's net position</td>
+                        </tr>
+                        <tr>
+                            <td>Control & Timing</td>
+                            <td>Dependent on Sponsor's processes, gateways, and deadlines</td>
+                        </tr>
+                        <tr>
+                            <td>Cost & Complexity</td>
+                            <td>Lower entry cost. Pays fees (often volume-based) to the Sponsor DP</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Profile</td>
+                            <td>Liquidity risk managed by the Sponsor; subject to the Sponsor's risk controls</td>
+                        </tr>
+                        <tr>
+                            <td>Typical Entities</td>
+                            <td>Smaller banks, e-money institutions, payment institutions, foreign banks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison">
+            <h2>Comparison: Direct vs. Indirect Participant</h2>
+            <p class="intro-text">
+                The fundamental difference between Direct and Indirect Participants lies in access, risk management, and settlement. The core BACS processing engine treats payment files identically once submitted. The Sponsor DP acts as a critical gateway and risk manager for the Indirect Participant, consolidating its flows into the high-value settlement system.
+            </p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Direct Participant (DP)</th>
+                            <th>Indirect Participant (IP)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BACS Link</td>
+                            <td>Direct connection (Bacstel-IP, APIs)</td>
+                            <td>No direct connection. Uses a Sponsor DP</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement Account</td>
+                            <td>Holds a settlement account at the Bank of England</td>
+                            <td>No BoE account. Relies on Sponsor's account</td>
+                        </tr>
+                        <tr>
+                            <td>Settlement</td>
+                            <td>Settles its own net position directly in RTGS</td>
+                            <td>Its flows are aggregated into the Sponsor DP's net position</td>
+                        </tr>
+                        <tr>
+                            <td>Control & Timing</td>
+                            <td>Full control over submission and settlement timing</td>
+                            <td>Dependent on Sponsor's processes, gateways, and deadlines</td>
+                        </tr>
+                        <tr>
+                            <td>Cost & Complexity</td>
+                            <td>High setup cost, operational overhead, and regulatory capital</td>
+                            <td>Lower entry cost. Pays fees (often volume-based) to the Sponsor DP</td>
+                        </tr>
+                        <tr>
+                            <td>Risk Profile</td>
+                            <td>Bears its own settlement risk and manages its own liquidity</td>
+                            <td>Liquidity risk managed by the Sponsor; subject to the Sponsor's risk controls</td>
+                        </tr>
+                        <tr>
+                            <td>Typical Entities</td>
+                            <td>Major UK banks (Barclays, HSBC, etc.), large building societies</td>
+                            <td>Smaller banks, e-money institutions, payment institutions, foreign banks</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <strong>Key Takeaway:</strong><br>
+                The core BACS processing engine treats payment files identically once submitted. The fundamental difference lies in access, risk management, and settlement. The Sponsor DP acts as a critical gateway and risk manager for the Indirect Participant, consolidating its flows into the high-value settlement system.
+            </div>
+        </section>
+
+        <!-- Final Note -->
+        <section>
             <div class="info-box">
                 <strong>Final Note:</strong><br>
                 This process remains fundamental to UK payroll, supplier payments, and regular collections despite the growth of faster alternatives, due to its reliability and efficiency for bulk, non-urgent transactions. The DDI system, while appearing complex, provides a secure, regulated framework for recurring payments that balances business efficiency with strong consumer protection through the Direct Debit Guarantee.
