@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Payments SME & Senior Consultant</title>
+
+    <style>
+        :root {
+            /* Brand Colours – easy to change */
+            --primary-color: #0b3c5d;   /* Deep bank blue */
+            --secondary-color: #2563eb; /* Fintech blue */
+            --accent-color: #e5effa;
+            --text-color: #1f2933;
+            --muted-text: #6b7280;
+            --background: #f5f7fa;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Header / Hero */
+        .hero {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .hero img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .hero p {
+            margin-top: 10px;
+            font-size: 1rem;
+            max-width: 650px;
+        }
+
+        /* Content Cards */
+        .card {
+            background-color: var(--card-bg);
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 12px;
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        ul {
+            margin: 10px 0 0 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tagline {
+            color: var(--muted-text);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HERO / PROFILE SECTION -->
+        <section class="hero">
+            <!-- Replace src with your profile image path -->
+            <img src="profile.jpg" alt="Profile Picture">
+
+            <div>
+                <h1>Payments SME & Senior Consultant</h1>
+                <div class="tagline">
+                    UK & European Payments | FPS • BACS • CHAPS • SEPA • RTGS • AML & Fraud
+                </div>
+                <p>
+                    Senior payments professional specialising in end-to-end payment systems,
+                    scheme connectivity, clearing & settlement, and financial crime integration
+                    across UK and European payment infrastructures.
+                </p>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="card">
+            <h2>About Me</h2>
+            <p>
+                I am Raja Rethinam from UK. I am a <strong>Payments Subject Matter Expert and Senior Consultant</strong> with extensive
+                experience designing, delivering, and modernising <strong>domestic and cross-border
+                payment systems</strong> across the UK and Europe.
+            </p>
+            <p>
+                My expertise spans the complete payments lifecycle — from initiation and scheme
+                connectivity through clearing, settlement, liquidity management, risk controls,
+                and regulatory compliance.
+            </p>
+        </section>
+
+        <!-- PAYMENTS EXPERTISE -->
+        <section class="card">
+            <h2>Payments Expertise</h2>
+
+            <div class="two-column">
+                <div>
+                    <p><strong>UK Payments</strong></p>
+                    <ul>
+                        <li>Faster Payments Service (FPS)</li>
+                        <li>BACS (Direct Credit & Direct Debit)</li>
+                        <li>CHAPS</li>
+                        <li>Bank of England RTGS & settlement models</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <p><strong>European Payments</strong></p>
+                    <ul>
+                        <li>SEPA Credit Transfer (SCT)</li>
+                        <li>SEPA Instant Credit Transfer (SCT Inst)</li>
+                        <li>TARGET2 / T2</li>
+                        <li>Clearing & Settlement Mechanisms (CSMs)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- END TO END -->
+        <section class="card">
+            <h2>End-to-End Payments & Settlement</h2>
+            <ul>
+                <li>Payment initiation, validation, and routing</li>
+                <li>Gateway and scheme connectivity (including Bacstel-IP)</li>
+                <li>Clearing, settlement, and prefunding models</li>
+                <li>Liquidity and intraday risk management</li>
+                <li>Exception handling, returns, and reconciliations</li>
+                <li>Operational readiness and scheme reporting</li>
+            </ul>
+        </section>
+
+        <!-- AML & FRAUD -->
+        <section class="card">
+            <h2>AML, Fraud & Financial Crime Integration</h2>
+            <ul>
+                <li>AML and sanctions screening within payment flows</li>
+                <li>Real-time and post-event fraud monitoring</li>
+                <li>Integration with fraud and transaction monitoring platforms</li>
+                <li>Scheme-specific fraud rules and compliance</li>
+                <li>Regulatory and operational impact assessments</li>
+            </ul>
+        </section>
+
+        <!-- CONSULTING -->
+        <section class="card">
+            <h2>Consulting Approach</h2>
+            <p>
+                I work at the intersection of <strong>business, technology, operations, and risk</strong>,
+                providing practical, delivery-focused solutions for complex and regulated payment environments.
+            </p>
+            <ul>
+                <li>Strong stakeholder engagement and communication</li>
+                <li>Hands-on delivery and strategic advisory</li>
+                <li>Support for migrations, transformations, and scheme onboarding</li>
+                <li>Proven experience across banks, PSPs, and fintechs</li>
+            </ul>
+        </section>
+
+    </div>
+
+</body>
+</html>
