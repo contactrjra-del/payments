@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payments Overview - UK & EU Payment Systems</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3Ecircle%7Bfill:%231a365d%7D text%7Bfill:white;font-family:Arial,sans-serif;font-size:50px;font-weight:bold%7D%3C/style%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ctext x='50' y='70' text-anchor='middle'%3E💷%3C/text%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,8 +17,6 @@
             --text-primary: #1f2937;
             --text-secondary: #4b5563;
             --border-color: #e5e7eb;
-            --link-color: #2563eb;
-            --link-hover: #1d4ed8;
         }
 
         * {
@@ -30,7 +29,7 @@
             font-family: 'Crimson Pro', serif;
             line-height: 1.8;
             color: var(--text-primary);
-            background: linear-gradient(135deg, #f9fafb 0%, #e8eef5 100%);
+            background: var(--background);
             min-height: 100vh;
         }
 
@@ -40,64 +39,196 @@
             padding: 0 2rem;
         }
 
-        /* Header */
+        /* Header with Fixed Background Image */
         header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #2c5282 100%);
+            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(44, 82, 130, 0.85)), 
+                        url('data:image/svg+xml,%3Csvg width="1920" height="600" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="1920" height="600" fill="%231a365d"/%3E%3Crect width="1920" height="600" fill="url(%23grid)"/%3E%3Ccircle cx="200" cy="100" r="150" fill="rgba(255,255,255,0.03)"/%3E%3Ccircle cx="1700" cy="400" r="200" fill="rgba(255,255,255,0.02)"/%3E%3Cpath d="M0,300 Q480,200 960,300 T1920,300 L1920,600 L0,600 Z" fill="rgba(44,82,130,0.3)"/%3E%3C/svg%3E');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: white;
-            padding: 4rem 0 3rem;
+            padding: 8rem 0 0;
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            border-radius: 50%;
+        .hero-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 900;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
         }
 
         .subtitle {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             opacity: 0.95;
-            position: relative;
-            z-index: 1;
             font-weight: 400;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navigation Menu */
+        nav {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 1.5rem 2rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(to bottom, transparent, rgba(26, 54, 93, 0.05));
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            list-style: none;
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .dropdown-link:hover {
+            background: linear-gradient(to right, rgba(26, 54, 93, 0.05), transparent);
+            border-left-color: var(--accent-color);
+            padding-left: 2rem;
+        }
+
+        .dropdown-link.available {
+            position: relative;
+        }
+
+        .dropdown-link.available::after {
+            content: '✓';
+            position: absolute;
+            right: 1.5rem;
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .dropdown-link.coming-soon {
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .dropdown-link.coming-soon::after {
+            content: 'Coming Soon';
+            position: absolute;
+            right: 1.5rem;
+            font-size: 0.75rem;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        /* Main Content */
+        main {
+            background: white;
         }
 
         /* Introduction Section */
         .intro-section {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 3rem;
-            margin: 3rem 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-top: 5px solid var(--accent-color);
+            padding: 4rem 2rem;
+            margin: 0;
+        }
+
+        .intro-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
         }
 
         .intro-section p {
@@ -105,18 +236,22 @@
             color: var(--text-secondary);
             line-height: 1.9;
             margin-bottom: 1.5rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Payment Sections */
         .payment-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 3rem;
-            margin: 3rem 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            background: #f9fafb;
+            padding: 4rem 2rem;
         }
 
-        h2 {
+        .payment-section:nth-child(even) {
+            background: white;
+        }
+
+        .payment-section h2 {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             color: var(--primary-color);
@@ -131,12 +266,12 @@
             line-height: 1.9;
             margin-bottom: 2.5rem;
             padding: 1.5rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-left: 4px solid var(--link-color);
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            border-left: 4px solid #2563eb;
             border-radius: 8px;
         }
 
-        /* Payment Systems Grid */
+        /* Payment Grid */
         .payment-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -195,7 +330,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--link-color);
+            color: #2563eb;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.05rem;
@@ -204,7 +339,7 @@
         }
 
         .payment-link:hover {
-            color: var(--link-hover);
+            color: #1d4ed8;
             gap: 0.8rem;
         }
 
@@ -245,8 +380,8 @@
             background: var(--secondary-color);
             color: white;
             text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
+            padding: 3rem 2rem;
+            margin-top: 0;
         }
 
         footer p {
@@ -260,182 +395,256 @@
                 font-size: 2.5rem;
             }
 
-            h2 {
-                font-size: 2rem;
+            .nav-menu {
+                flex-direction: column;
             }
 
-            .payment-section,
-            .intro-section {
-                padding: 2rem;
+            .nav-link {
+                padding: 1rem 1.5rem;
+            }
+
+            .dropdown {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: #f9fafb;
+                display: none;
+            }
+
+            .nav-item:hover .dropdown {
+                display: block;
             }
 
             .payment-grid {
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .payment-section,
-        .intro-section {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .payment-card {
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .payment-card:nth-child(1) { animation-delay: 0.1s; }
-        .payment-card:nth-child(2) { animation-delay: 0.2s; }
-        .payment-card:nth-child(3) { animation-delay: 0.3s; }
-        .payment-card:nth-child(4) { animation-delay: 0.4s; }
-        .payment-card:nth-child(5) { animation-delay: 0.5s; }
-        .payment-card:nth-child(6) { animation-delay: 0.6s; }
-        .payment-card:nth-child(7) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>Payments Overview</h1>
-            <p class="subtitle">Understanding UK and European Payment Systems</p>
+        <div class="hero-content">
+            <div class="container">
+                <h1>Payments Overview</h1>
+                <p class="subtitle">Understanding UK and European Payment Systems</p>
+            </div>
         </div>
+        
+        <!-- Navigation Menu -->
+        <nav>
+            <div class="nav-container">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#uk-payments" class="nav-link">UK Payments</a>
+                        <ul class="dropdown">
+                            <li class="dropdown-item">
+                                <a href="fps-payment-process.html" class="dropdown-link coming-soon">FPS (Faster Payments)</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="bacs-payment-process.html" class="dropdown-link available">BACS</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="chaps-payment-process.html" class="dropdown-link available">CHAPS</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#eu-payments" class="nav-link">EU Payments</a>
+                        <ul class="dropdown">
+                            <li class="dropdown-item">
+                                <a href="sepa-instant-payment-process.html" class="dropdown-link available">SEPA Instant</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="sepa-payment-process.html" class="dropdown-link coming-soon">SEPA</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="csm-payment-process.html" class="dropdown-link coming-soon">CSM</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="target2-payment-process.html" class="dropdown-link coming-soon">TARGET2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#miscellaneous" class="nav-link">Miscellaneous</a>
+                        <ul class="dropdown">
+                            <li class="dropdown-item">
+                                <a href="card-payments-overview.html" class="dropdown-link coming-soon">Card Payments</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="iso20022-standard.html" class="dropdown-link coming-soon">ISO 20022</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="iso8583-standard.html" class="dropdown-link coming-soon">ISO 8583</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">About Me</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
-    <div class="container">
+    <main>
         <!-- Introduction Section -->
         <section class="intro-section">
-            <p>
-                Payment systems form the backbone of modern financial infrastructure, enabling the seamless transfer of funds between individuals, businesses, and financial institutions. In the UK and European Union, sophisticated payment networks have evolved to meet diverse needs—from high-value corporate transactions to instant consumer payments.
-            </p>
-            <p>
-                This overview explores the key payment systems operating across the United Kingdom and the European Union. Each system serves specific purposes, from the UK's BACS for bulk payments to the EU's SEPA framework for pan-European transfers. Understanding these systems is essential for businesses operating in these markets and for anyone involved in financial services, treasury management, or payment processing.
-            </p>
-            <p>
-                The following sections provide detailed information about each payment scheme, including their operational frameworks, use cases, and technical specifications.
-            </p>
+            <div class="container">
+                <h2>Welcome to Payments Overview</h2>
+                <p>
+                    Payment systems form the backbone of modern financial infrastructure, enabling the seamless transfer of funds between individuals, businesses, and financial institutions. In the UK and European Union, sophisticated payment networks have evolved to meet diverse needs—from high-value corporate transactions to instant consumer payments.
+                </p>
+                <p>
+                    This overview explores the key payment systems operating across the United Kingdom and the European Union. Each system serves specific purposes, from the UK's BACS for bulk payments to the EU's SEPA framework for pan-European transfers. Understanding these systems is essential for businesses operating in these markets and for anyone involved in financial services, treasury management, or payment processing.
+                </p>
+                <p>
+                    The following sections provide detailed information about each payment scheme, including their operational frameworks, use cases, and technical specifications.
+                </p>
+            </div>
         </section>
 
         <!-- UK Payments Section -->
-        <section class="payment-section">
-            <h2>United Kingdom Payment Systems</h2>
-            <div class="section-intro">
-                The UK operates several distinct payment systems, each designed for specific transaction types and processing speeds. These systems are regulated by the Payment Systems Regulator (PSR) and operated by Pay.UK, ensuring reliability, security, and efficiency across the UK financial ecosystem.
-            </div>
-
-            <div class="payment-grid">
-                <!-- FPS -->
-                <div class="payment-card">
-                    <h3>Faster Payments Service (FPS)<span class="available-badge">Available</span></h3>
-                    <p>
-                        Real-time payment system enabling near-instant transfers between UK bank accounts, typically processing within seconds. Widely used for online and mobile banking transfers, standing orders, and bill payments.
-                    </p>
-                    <a href="fps-payment-process.html" class="payment-link">Learn More</a>
+        <section id="uk-payments" class="payment-section">
+            <div class="container">
+                <h2>United Kingdom Payment Systems</h2>
+                <div class="section-intro">
+                    The UK operates several distinct payment systems, each designed for specific transaction types and processing speeds. These systems are regulated by the Payment Systems Regulator (PSR) and operated by Pay.UK, ensuring reliability, security, and efficiency across the UK financial ecosystem.
                 </div>
 
-                <!-- BACS -->
-                <div class="payment-card">
-                    <h3>BACS<span class="available-badge">Available</span></h3>
-                    <p>
-                        Bankers' Automated Clearing Services handles bulk payment processing with a 3-day clearing cycle. The preferred system for salary payments, Direct Debits, supplier payments, and recurring transactions across the UK.
-                    </p>
-                    <a href="bacs-payment-process.html" class="payment-link">Learn More</a>
-                </div>
+                <div class="payment-grid">
+                    <!-- FPS -->
+                    <div class="payment-card">
+                        <h3>Faster Payments Service (FPS)<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            Real-time payment system enabling near-instant transfers between UK bank accounts, typically processing within seconds. Widely used for online and mobile banking transfers, standing orders, and bill payments.
+                        </p>
+                        <a href="fps-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
 
-                <!-- CHAPS -->
-                <div class="payment-card">
-                    <h3>CHAPS<span class="available-badge">Available</span></h3>
-                    <p>
-                        Clearing House Automated Payment System provides same-day, guaranteed high-value payments. Essential for time-critical transactions such as property purchases, large business payments, and financial market settlements.
-                    </p>
-                    <a href="chaps-payment-process.html" class="payment-link">Learn More</a>
+                    <!-- BACS -->
+                    <div class="payment-card">
+                        <h3>BACS<span class="available-badge">Available</span></h3>
+                        <p>
+                            Bankers' Automated Clearing Services handles bulk payment processing with a 3-day clearing cycle. The preferred system for salary payments, Direct Debits, supplier payments, and recurring transactions across the UK.
+                        </p>
+                        <a href="bacs-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
+
+                    <!-- CHAPS -->
+                    <div class="payment-card">
+                        <h3>CHAPS<span class="available-badge">Available</span></h3>
+                        <p>
+                            Clearing House Automated Payment System provides same-day, guaranteed high-value payments. Essential for time-critical transactions such as property purchases, large business payments, and financial market settlements.
+                        </p>
+                        <a href="chaps-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- EU Payments Section -->
-        <section class="payment-section">
-            <h2>European Union Payment Systems</h2>
-            <div class="section-intro">
-                The European Union has developed integrated payment infrastructure to facilitate seamless cross-border transactions across member states. These systems support the EU's single market objectives, enabling efficient euro-denominated payments and harmonized payment standards across Europe.
-            </div>
-
-            <div class="payment-grid">
-                <!-- CSM -->
-                <div class="payment-card">
-                    <h3>CSM (Clearing and Settlement Mechanisms)<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        European clearing and settlement mechanisms that process and finalize payment transactions between financial institutions, ensuring secure and efficient fund transfers across the eurozone.
-                    </p>
-                    <a href="csm-payment-process.html" class="payment-link">Learn More</a>
+        <section id="eu-payments" class="payment-section">
+            <div class="container">
+                <h2>European Union Payment Systems</h2>
+                <div class="section-intro">
+                    The European Union has developed integrated payment infrastructure to facilitate seamless cross-border transactions across member states. These systems support the EU's single market objectives, enabling efficient euro-denominated payments and harmonized payment standards across Europe.
                 </div>
 
-                <!-- TARGET2 -->
-                <div class="payment-card">
-                    <h3>TARGET2<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        Trans-European Automated Real-time Gross settlement Express Transfer system. The Eurosystem's real-time gross settlement (RTGS) system for processing large-value euro payments with immediate finality.
-                    </p>
-                    <a href="target2-payment-process.html" class="payment-link">Learn More</a>
-                </div>
+                <div class="payment-grid">
+                    <!-- SEPA Instant -->
+                    <div class="payment-card">
+                        <h3>SEPA Instant<span class="available-badge">Available</span></h3>
+                        <p>
+                            Real-time euro payment scheme enabling instant credit transfers available 24/7/365 across the SEPA region, with funds credited to the beneficiary's account within 10 seconds. Includes comprehensive CSM infrastructure details.
+                        </p>
+                        <a href="sepa-instant-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
 
-                <!-- SEPA -->
-                <div class="payment-card">
-                    <h3>SEPA (Single Euro Payments Area)<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        Unified payment framework allowing euro credit transfers and Direct Debits to be processed under the same conditions across 36 European countries, simplifying cross-border euro payments.
-                    </p>
-                    <a href="sepa-payment-process.html" class="payment-link">Learn More</a>
-                </div>
+                    <!-- SEPA -->
+                    <div class="payment-card">
+                        <h3>SEPA (Single Euro Payments Area)<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            Unified payment framework allowing euro credit transfers and Direct Debits to be processed under the same conditions across 36 European countries, simplifying cross-border euro payments.
+                        </p>
+                        <a href="sepa-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
 
-                <!-- SEPA Instant -->
-                <div class="payment-card">
-                    <h3>SEPA Instant<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        Real-time euro payment scheme enabling instant credit transfers available 24/7/365 across the SEPA region, with funds credited to the beneficiary's account within seconds.
-                    </p>
-                    <a href="sepa-instant-payment-process.html" class="payment-link">Learn More</a>
-                </div>
+                    <!-- CSM -->
+                    <div class="payment-card">
+                        <h3>CSM (Clearing and Settlement Mechanisms)<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            European clearing and settlement mechanisms that process and finalize payment transactions between financial institutions, ensuring secure and efficient fund transfers across the eurozone.
+                        </p>
+                        <a href="csm-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
 
-                <!-- ISO 20022 -->
-                <div class="payment-card">
-                    <h3>ISO 20022<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        International standard for financial messaging that provides rich, structured data format for payment instructions, enabling enhanced payment information and improved straight-through processing.
-                    </p>
-                    <a href="iso20022-standard.html" class="payment-link">Learn More</a>
-                </div>
-
-                <!-- Card Payments -->
-                <div class="payment-card">
-                    <h3>Card Payments<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        European card payment infrastructure including schemes like Visa, Mastercard, and local systems, covering both card-present and card-not-present transactions across the EU with EMV and PSD2 compliance.
-                    </p>
-                    <a href="card-payments-overview.html" class="payment-link">Learn More</a>
-                </div>
-
-                <!-- ISO 8583 -->
-                <div class="payment-card">
-                    <h3>ISO 8583<span class="coming-soon-badge">Coming Soon</span></h3>
-                    <p>
-                        International standard for card transaction messaging between payment terminals, acquiring banks, and card networks, defining message formats for authorization, clearing, and settlement of card payments.
-                    </p>
-                    <a href="iso8583-standard.html" class="payment-link">Learn More</a>
+                    <!-- TARGET2 -->
+                    <div class="payment-card">
+                        <h3>TARGET2<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            Trans-European Automated Real-time Gross settlement Express Transfer system. The Eurosystem's real-time gross settlement (RTGS) system for processing large-value euro payments with immediate finality.
+                        </p>
+                        <a href="target2-payment-process.html" class="payment-link">Learn More</a>
+                    </div>
                 </div>
             </div>
         </section>
-    </div>
+
+        <!-- Miscellaneous Section -->
+        <section id="miscellaneous" class="payment-section">
+            <div class="container">
+                <h2>Standards & Other Payment Systems</h2>
+                <div class="section-intro">
+                    Beyond specific payment schemes, understanding international messaging standards and card payment systems is crucial for comprehensive payment system knowledge. These standards enable interoperability and define how payment information is structured and transmitted globally.
+                </div>
+
+                <div class="payment-grid">
+                    <!-- Card Payments -->
+                    <div class="payment-card">
+                        <h3>Card Payments<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            European card payment infrastructure including schemes like Visa, Mastercard, and local systems, covering both card-present and card-not-present transactions across the EU with EMV and PSD2 compliance.
+                        </p>
+                        <a href="card-payments-overview.html" class="payment-link">Learn More</a>
+                    </div>
+
+                    <!-- ISO 20022 -->
+                    <div class="payment-card">
+                        <h3>ISO 20022<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            International standard for financial messaging that provides rich, structured data format for payment instructions, enabling enhanced payment information and improved straight-through processing.
+                        </p>
+                        <a href="iso20022-standard.html" class="payment-link">Learn More</a>
+                    </div>
+
+                    <!-- ISO 8583 -->
+                    <div class="payment-card">
+                        <h3>ISO 8583<span class="coming-soon-badge">Coming Soon</span></h3>
+                        <p>
+                            International standard for card transaction messaging between payment terminals, acquiring banks, and card networks, defining message formats for authorization, clearing, and settlement of card payments.
+                        </p>
+                        <a href="iso8583-standard.html" class="payment-link">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about" class="payment-section">
+            <div class="container">
+                <h2>About Me</h2>
+                <div class="section-intro">
+                    This comprehensive payment systems resource is designed to provide clear, detailed information about UK and European payment infrastructure. Each guide includes process flows, message formats, operational details, and best practices to help professionals understand and work with these critical financial systems.
+                </div>
+                <p style="text-align: center; font-size: 1.1rem; color: var(--text-secondary); margin-top: 2rem;">
+                    For questions, feedback, or contributions, please feel free to reach out. This is a living resource that will continue to grow with additional payment systems and updated information.
+                </p>
+            </div>
+        </section>
+    </main>
 
     <footer>
         <div class="container">
