@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEPA Instant Payments - Complete Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --sepa-accent: #2563eb;
+            --sepa-light: #dbeafe;
+            --instant-accent: #7c3aed;
+            --csm-accent: #059669;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f9fafb 0%, #e8eef5 100%);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--sepa-accent) 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 1rem; }
+        .subtitle { font-size: 1.3rem; opacity: 0.95; }
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--sepa-accent);
+            padding-left: 1.5rem;
+        }
+        h3 { font-size: 1.7rem; color: #2d3748; margin: 2rem 0 1rem; }
+        h4 { font-size: 1.4rem; color: #2d3748; margin: 1.5rem 0 1rem; }
+        p { margin: 1.2rem 0; font-size: 1.1rem; color: #4b5563; }
+        ul, ol { margin: 1.5rem 0 1.5rem 2rem; font-size: 1.1rem; }
+        .info-box {
+            background: linear-gradient(135deg, var(--sepa-light) 0%, #bfdbfe 100%);
+            border-left: 5px solid var(--sepa-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        .csm-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 5px solid var(--csm-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        .highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 5px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        .diagram {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        th {
+            background: var(--sepa-accent);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        td { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--sepa-accent);
+        }
+        .toc ul { list-style: none; }
+        .toc li { margin: 0.8rem 0; padding-left: 1.5rem; position: relative; }
+        .toc li::before { content: '⚡'; position: absolute; left: 0; color: var(--instant-accent); }
+        .toc a { color: #1f2937; text-decoration: none; font-weight: 600; }
+        .toc a:hover { color: var(--sepa-accent); }
+        .instant-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--instant-accent) 0%, #6d28d9 100%);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        footer { background: #2d3748; color: white; text-align: center; padding: 2rem; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>SEPA Instant Payments</h1>
+            <p class="subtitle">Real-Time Euro Transfers Across Europe</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">Overview of SEPA Instant</a></li>
+                <li><a href="#csm">Clearing & Settlement Mechanisms (CSM)</a></li>
+                <li><a href="#process-flow">Process Flow</a></li>
+                <li><a href="#key-messages">Key Message Types</a></li>
+                <li><a href="#message-formats">Message Formats</a></li>
+                <li><a href="#timing">Timing & Processing Windows</a></li>
+                <li><a href="#operations">Day-to-Day Operations</a></li>
+                <li><a href="#security">Security & Compliance</a></li>
+                <li><a href="#settlement">Settlement Process</a></li>
+                <li><a href="#advantages">Advantages & Limitations</a></li>
+                <li><a href="#use-cases">Use Cases</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <section id="overview">
+            <h2>Overview of SEPA Instant Payments<span class="instant-badge">⚡ 10 Seconds</span></h2>
+            <p>
+                SEPA Instant Credit Transfer (SCT Inst) is a pan-European payment scheme enabling real-time euro transfers across the Single Euro Payments Area (SEPA). Launched in November 2017, it allows credit transfers to be completed within 10 seconds, 24/7/365, with immediate fund availability to the beneficiary.
+            </p>
+            <p>
+                SEPA Instant builds upon the successful standard SEPA Credit Transfer (SCT) scheme but adds real-time processing, making it competitive with domestic instant payment systems while maintaining pan-European reach across 36 countries.
+            </p>
+
+            <h3>Key Characteristics</h3>
+            <div class="info-box">
+                <strong>Core Features:</strong>
+                <ul>
+                    <li><strong>Speed:</strong> Maximum 10 seconds end-to-end processing</li>
+                    <li><strong>Availability:</strong> 24 hours a day, 7 days a week, 365 days a year</li>
+                    <li><strong>Transaction Limit:</strong> €100,000 per transaction (scheme maximum)</li>
+                    <li><strong>Coverage:</strong> 36 SEPA countries (EU, EEA, and associated territories)</li>
+                    <li><strong>Currency:</strong> Euro (EUR) only</li>
+                    <li><strong>Irrevocability:</strong> Payments cannot be recalled once processed</li>
+                    <li><strong>Settlement:</strong> Real-time settlement in central bank money</li>
+                </ul>
+            </div>
+
+            <h3>SEPA Coverage</h3>
+            <p><strong>SEPA Instant is available across 36 countries:</strong></p>
+            <ul>
+                <li><strong>EU Member States (27):</strong> Austria, Belgium, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Netherlands, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden</li>
+                <li><strong>EEA Countries (3):</strong> Iceland, Liechtenstein, Norway</li>
+                <li><strong>Other (6):</strong> Andorra, Monaco, San Marino, Switzerland, United Kingdom, Vatican City</li>
+            </ul>
+
+            <h3>Comparison: SEPA SCT vs. SEPA Instant</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Standard SEPA (SCT)</th>
+                        <th>SEPA Instant (SCT Inst)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Processing Time</td>
+                        <td>1 business day (D+1)</td>
+                        <td>10 seconds maximum</td>
+                    </tr>
+                    <tr>
+                        <td>Availability</td>
+                        <td>Business hours only</td>
+                        <td>24/7/365</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Limit</td>
+                        <td>No limit</td>
+                        <td>€100,000</td>
+                    </tr>
+                    <tr>
+                        <td>Settlement</td>
+                        <td>Batch processing, D+1 settlement</td>
+                        <td>Real-time settlement</td>
+                    </tr>
+                    <tr>
+                        <td>Fund Availability</td>
+                        <td>Next business day</td>
+                        <td>Immediate</td>
+                    </tr>
+                    <tr>
+                        <td>Typical Cost</td>
+                        <td>Very low/free</td>
+                        <td>Low (higher than SCT)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Governance & Standards</h3>
+            <p>
+                SEPA Instant is governed by the <strong>European Payments Council (EPC)</strong>, which maintains the SCT Inst Rulebook. The scheme uses <strong>ISO 20022 XML messaging</strong> for all payment instructions and related messages.
+            </p>
+
+            <h3>Regulatory Landscape</h3>
+            <div class="highlight">
+                <p><strong>EU Instant Payments Regulation (2024):</strong></p>
+                <p>
+                    The EU has mandated that by early 2025, all payment service providers offering regular SEPA Credit Transfers must also offer SEPA Instant payments at the same price. This regulation aims to make instant payments the new normal across Europe.
+                </p>
+                <ul>
+                    <li><strong>Mandatory Offering:</strong> All PSPs must support SCT Inst receiving by early 2025</li>
+                    <li><strong>Price Parity:</strong> SCT Inst must cost the same as regular SCT</li>
+                    <li><strong>Fraud Screening:</strong> Enhanced fraud and sanctions screening required</li>
+                    <li><strong>Verification:</strong> Beneficiary name verification (similar to CoP)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="csm">
+            <h2>Clearing & Settlement Mechanisms (CSM)</h2>
+            <p>
+                The Clearing and Settlement Mechanism (CSM) is the infrastructure layer that processes SEPA Instant payments between Payment Service Providers (PSPs). Multiple CSMs operate across Europe, providing the technical platform for instant payment processing.
+            </p>
+
+            <h3>What is a CSM?</h3>
+            <div class="csm-box">
+                <strong>Definition:</strong>
+                <p>
+                    A CSM is an automated technical infrastructure that:
+                </p>
+                <ul>
+                    <li>Receives payment instructions from sending PSPs</li>
+                    <li>Validates and processes transactions in real-time</li>
+                    <li>Routes payments to receiving PSPs</li>
+                    <li>Facilitates settlement between PSPs</li>
+                    <li>Ensures 24/7/365 availability</li>
+                    <li>Guarantees 10-second processing maximum</li>
+                </ul>
+            </div>
+
+            <h3>Major European CSM Providers</h3>
+
+            <h4>1. TIPS (TARGET Instant Payment Settlement)</h4>
+            <div class="csm-box">
+                <p><strong>Operator:</strong> European Central Bank (Eurosystem)</p>
+                <p><strong>Launch:</strong> November 2018</p>
+                <p><strong>Settlement:</strong> Central bank money (TARGET2 accounts)</p>
+                
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li>Operated by the Eurosystem (network of EU central banks)</li>
+                    <li>Settlement in central bank money (highest level of safety)</li>
+                    <li>Integrated with TARGET2 RTGS system</li>
+                    <li>No value limit per transaction</li>
+                    <li>Participants must have TARGET2 account</li>
+                    <li>Primary settlement mechanism for many European banks</li>
+                </ul>
+
+                <p><strong>Architecture:</strong></p>
+                <ul>
+                    <li>Dual data centers (primary in Germany, backup in Italy)</li>
+                    <li>Direct participant model and reachable party model</li>
+                    <li>Real-time liquidity management tools</li>
+                    <li>Integration with national RTGS systems</li>
+                </ul>
+            </div>
+
+            <h4>2. RT1 (Real-Time 1)</h4>
+            <div class="csm-box">
+                <p><strong>Operator:</strong> EBA CLEARING (The Clearing House of the Euro Banking Association)</p>
+                <p><strong>Launch:</strong> November 2017 (first SCT Inst CSM)</p>
+                <p><strong>Settlement:</strong> Commercial bank money (via settlement banks)</p>
+                
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li>First pan-European instant payment infrastructure</li>
+                    <li>Settlement through commercial settlement banks</li>
+                    <li>No direct central bank account required</li>
+                    <li>Extensive European coverage</li>
+                    <li>Integrated fraud and sanctions screening</li>
+                    <li>Participant can be direct or indirect (via settlement bank)</li>
+                </ul>
+
+                <p><strong>Settlement Banks:</strong></p>
+                <ul>
+                    <li>ABN AMRO</li>
+                    <li>BBVA</li>
+                    <li>BNP Paribas</li>
+                    <li>Deutsche Bank</li>
+                    <li>HSBC</li>
+                    <li>Santander</li>
+                    <li>And others</li>
+                </ul>
+            </div>
+
+            <h4>3. CORE (FR)</h4>
+            <div class="csm-box">
+                <p><strong>Operator:</strong> STET (French payment infrastructure)</p>
+                <p><strong>Focus:</strong> Primarily French market</p>
+                <p><strong>Settlement:</strong> Integration with Banque de France</p>
+                
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li>Serves French banking community</li>
+                    <li>Integrated with French national infrastructure</li>
+                    <li>Interoperable with other European CSMs</li>
+                    <li>Settlement in central bank money via Banque de France</li>
+                </ul>
+            </div>
+
+            <h4>4. National CSMs</h4>
+            <p>Several countries operate national instant payment CSMs:</p>
+            <ul>
+                <li><strong>Germany:</strong> RPS (Real-Time Payment System) by Deutsche Bundesbank</li>
+                <li><strong>Spain:</strong> SNCE (Sistema Nacional de Compensación Electrónica)</li>
+                <li><strong>Italy:</strong> BI-COMP operated by Bank of Italy</li>
+                <li><strong>Poland:</strong> Express Elixir</li>
+            </ul>
+
+            <h3>CSM Interoperability</h3>
+            <div class="diagram">CSM INTEROPERABILITY MODEL
+═══════════════════════════════════════════════════════════
+
+Sending PSP     CSM A          CSM B        Receiving PSP
+    │             │              │                │
+    │ 1. Payment  │              │                │
+    │─────────────▶              │                │
+    │             │              │                │
+    │             │ 2. Process   │                │
+    │             │              │                │
+    │             │ 3. Route to  │                │
+    │             │    CSM B     │                │
+    │             │──────────────▶                │
+    │             │              │                │
+    │             │              │ 4. Forward to  │
+    │             │              │    Recipient   │
+    │             │              │────────────────▶
+    │             │              │                │
+    │             │              │ 5. Response    │
+    │             │              │◀────────────────
+    │             │              │                │
+    │             │ 6. Response  │                │
+    │             │◀──────────────                │
+    │             │              │                │
+    │ 7. Confirm  │              │                │
+    │◀────────────│              │                │
+    │             │              │                │
+    │                    SETTLEMENT                │
+    │             │              │                │
+    │        Settlement     Settlement            │
+    │         Layer A       Layer B               │
+    └─────────────┴──────────────┴────────────────┘
+
+KEY POINT: Different CSMs can interoperate, allowing
+PSPs on different platforms to exchange instant payments</div>
+
+            <h3>CSM Participation Models</h3>
+
+            <h4>1. Direct Participant</h4>
+            <ul>
+                <li>Direct technical connection to CSM</li>
+                <li>Own settlement arrangement (TIPS account or settlement bank)</li>
+                <li>Full control over payment processing</li>
+                <li>Typically large banks</li>
+            </ul>
+
+            <h4>2. Indirect Participant (Reachable Party)</h4>
+            <ul>
+                <li>Reaches CSM through a direct participant</li>
+                <li>Direct participant handles settlement</li>
+                <li>Lower entry costs</li>
+                <li>Typically smaller PSPs, fintechs</li>
+            </ul>
+
+            <h3>CSM Requirements</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Processing Speed</td>
+                        <td>Maximum 10 seconds for payment completion</td>
+                    </tr>
+                    <tr>
+                        <td>Availability</td>
+                        <td>99.9%+ uptime, 24/7/365 operation</td>
+                    </tr>
+                    <tr>
+                        <td>Message Format</td>
+                        <td>ISO 20022 XML (pacs.008, pacs.002, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td>Settlement Finality</td>
+                        <td>Immediate and irrevocable</td>
+                    </tr>
+                    <tr>
+                        <td>Liquidity Management</td>
+                        <td>Real-time liquidity checking and management</td>
+                    </tr>
+                    <tr>
+                        <td>Security</td>
+                        <td>Encryption, authentication, fraud screening</td>
+                    </tr>
+                    <tr>
+                        <td>Interoperability</td>
+                        <td>Ability to route between different CSMs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Settlement in CSMs</h3>
+
+            <h4>TIPS Settlement (Central Bank Money):</h4>
+            <div class="diagram">TIPS SETTLEMENT MODEL
+═══════════════════════════════════════════════════════════
+
+Each transaction settles individually in real-time:
+
+BEFORE TRANSACTION:
+Bank A TIPS Account: €100,000,000
+Bank B TIPS Account: €150,000,000
+
+TRANSACTION: €50,000 from Bank A to Bank B
+
+SETTLEMENT (simultaneous):
+Debit Bank A:  -€50,000
+Credit Bank B: +€50,000
+
+AFTER TRANSACTION:
+Bank A TIPS Account: €99,950,000
+Bank B TIPS Account: €150,050,000
+
+Settlement Time: 1-3 seconds
+Finality: Immediate (central bank money)
+Risk: Zero counterparty risk</div>
+
+            <h4>RT1 Settlement (Commercial Bank Money):</h4>
+            <div class="diagram">RT1 SETTLEMENT MODEL
+═══════════════════════════════════════════════════════════
+
+Participants settle via settlement banks:
+
+Bank A (Participant) → Settlement Bank X
+Bank B (Participant) → Settlement Bank Y
+
+TRANSACTION: €50,000 from Bank A to Bank B
+
+RT1 processes payment immediately
+
+SETTLEMENT (between settlement banks):
+Settlement Bank X owes Settlement Bank Y: €50,000
+
+Settlement occurs via:
+• Prefunded accounts at settlement banks
+• Or subsequent settlement in TARGET2
+• Or bilateral agreements
+
+Settlement Time: Real-time for participants
+Final Settlement: Via TARGET2 or bilateral</div>
+
+            <h3>CSM Comparison</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>TIPS</th>
+                        <th>RT1</th>
+                        <th>National CSMs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Operator</td>
+                        <td>ECB/Eurosystem</td>
+                        <td>EBA CLEARING</td>
+                        <td>National central banks</td>
+                    </tr>
+                    <tr>
+                        <td>Settlement</td>
+                        <td>Central bank money</td>
+                        <td>Commercial bank money</td>
+                        <td>Usually central bank</td>
+                    </tr>
+                    <tr>
+                        <td>Account Required</td>
+                        <td>TARGET2 account</td>
+                        <td>Settlement bank relationship</td>
+                        <td>Varies by country</td>
+                    </tr>
+                    <tr>
+                        <td>Coverage</td>
+                        <td>Pan-European</td>
+                        <td>Pan-European</td>
+                        <td>Domestic + interoperable</td>
+                    </tr>
+                    <tr>
+                        <td>Entry Barrier</td>
+                        <td>Higher (central bank account)</td>
+                        <td>Lower (via settlement banks)</td>
+                        <td>Varies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="process-flow">
+            <h2>Process Flow</h2>
+            <p>
+                SEPA Instant payments operate on a near-real-time basis with a strict 10-second maximum processing time. The entire journey from initiation to beneficiary credit must complete within this window.
+            </p>
+
+            <h3>Standard SEPA Instant Payment Flow</h3>
+            <div class="diagram">┌────────────────────────────────────────────────────────────┐
+│            SEPA INSTANT PAYMENT PROCESS FLOW               │
+│           (Maximum 10 Seconds End-to-End)                  │
+└────────────────────────────────────────────────────────────┘
+
+Originator → Originating PSP → CSM → Beneficiary PSP → Beneficiary
+    │              │           │           │               │
+    │ 1. Initiate  │           │           │               │
+    │──────────────▶           │           │               │
+    │              │           │           │               │
+    │              │ 2. Validate          │               │
+    │              │ & Check   │           │               │
+    │              │ Liquidity │           │               │
+    │              │           │           │               │
+    │              │ 3. Submit │           │               │
+    │              │ pacs.008  │           │               │
+    │              │───────────▶           │               │
+    │              │           │           │               │
+    │              │           │ 4. Process               │
+    │              │           │ Validate  │               │
+    │              │           │ Route     │               │
+    │              │           │           │               │
+    │              │           │ 5. Forward               │
+    │              │           │───────────▶               │
+    │              │           │           │               │
+    │              │           │           │ 6. Validate & │
+    │              │           │           │ Credit Account│
+    │              │           │           │───────────────▶
+    │              │           │           │               │
+    │              │           │           │ 7. Response   │
+    │              │           │           │ pacs.002      │
+    │              │           │◀──────────┘               │
+    │              │           │                           │
+    │              │ 8. Deliver│                           │
+    │              │ Response  │                           │
+    │              │◀──────────┘                           │
+    │              │                                       │
+    │ 9. Confirm   │                                       │
+    │◀─────────────┘                                       │
+    │                                                      │
+    ▼          SETTLEMENT (Real-Time)                     ▼
+
+    Originating PSP                         Beneficiary PSP
+    Settlement Account    CSM/TIPS           Settlement Account
+          │                 │                      │
+          │ Debit -€X       │ Credit +€X          │
+          │◀────────────────┼─────────────────────▶
+          ▼                 ▼                      ▼
+
+MAXIMUM TIME: 10 seconds (typically 3-7 seconds)</div>
+
+            <h3>Detailed Step-by-Step Process</h3>
+
+            <h4>1. Payment Initiation (< 1 second)</h4>
+            <p>Originator initiates payment through:</p>
+            <ul>
+                <li>Mobile banking app</li>
+                <li>Online banking</li>
+                <li>QR code payment</li>
+                <li>Request-to-Pay (RTP) service</li>
+                <li>API/third-party payment initiation</li>
+            </ul>
+
+            <h4>2. PSP Validation (< 1 second)</h4>
+            <p>Originating PSP performs real-time checks:</p>
+            <ul>
+                <li><strong>Account Status:</strong> Active and not blocked</li>
+                <li><strong>Available Balance:</strong> Sufficient funds (€100,000 limit)</li>
+                <li><strong>Transaction Limits:</strong> Daily/per-transaction limits</li>
+                <li><strong>Fraud Screening:</strong> AML, sanctions, pattern analysis</li>
+                <li><strong>Beneficiary Verification:</strong> Name matching (if supported)</li>
+                <li><strong>Liquidity Check:</strong> Settlement account has funds</li>
+            </ul>
+
+            <h4>3. Message Submission (< 1 second)</h4>
+            <p>
+                Originating PSP constructs ISO 20022 pacs.008 message and submits to CSM with all payment details.
+            </p>
+
+            <h4>4. CSM Processing (< 3 seconds)</h4>
+            <p>CSM performs:</p>
+            <ul>
+                <li>Message format validation</li>
+                <li>Duplicate detection</li>
+                <li>Routing to beneficiary PSP (including cross-CSM routing)</li>
+                <li>Sanctions screening</li>
+                <li>Transaction logging</li>
+            </ul>
+
+            <h4>5. Forward to Beneficiary PSP (< 1 second)</h4>
+            <p>Payment delivered to receiving PSP for processing.</p>
+
+            <h4>6. Beneficiary PSP Processing (< 2 seconds)</h4>
+            <p>Receiving PSP:</p>
+            <ul>
+                <li>Validates beneficiary account exists and is active</li>
+                <li>Performs AML/sanctions checks</li>
+                <li>Credits beneficiary account immediately</li>
+                <li>Makes funds available instantly</li>
+                <li>Generates response message</li>
+            </ul>
+
+            <h4>7-9. Response & Confirmation (< 2 seconds)</h4>
+            <p>
+                pacs.002 response travels back through CSM to originating PSP, confirming acceptance or rejection. Customer receives confirmation.
+            </p>
+
+            <h4>Settlement (Parallel Process)</h4>
+            <p>
+                Settlement occurs in real-time via CSM settlement mechanism (TIPS or settlement banks), running parallel to message processing.
+            </p>
+
+            <h3>Processing Timeline</h3>
+            <div class="diagram">TYPICAL SEPA INSTANT TIMELINE
+═══════════════════════════════════════════════════════════
+
+T+0.0s:  Customer initiates payment
+         │
+T+0.5s:  Originating PSP validates
+         │
+T+1.0s:  pacs.008 submitted to CSM
+         │
+T+2.0s:  CSM processes and routes
+         │
+T+3.0s:  Delivered to beneficiary PSP
+         │
+T+4.0s:  Beneficiary account credited
+         │
+T+5.0s:  pacs.002 response generated
+         │
+T+6.0s:  Response delivered to originator
+         │
+T+7.0s:  Customer receives confirmation
+         │
+         FUNDS IMMEDIATELY AVAILABLE
+
+Settlement: Occurs in parallel (1-3 seconds)
+Maximum Allowed: 10 seconds
+Typical Actual: 3-7 seconds</div>
+
+            <h3>Rejection Scenarios</h3>
+
+            <h4>Common Rejection Reasons:</h4>
+            <ul>
+                <li><strong>AC01:</strong> Incorrect account number</li>
+                <li><strong>AC04:</strong> Closed account</li>
+                <li><strong>AC06:</strong> Blocked account</li>
+                <li><strong>AM04:</strong> Insufficient funds (originating PSP)</li>
+                <li><strong>AM18:</strong> Amount exceeds agreed limit (€100,000)</li>
+                <li><strong>AGNT:</strong> Incorrect agent/BIC</li>
+                <li><strong>CUST:</strong> Requested by customer</li>
+                <li><strong>DUPL:</strong> Duplicate payment</li>
+                <li><strong>NARR:</strong> Narrative reason (see additional info)</li>
+            </ul>
+
+            <h4>Rejection Handling:</h4>
+            <div class="diagram">REJECTION FLOW:
+═══════════════════════════════════════════════════════════
+
+1. Beneficiary PSP detects issue (e.g., closed account)
+2. Sends RJCT status in pacs.002 with reason code
+3. CSM routes rejection back to originating PSP
+4. Originating PSP reverses debit to customer
+5. Customer notified of rejection with reason
+6. No settlement occurs (payment not completed)
+
+Total Time: Still within 10 seconds
+Result: No funds transferred, customer account unchanged</div>
+        </section>
+
+        <section id="key-messages">
+            <h2>Key Message Types</h2>
+            <p>
+                SEPA Instant uses ISO 20022 XML messaging exclusively. The scheme defines specific message types for payment initiation, responses, and exceptions.
+            </p>
+
+            <h3>Core ISO 20022 Message Types</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message Type</th>
+                        <th>Name</th>
+                        <th>Direction</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>pain.001</td>
+                        <td>CustomerCreditTransferInitiation</td>
+                        <td>Customer → PSP</td>
+                        <td>Payment instruction from customer</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.008</td>
+                        <td>FIToFICustomerCreditTransfer</td>
+                        <td>PSP → CSM → PSP</td>
+                        <td>Interbank payment instruction</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.002</td>
+                        <td>FIToFIPaymentStatusReport</td>
+                        <td>PSP → CSM → PSP</td>
+                        <td>Payment acceptance/rejection</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.004</td>
+                        <td>PaymentReturn</td>
+                        <td>PSP → CSM → PSP</td>
+                        <td>Return of credited payment</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.028</td>
+                        <td>FIToFIPaymentStatusRequest</td>
+                        <td>PSP → CSM</td>
+                        <td>Query payment status</td>
+                    </tr>
+                    <tr>
+                        <td>camt.056</td>
+                        <td>FIToFIPaymentCancellationRequest</td>
+                        <td>PSP → CSM → PSP</td>
+                        <td>Request to cancel payment</td>
+                    </tr>
+                    <tr>
+                        <td>camt.029</td>
+                        <td>ResolutionOfInvestigation</td>
+                        <td>PSP → CSM → PSP</td>
+                        <td>Response to cancellation request</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Payment Status Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ACSC</td>
+                        <td>AcceptedSettlementCompleted</td>
+                        <td>Payment successfully completed and settled</td>
+                    </tr>
+                    <tr>
+                        <td>ACSP</td>
+                        <td>AcceptedSettlementInProcess</td>
+                        <td>Payment accepted, settlement pending</td>
+                    </tr>
+                    <tr>
+                        <td>RJCT</td>
+                        <td>Rejected</td>
+                        <td>Payment rejected (see reason code)</td>
+                    </tr>
+                    <tr>
+                        <td>PDNG</td>
+                        <td>Pending</td>
+                        <td>Payment pending (should not occur in SCT Inst)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Reason Codes (for Rejections)</h3>
+            <div class="info-box">
+                <strong>Most Common Reason Codes:</strong>
+                <ul>
+                    <li><strong>AC01:</strong> Incorrect account number format</li>
+                    <li><strong>AC04:</strong> Closed account number</li>
+                    <li><strong>AC06:</strong> Blocked account</li>
+                    <li><strong>AG01:</strong> Transaction forbidden on this type of account</li>
+                    <li><strong>AG02:</strong> Invalid bank operation code</li>
+                    <li><strong>AM04:</strong> Insufficient funds</li>
+                    <li><strong>AM18:</strong> Amount exceeds agreed limit</li>
+                    <li><strong>BE01:</strong> Inconsistent with end customer</li>
+                    <li><strong>CURR:</strong> Incorrect currency (must be EUR)</li>
+                    <li><strong>CUST:</strong> Requested by customer</li>
+                    <li><strong>DUPL:</strong> Payment is a duplicate</li>
+                    <li><strong>FF01:</strong> Invalid file format or syntax</li>
+                    <li><strong>FOCR:</strong> Following cancellation request</li>
+                    <li><strong>MS03:</strong> Not specified reason agent generated</li>
+                    <li><strong>NARR:</strong> Narrative (free text explanation required)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="message-formats">
+            <h2>Message Formats</h2>
+            <p>
+                SEPA Instant uses ISO 20022 XML schema version pain.001.001.03 and pacs.008.001.02 (or higher versions).
+            </p>
+
+            <h3>Example pacs.008 Message (SEPA Instant)</h3>
+            <div class="code-block">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.02"&gt;
+  &lt;FIToFICstmrCdtTrf&gt;
+    &lt;GrpHdr&gt;
+      &lt;MsgId&gt;SEPAINST-2023-FR-001234&lt;/MsgId&gt;
+      &lt;CreDtTm&gt;2023-11-15T14:32:17.000Z&lt;/CreDtTm&gt;
+      &lt;NbOfTxs&gt;1&lt;/NbOfTxs&gt;
+      &lt;TtlIntrBkSttlmAmt Ccy="EUR"&gt;1250.50&lt;/TtlIntrBkSttlmAmt&gt;
+      &lt;IntrBkSttlmDt&gt;2023-11-15&lt;/IntrBkSttlmDt&gt;
+      &lt;SttlmInf&gt;
+        &lt;SttlmMtd&gt;CLRG&lt;/SttlmMtd&gt;
+        &lt;ClrSys&gt;
+          &lt;Cd&gt;TGT&lt;/Cd&gt;  &lt;!-- TARGET/TIPS settlement --&gt;
+        &lt;/ClrSys&gt;
+      &lt;/SttlmInf&gt;
+      &lt;PmtTpInf&gt;
+        &lt;InstrPrty&gt;HIGH&lt;/InstrPrty&gt;  &lt;!-- High priority for instant --&gt;
+        &lt;SvcLvl&gt;
+          &lt;Cd&gt;SEPA&lt;/Cd&gt;
+        &lt;/SvcLvl&gt;
+        &lt;LclInstrm&gt;
+          &lt;Cd&gt;INST&lt;/Cd&gt;  &lt;!-- CRITICAL: Identifies as SEPA Instant --&gt;
+        &lt;/LclInstrm&gt;
+      &lt;/PmtTpInf&gt;
+      &lt;InstgAgt&gt;
+        &lt;FinInstnId&gt;
+          &lt;BICFI&gt;BNPAFRPPXXX&lt;/BICFI&gt;
+        &lt;/FinInstnId&gt;
+      &lt;/InstgAgt&gt;
+      &lt;InstdAgt&gt;
+        &lt;FinInstnId&gt;
+          &lt;BICFI&gt;DEUTDEFFXXX&lt;/BICFI&gt;
+        &lt;/FinInstnId&gt;
+      &lt;/InstdAgt&gt;
+    &lt;/GrpHdr&gt;
+    
+    &lt;CdtTrfTxInf&gt;
+      &lt;PmtId&gt;
+        &lt;InstrId&gt;INST-FR-2023-1115-001&lt;/InstrId&gt;
+        &lt;EndToEndId&gt;INVOICE-45678-PAYMENT&lt;/EndToEndId&gt;
+        &lt;TxId&gt;TXN-SEPAINST-987654321&lt;/TxId&gt;
+        &lt;UETR&gt;d4e5f6a7-b8c9-4d3e-a2b1-c0d9e8f7a6b5&lt;/UETR&gt;
+      &lt;/PmtId&gt;
+      &lt;IntrBkSttlmAmt Ccy="EUR"&gt;1250.50&lt;/IntrBkSttlmAmt&gt;
+      &lt;IntrBkSttlmDt&gt;2023-11-15&lt;/IntrBkSttlmDt&gt;
+      &lt;InstdAmt Ccy="EUR"&gt;1250.50&lt;/InstdAmt&gt;
+      &lt;ChrgBr&gt;SLEV&lt;/ChrgBr&gt;  &lt;!-- Charges borne by creditor --&gt;
+      
+      &lt;Dbtr&gt;
+        &lt;Nm&gt;Marie Dubois&lt;/Nm&gt;
+        &lt;PstlAdr&gt;
+          &lt;Ctry&gt;FR&lt;/Ctry&gt;
+        &lt;/PstlAdr&gt;
+      &lt;/Dbtr&gt;
+      &lt;DbtrAcct&gt;
+        &lt;Id&gt;
+          &lt;IBAN&gt;FR7630006000011234567890189&lt;/IBAN&gt;
+        &lt;/Id&gt;
+      &lt;/DbtrAcct&gt;
+      &lt;DbtrAgt&gt;
+        &lt;FinInstnId&gt;
+          &lt;BICFI&gt;BNPAFRPPXXX&lt;/BICFI&gt;
+        &lt;/FinInstnId&gt;
+      &lt;/DbtrAgt&gt;
+      
+      &lt;Cdtr&gt;
+        &lt;Nm&gt;Hans Schmidt GmbH&lt;/Nm&gt;
+        &lt;PstlAdr&gt;
+          &lt;Ctry&gt;DE&lt;/Ctry&gt;
+        &lt;/PstlAdr&gt;
+      &lt;/Cdtr&gt;
+      &lt;CdtrAcct&gt;
+        &lt;Id&gt;
+          &lt;IBAN&gt;DE89370400440532013000&lt;/IBAN&gt;
+        &lt;/Id&gt;
+      &lt;/CdtrAcct&gt;
+      &lt;CdtrAgt&gt;
+        &lt;FinInstnId&gt;
+          &lt;BICFI&gt;DEUTDEFFXXX&lt;/BICFI&gt;
+        &lt;/FinInstnId&gt;
+      &lt;/CdtrAgt&gt;
+      
+      &lt;RmtInf&gt;
+        &lt;Ustrd&gt;Invoice 45678 - November consulting services&lt;/Ustrd&gt;
+      &lt;/RmtInf&gt;
+    &lt;/CdtTrfTxInf&gt;
+  &lt;/FIToFICstmrCdtTrf&gt;
+&lt;/Document&gt;</div>
+
+            <h3>Critical SEPA Instant Elements</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Value/Format</th>
+                        <th>Required</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LclInstrm/Cd</td>
+                        <td>INST</td>
+                        <td>Yes</td>
+                        <td>Identifies as SEPA Instant payment</td>
+                    </tr>
+                    <tr>
+                        <td>InstrPrty</td>
+                        <td>HIGH</td>
+                        <td>Recommended</td>
+                        <td>High priority processing</td>
+                    </tr>
+                    <tr>
+                        <td>IntrBkSttlmAmt</td>
+                        <td>Max €100,000</td>
+                        <td>Yes</td>
+                        <td>Must not exceed scheme limit</td>
+                    </tr>
+                    <tr>
+                        <td>Ccy</td>
+                        <td>EUR</td>
+                        <td>Yes</td>
+                        <td>Only EUR supported</td>
+                    </tr>
+                    <tr>
+                        <td>IBAN</td>
+                        <td>Valid SEPA IBAN</td>
+                        <td>Yes</td>
+                        <td>Both debtor and creditor</td>
+                    </tr>
+                    <tr>
+                        <td>BIC</td>
+                        <td>Valid BIC code</td>
+                        <td>Optional</td>
+                        <td>Can be derived from IBAN</td>
+                    </tr>
+                    <tr>
+                        <td>UETR</td>
+                        <td>UUID format</td>
+                        <td>Optional</td>
+                        <td>Unique transaction reference</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Example pacs.002 Response (Success)</h3>
+            <div class="code-block">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.03"&gt;
+  &lt;FIToFIPmtStsRpt&gt;
+    &lt;GrpHdr&gt;
+      &lt;MsgId&gt;RESP-SEPAINST-2023-DE-001234&lt;/MsgId&gt;
+      &lt;CreDtTm&gt;2023-11-15T14:32:22.000Z&lt;/CreDtTm&gt;
+    &lt;/GrpHdr&gt;
+    &lt;TxInfAndSts&gt;
+      &lt;OrgnlInstrId&gt;INST-FR-2023-1115-001&lt;/OrgnlInstrId&gt;
+      &lt;OrgnlEndToEndId&gt;INVOICE-45678-PAYMENT&lt;/OrgnlEndToEndId&gt;
+      &lt;OrgnlTxId&gt;TXN-SEPAINST-987654321&lt;/OrgnlTxId&gt;
+      &lt;TxSts&gt;ACSC&lt;/TxSts&gt;  &lt;!-- Accepted, Settlement Completed --&gt;
+      &lt;StsRsnInf&gt;
+        &lt;Rsn&gt;
+          &lt;Cd&gt;0000&lt;/Cd&gt;
+        &lt;/Rsn&gt;
+        &lt;AddtlInf&gt;Payment processed successfully&lt;/AddtlInf&gt;
+      &lt;/StsRsnInf&gt;
+      &lt;AccptncDtTm&gt;2023-11-15T14:32:22.000Z&lt;/AccptncDtTm&gt;
+      &lt;InstdAmt Ccy="EUR"&gt;1250.50&lt;/InstdAmt&gt;
+    &lt;/TxInfAndSts&gt;
+  &lt;/FIToFIPmtStsRpt&gt;
+&lt;/Document&gt;</div>
+
+            <h3>Example pacs.002 Response (Rejection)</h3>
+            <div class="code-block">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.03"&gt;
+  &lt;FIToFIPmtStsRpt&gt;
+    &lt;GrpHdr&gt;
+      &lt;MsgId&gt;RESP-SEPAINST-2023-DE-001235&lt;/MsgId&gt;
+      &lt;CreDtTm&gt;2023-11-15T14:35:08.000Z&lt;/CreDtTm&gt;
+    &lt;/GrpHdr&gt;
+    &lt;TxInfAndSts&gt;
+      &lt;OrgnlInstrId&gt;INST-FR-2023-1115-002&lt;/OrgnlInstrId&gt;
+      &lt;OrgnlEndToEndId&gt;PAYMENT-REF-789&lt;/OrgnlEndToEndId&gt;
+      &lt;OrgnlTxId&gt;TXN-SEPAINST-987654322&lt;/OrgnlTxId&gt;
+      &lt;TxSts&gt;RJCT&lt;/TxSts&gt;  &lt;!-- Rejected --&gt;
+      &lt;StsRsnInf&gt;
+        &lt;Rsn&gt;
+          &lt;Cd&gt;AC04&lt;/Cd&gt;  &lt;!-- Closed Account --&gt;
+        &lt;/Rsn&gt;
+        &lt;AddtlInf&gt;Beneficiary account is closed&lt;/AddtlInf&gt;
+      &lt;/StsRsnInf&gt;
+      &lt;InstdAmt Ccy="EUR"&gt;500.00&lt;/InstdAmt&gt;
+    &lt;/TxInfAndSts&gt;
+  &lt;/FIToFIPmtStsRpt&gt;
+&lt;/Document&gt;</div>
+        </section>
+
+        <section id="timing">
+            <h2>Timing & Processing Windows</h2>
+            <p>
+                One of SEPA Instant's key advantages is its 24/7/365 availability with no processing windows or cut-off times.
+            </p>
+
+            <h3>Service Availability</h3>
+            <div class="info-box">
+                <strong>Operational Hours:</strong>
+                <ul>
+                    <li><strong>Availability:</strong> 24/7/365 - no downtime for weekends or holidays</li>
+                    <li><strong>Maintenance Windows:</strong> Minimal scheduled maintenance (announced in advance)</li>
+                    <li><strong>Processing Time:</strong> Maximum 10 seconds, typically 3-7 seconds</li>
+                    <li><strong>Cut-Off Times:</strong> None - payments processed continuously</li>
+                    <li><strong>Weekends:</strong> Full service</li>
+                    <li><strong>Bank Holidays:</strong> Full service (all European countries)</li>
+                </ul>
+            </div>
+
+            <h3>Processing Performance Targets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Target</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Maximum Processing Time</td>
+                        <td>10 seconds</td>
+                        <td>Scheme requirement</td>
+                    </tr>
+                    <tr>
+                        <td>Typical Processing Time</td>
+                        <td>3-7 seconds</td>
+                        <td>Real-world average</td>
+                    </tr>
+                    <tr>
+                        <td>CSM Availability</td>
+                        <td>99.9%+</td>
+                        <td>TIPS/RT1 target</td>
+                    </tr>
+                    <tr>
+                        <td>Settlement Time</td>
+                        <td>1-3 seconds</td>
+                        <td>Real-time in TIPS</td>
+                    </tr>
+                    <tr>
+                        <td>Response Time</td>
+                        <td>Within 10s total</td>
+                        <td>Accept or reject</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Comparison: Standard SEPA vs. SEPA Instant Timing</h3>
+            <div class="diagram">STANDARD SEPA SCT (D+1):
+═══════════════════════════════════════════════════════════
+
+Monday 10:00 - Payment initiated
+Monday 10:01 - Submitted to ACH
+Tuesday 03:00 - Batch processing overnight
+Tuesday 09:00 - Beneficiary receives funds
+         
+TOTAL TIME: ~23 hours
+
+
+SEPA INSTANT (SCT Inst):
+═══════════════════════════════════════════════════════════
+
+Monday 10:00:00 - Payment initiated
+Monday 10:00:02 - Processed by CSM
+Monday 10:00:05 - Beneficiary receives funds
+         
+TOTAL TIME: 5 seconds
+
+BENEFIT: 16,560 times faster than standard SEPA!</div>
+
+            <h3>Peak Processing Times</h3>
+            <p>
+                While SEPA Instant operates 24/7, certain patterns emerge:
+            </p>
+            <ul>
+                <li><strong>Business Hours (09:00-17:00 CET):</strong> Highest volume</li>
+                <li><strong>Evenings (18:00-22:00 CET):</strong> Consumer peer-to-peer payments</li>
+                <li><strong>Weekends:</strong> Moderate volume, primarily consumer transactions</li>
+                <li><strong>Nights (00:00-06:00 CET):</strong> Lowest volume</li>
+                <li><strong>Month End:</strong> Increased business payment activity</li>
+            </ul>
+
+            <h3>No Cut-Off Time Benefit</h3>
+            <div class="highlight">
+                <p><strong>Critical Advantage:</strong></p>
+                <p>
+                    Unlike CHAPS (18:00 cut-off) or standard SEPA (daily batch windows), SEPA Instant has no cut-off times. This means:
+                </p>
+                <ul>
+                    <li>Payments can be made anytime, including weekends and holidays</li>
+                    <li>No rush before end-of-day deadlines</li>
+                    <li>True on-demand payment capability</li>
+                    <li>Ideal for emergency or time-critical payments</li>
+                    <li>Supports modern 24/7 business models</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="operations">
+            <h2>Day-to-Day Operations</h2>
+
+            <h3>For Payment Service Providers (PSPs)</h3>
+
+            <h4>1. 24/7 Operations</h4>
+            <div class="info-box">
+                <strong>Continuous Monitoring:</strong>
+                <ul>
+                    <li>Round-the-clock NOC (Network Operations Center)</li>
+                    <li>Real-time transaction monitoring</li>
+                    <li>Automated alerting for system issues</li>
+                    <li>Performance dashboard tracking</li>
+                    <li>Liquidity position monitoring (TIPS/settlement accounts)</li>
+                </ul>
+            </div>
+
+            <h4>2. Transaction Processing</h4>
+            <p><strong>Incoming Payments:</strong></p>
+            <ul>
+                <li>Receive pacs.008 from CSM</li>
+                <li>Validate beneficiary IBAN</li>
+                <li>Perform AML/sanctions screening (within 10s limit)</li>
+                <li>Credit beneficiary account immediately</li>
+                <li>Send pacs.002 response</li>
+                <li>Notify beneficiary via app/SMS</li>
+            </ul>
+
+            <p><strong>Outgoing Payments:</strong></p>
+            <ul>
+                <li>Receive customer instruction</li>
+                <li>Validate account and balance</li>
+                <li>Check against €100,000 limit</li>
+                <li>Perform fraud screening</li>
+                <li>Check settlement liquidity</li>
+                <li>Submit pacs.008 to CSM</li>
+                <li>Monitor for response</li>
+            </ul>
+
+            <h4>3. Liquidity Management</h4>
+            <p><strong>TIPS Participants:</strong></p>
+            <ul>
+                <li>Monitor TIPS account balance continuously</li>
+                <li>Ensure sufficient funds for outgoing payments</li>
+                <li>Use ECB's liquidity management tools</li>
+                <li>Forecast daily payment flows</li>
+                <li>Maintain minimum buffer for peaks</li>
+            </ul>
+
+            <p><strong>RT1 Participants:</strong></p>
+            <ul>
+                <li>Maintain prefunded balances with settlement banks</li>
+                <li>Monitor position in real-time</li>
+                <li>Top-up when approaching limits</li>
+                <li>Coordinate with settlement bank</li>
+            </ul>
+
+            <h4>4. Exception Handling</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exception</th>
+                        <th>Action</th>
+                        <th>Timeline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Payment Rejection</td>
+                        <td>Reverse debit, notify customer with reason</td>
+                        <td>Within 10 seconds</td>
+                    </tr>
+                    <tr>
+                        <td>Timeout (no response)</td>
+                        <td>Query CSM, investigate, inform customer</td>
+                        <td>After 10 seconds</td>
+                    </tr>
+                    <tr>
+                        <td>Insufficient Liquidity</td>
+                        <td>Add funds to settlement account or reject</td>
+                        <td>Immediate</td>
+                    </tr>
+                    <tr>
+                        <td>CSM Technical Issue</td>
+                        <td>Monitor CSM status, queue if needed</td>
+                        <td>Ongoing</td>
+                    </tr>
+                    <tr>
+                        <td>Suspected Fraud</td>
+                        <td>Block payment, contact customer</td>
+                        <td>Before submission</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>For Businesses Using SEPA Instant</h3>
+
+            <h4>1. Payment Initiation</h4>
+            <p><strong>Methods:</strong></p>
+            <ul>
+                <li>Online/mobile banking</li>
+                <li>Corporate banking API</li>
+                <li>ERP system integration</li>
+                <li>Request-to-Pay services</li>
+                <li>QR code payments</li>
+            </ul>
+
+            <h4>2. Use Case Examples</h4>
+
+            <div class="diagram">E-COMMERCE INSTANT REFUND:
+═══════════════════════════════════════════════════════════
+
+14:00 - Customer returns item online
+14:05 - Merchant processes return
+14:06 - Refund initiated via SEPA Instant
+14:06 - Customer receives funds (10 seconds)
+14:07 - Customer sees refund in banking app
+         
+Customer satisfaction: IMMEDIATE
+
+
+FREELANCE PAYMENT:
+═══════════════════════════════════════════════════════════
+
+Friday 17:30 - Freelancer completes project
+Friday 17:35 - Client approves work
+Friday 17:40 - Payment sent via SEPA Instant
+Friday 17:40 - Freelancer receives €2,500
+Weekend - Freelancer has funds for weekend
+
+Traditional SEPA would arrive Monday!</div>
+
+            <h4>3. Treasury Operations</h4>
+            <p><strong>Benefits for Corporate Treasury:</strong></p>
+            <ul>
+                <li>Just-in-time liquidity management</li>
+                <li>Intraday cash positioning</li>
+                <li>Immediate intercompany transfers</li>
+                <li>Real-time payment confirmation</li>
+                <li>Weekend/holiday payment capability</li>
+            </ul>
+
+            <h3>For Consumers</h3>
+
+            <h4>Typical Consumer Uses:</h4>
+            <ul>
+                <li><strong>Peer-to-Peer:</strong> Splitting bills, sending money to friends/family</li>
+                <li><strong>Online Shopping:</strong> Instant payment at checkout</li>
+                <li><strong>Bill Payments:</strong> Urgent bill payments avoiding late fees</li>
+                <li><strong>Emergency Transfers:</strong> Sending money urgently to family abroad (within SEPA)</li>
+                <li><strong>Rent Payments:</strong> Last-minute rent payments</li>
+            </ul>
+        </section>
+
+        <section id="security">
+            <h2>Security & Compliance</h2>
+
+            <h3>Security Measures</h3>
+
+            <h4>1. Message Security</h4>
+            <ul>
+                <li><strong>Encryption:</strong> TLS 1.3+ for all CSM communications</li>
+                <li><strong>Digital Signatures:</strong> ISO 20022 message signing</li>
+                <li><strong>Authentication:</strong> Strong authentication for PSP access</li>
+                <li><strong>Certificate Management:</strong> PKI infrastructure</li>
+            </ul>
+
+            <h4>2. Fraud Prevention</h4>
+            <div class="info-box">
+                <strong>Real-Time Fraud Screening:</strong>
+                <ul>
+                    <li>Behavioral analytics (unusual patterns)</li>
+                    <li>Velocity checks (frequency and amounts)</li>
+                    <li>Device fingerprinting</li>
+                    <li>Geolocation analysis</li>
+                    <li>Machine learning fraud models</li>
+                    <li>Sanctions and PEP screening</li>
+                    <li>All within the 10-second window!</li>
+                </ul>
+            </div>
+
+            <h4>3. Beneficiary Verification</h4>
+            <p><strong>Verification of Payee (similar to UK's CoP):</strong></p>
+            <ul>
+                <li>EU regulation requires name verification by 2025</li>
+                <li>PSPs must check beneficiary name matches IBAN</li>
+                <li>Real-time response (match, close match, no match)</li>
+                <li>Reduces misdirected payments and fraud</li>
+            </ul>
+
+            <h3>Regulatory Framework</h3>
+
+            <h4>1. EU Regulations</h4>
+            <ul>
+                <li><strong>PSD2:</strong> Strong customer authentication (SCA) required</li>
+                <li><strong>Instant Payments Regulation (2024):</strong> Mandatory offering, price parity</li>
+                <li><strong>AML Directives:</strong> Anti-money laundering compliance</li>
+                <li><strong>GDPR:</strong> Data protection for payment data</li>
+                <li><strong>SEPA Regulation:</strong> Harmonized payment rules</li>
+            </ul>
+
+            <h4>2. SCT Inst Scheme Rules</h4>
+            <div class="csm-box">
+                <strong>Key Rulebook Requirements:</strong>
+                <ul>
+                    <li>10-second maximum processing time</li>
+                    <li>24/7/365 availability (99.9%+ uptime)</li>
+                    <li>€100,000 transaction limit</li>
+                    <li>ISO 20022 messaging mandatory</li>
+                    <li>Immediate fund availability to beneficiary</li>
+                    <li>Irrevocability of accepted payments</li>
+                    <li>Enhanced fraud and sanctions screening</li>
+                </ul>
+            </div>
+
+            <h4>3. Strong Customer Authentication (SCA)</h4>
+            <p>Under PSD2, payment initiation requires SCA:</p>
+            <ul>
+                <li><strong>Two-factor authentication:</strong> Something you know + something you have</li>
+                <li><strong>Biometric options:</strong> Fingerprint, face recognition</li>
+                <li><strong>Mobile app authentication:</strong> Push notifications with approval</li>
+                <li><strong>Exemptions:</strong> Trusted beneficiaries, low-value payments (under limits)</li>
+            </ul>
+
+            <h3>Consumer Protection</h3>
+
+            <h4>Unauthorized Payments:</h4>
+            <ul>
+                <li>PSP must refund unauthorized payments immediately</li>
+                <li>Consumer liability limited to €50 (if promptly reported)</li>
+                <li>Zero liability if PSP failed to implement SCA</li>
+                <li>13-month claim period for unauthorized payments</li>
+            </ul>
+
+            <h4>Authorized Push Payment Fraud:</h4>
+            <div class="highlight">
+                <p><strong>Challenge:</strong></p>
+                <p>
+                    As with UK's APP fraud, SEPA Instant's irrevocability creates risk when consumers are tricked into authorizing fraudulent payments.
+                </p>
+                <p><strong>Mitigations:</strong></p>
+                <ul>
+                    <li>Mandatory beneficiary name verification (from 2025)</li>
+                    <li>Enhanced customer warnings for high-risk transactions</li>
+                    <li>Real-time fraud screening by PSPs</li>
+                    <li>Consumer education campaigns</li>
+                    <li>Coordinated fraud databases across PSPs</li>
+                </ul>
+            </div>
+
+            <h3>Data Protection & Privacy</h3>
+            <ul>
+                <li><strong>GDPR Compliance:</strong> Payment data processed lawfully</li>
+                <li><strong>Data Minimization:</strong> Only necessary data collected</li>
+                <li><strong>Retention Limits:</strong> Payment data retained per regulatory requirements</li>
+                <li><strong>Right to Access:</strong> Consumers can request their payment data</li>
+                <li><strong>Breach Notification:</strong> Must report data breaches within 72 hours</li>
+            </ul>
+        </section>
+
+        <section id="settlement">
+            <h2>Settlement Process</h2>
+            <p>
+                SEPA Instant uses real-time settlement, with the specific mechanism depending on the CSM used.
+            </p>
+
+            <h3>TIPS Settlement Model</h3>
+            <div class="csm-box">
+                <p><strong>TARGET Instant Payment Settlement (TIPS)</strong></p>
+                <p>
+                    TIPS provides real-time gross settlement in central bank money, offering the highest level of safety and finality.
+                </p>
+            </div>
+
+            <h4>Settlement Flow in TIPS:</h4>
+            <div class="diagram">TIPS REAL-TIME SETTLEMENT
+═══════════════════════════════════════════════════════════
+
+1. PSP A submits payment of €5,000 to TIPS
+
+2. TIPS checks PSP A's TIPS account balance
+   Current Balance: €10,000,000
+   Required: €5,000
+   Status: SUFFICIENT ✓
+
+3. TIPS executes settlement (simultaneous):
+   
+   PSP A TIPS Account:      PSP B TIPS Account:
+   Before: €10,000,000      Before: €15,000,000
+   
+   Settlement Transaction:
+   Debit PSP A:  -€5,000   Credit PSP B: +€5,000
+   
+   After:  €9,995,000       After:  €15,005,000
+
+4. Settlement confirmed to both PSPs
+
+5. Payment message delivered to PSP B
+
+6. PSP B credits customer account
+
+TIMING: Settlement completes in 1-3 seconds
+FINALITY: Immediate and irrevocable
+SAFETY: Central bank money (Eurosystem)</div>
+
+            <h4>TIPS Account Management:</h4>
+            <ul>
+                <li><strong>Opening Balance:</strong> PSPs fund TIPS accounts at start of day</li>
+                <li><strong>Intraday Management:</strong> Monitor balances continuously</li>
+                <li><strong>Liquidity Transfers:</strong> Can transfer from TARGET2 to TIPS instantly</li>
+                <li><strong>Automated Rebalancing:</strong> Set rules for automatic top-ups</li>
+                <li><strong>Minimum Balance:</strong> Maintain buffer for peak periods</li>
+            </ul>
+
+            <h3>RT1 Settlement Model</h3>
+            <div class="csm-box">
+                <p><strong>RT1 (Real-Time 1) by EBA CLEARING</strong></p>
+                <p>
+                    RT1 uses settlement through commercial settlement banks, with subsequent final settlement in TARGET2.
+                </p>
+            </div>
+
+            <h4>RT1 Settlement Flow:</h4>
+            <div class="diagram">RT1 SETTLEMENT MODEL
+═══════════════════════════════════════════════════════════
+
+PARTICIPANT LEVEL:
+PSP A → Settlement Bank X (prefunded account)
+PSP B → Settlement Bank Y (prefunded account)
+
+TRANSACTION: €5,000 from PSP A to PSP B
+
+Step 1: RT1 processes payment immediately
+        PSP B customer credited instantly
+
+Step 2: Settlement Bank level:
+        Bank X owes Bank Y: €5,000
+        
+        Settled through:
+        • Prefunded balances with each other, OR
+        • Subsequent batch settlement via TARGET2
+
+PARTICIPANT VIEW:
+PSP A prefunded account: Reduced by €5,000 immediately
+PSP B prefunded account: Increased by €5,000 immediately
+
+FINAL SETTLEMENT:
+Between settlement banks in TARGET2 (batch or real-time)</div>
+
+            <h3>Liquidity Management Strategies</h3>
+
+            <h4>For TIPS Participants:</h4>
+            <div class="info-box">
+                <strong>Best Practices:</strong>
+                <ul>
+                    <li><strong>Forecasting:</strong> Predict daily instant payment volumes</li>
+                    <li><strong>Opening Balance:</strong> Fund TIPS account adequately at 07:00 CET</li>
+                    <li><strong>Real-Time Monitoring:</strong> Track TIPS balance continuously</li>
+                    <li><strong>Auto-Replenishment:</strong> Set up automatic transfers from TARGET2</li>
+                    <li><strong>Contingency Buffer:</strong> Maintain 20-30% buffer above expected peak</li>
+                    <li><strong>Recycling:</strong> Use incoming instant payments to fund outgoing</li>
+                </ul>
+            </div>
+
+            <h4>For RT1 Participants:</h4>
+            <ul>
+                <li>Maintain prefunded balances with settlement bank</li>
+                <li>Monitor account position in real-time</li>
+                <li>Coordinate with settlement bank for top-ups</li>
+                <li>Understand settlement bank's fee structure</li>
+                <li>Have backup settlement bank relationship</li>
+            </ul>
+
+            <h3>Settlement Failures</h3>
+
+            <h4>Insufficient Liquidity Scenario:</h4>
+            <div class="diagram">LIQUIDITY FAILURE HANDLING:
+═══════════════════════════════════════════════════════════
+
+1. PSP A submits payment for €50,000
+2. TIPS checks balance: €30,000 available
+3. INSUFFICIENT FUNDS - payment cannot be settled
+4. TIPS rejects payment immediately
+5. PSP A receives rejection (within 10 seconds)
+6. PSP A must either:
+   a) Add liquidity to TIPS account, then resubmit
+   b) Reject customer payment with "insufficient liquidity"
+7. Customer informed payment failed
+
+CRITICAL: PSPs must manage liquidity to avoid rejections</div>
+
+            <h4>Prevention Measures:</h4>
+            <ul>
+                <li>Pre-check settlement account balance before accepting payment</li>
+                <li>Set internal limits below actual settlement account balance</li>
+                <li>Automated alerts when balance falls below threshold</li>
+                <li>Automated liquidity transfers when needed</li>
+                <li>Reject customer payments if settlement liquidity insufficient</li>
+            </ul>
+        </section>
+
+        <section id="advantages">
+            <h2>Advantages & Limitations</h2>
+
+            <h3>Advantages of SEPA Instant</h3>
+            <div class="info-box">
+                <strong>Key Benefits:</strong>
+                <ul>
+                    <li><strong>Speed:</strong> Maximum 10 seconds (typically 3-7 seconds)</li>
+                    <li><strong>24/7/365 Availability:</strong> No weekends, no holidays, no cut-offs</li>
+                    <li><strong>Pan-European:</strong> Works across 36 SEPA countries</li>
+                    <li><strong>Immediate Availability:</strong> Funds usable instantly by beneficiary</li>
+                    <li><strong>Cost-Effective:</strong> Price parity with standard SEPA (EU regulation)</li>
+                    <li><strong>Certainty:</strong> Real-time confirmation of success/failure</li>
+                    <li><strong>Modern Infrastructure:</strong> ISO 20022 messaging</li>
+                    <li><strong>Central Bank Settlement:</strong> Available via TIPS</li>
+                    <li><strong>Improved Cash Flow:</strong> Instant liquidity for businesses</li>
+                    <li><strong>Customer Experience:</strong> Modern, instant payment expectation</li>
+                </ul>
+            </div>
+
+            <h3>Limitations of SEPA Instant</h3>
+
+            <h4>1. Transaction Limit</h4>
+            <ul>
+                <li><strong>€100,000 Maximum:</strong> Scheme-level limit per transaction</li>
+                <li><strong>Individual PSP Limits:</strong> Many banks impose lower limits</li>
+                <li><strong>Consumer Limits:</strong> Often €15,000 or less for retail customers</li>
+                <li><strong>Not Suitable:</strong> For very high-value payments (use TARGET2/standard SEPA)</li>
+            </ul>
+
+            <h4>2. Irrevocability</h4>
+            <div class="highlight">
+                <p><strong>Critical Limitation:</strong></p>
+                <p>
+                    Once processed, SEPA Instant payments cannot be recalled. This creates risks:
+                </p>
+                <ul>
+                    <li>Payments to wrong beneficiary cannot be reversed</li>
+                    <li>Typing errors in IBAN are immediately costly</li>
+                    <li>Fraud victims cannot stop payment after authorization</li>
+                    <li>Duplicate payments cannot be cancelled</li>
+                    <li>Recovery requires beneficiary cooperation</li>
+                </ul>
+                <p><strong>Mitigation:</strong> Beneficiary name verification (mandatory from 2025) helps reduce errors.</p>
+            </div>
+
+            <h4>3. Coverage Gaps</h4>
+            <ul>
+                <li><strong>Not All PSPs Participate:</strong> Some banks don't offer instant receiving/sending</li>
+                <li><strong>Becoming Mandatory:</strong> EU regulation fixes this by 2025</li>
+                <li><strong>Non-SEPA Countries:</strong> Cannot use SEPA Instant (e.g., USA, UK post-Brexit for some banks)</li>
+            </ul>
+
+            <h4>4. Operational Complexity</h4>
+            <ul>
+                <li><strong>24/7 Operations:</strong> Expensive for smaller PSPs</li>
+                <li><strong>Liquidity Management:</strong> Complex real-time liquidity required</li>
+                <li><strong>Fraud Screening:</strong> Must complete within 10 seconds</li>
+                <li><strong>System Availability:</strong> 99.9%+ uptime requirement</li>
+            </ul>
+
+            <h3>Comparison: SEPA Instant vs. Other Payment Methods</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>SEPA Instant</th>
+                        <th>Standard SEPA</th>
+                        <th>UK FPS</th>
+                        <th>Cards</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Processing Time</td>
+                        <td>10 seconds max</td>
+                        <td>1 business day</td>
+                        <td>Seconds</td>
+                        <td>2-3 days settlement</td>
+                    </tr>
+                    <tr>
+                        <td>Availability</td>
+                        <td>24/7/365</td>
+                        <td>Business hours</td>
+                        <td>24/7/365</td>
+                        <td>24/7 (settlement delayed)</td>
+                    </tr>
+                    <tr>
+                        <td>Coverage</td>
+                        <td>36 SEPA countries</td>
+                        <td>36 SEPA countries</td>
+                        <td>UK only</td>
+                        <td>Global</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Limit</td>
+                        <td>€100,000</td>
+                        <td>No limit</td>
+                        <td>£1M</td>
+                        <td>Varies (typically lower)</td>
+                    </tr>
+                    <tr>
+                        <td>Cost (typical)</td>
+                        <td>Free-€1</td>
+                        <td>Free-€1</td>
+                        <td>Free-£5</td>
+                        <td>1-3% merchant fee</td>
+                    </tr>
+                    <tr>
+                        <td>Settlement</td>
+                        <td>Real-time</td>
+                        <td>D+1 batch</td>
+                        <td>Real-time</td>
+                        <td>2-3 days</td>
+                    </tr>
+                    <tr>
+                        <td>Recallable</td>
+                        <td>No</td>
+                        <td>Within timeframes</td>
+                        <td>No</td>
+                        <td>Chargeback available</td>
+                    </tr>
+                    <tr>
+                        <td>Best For</td>
+                        <td>Urgent Euro payments</td>
+                        <td>Non-urgent Euro</td>
+                        <td>UK urgent payments</td>
+                        <td>Consumer purchases</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="use-cases">
+            <h2>Use Cases</h2>
+
+            <h3>Consumer Use Cases</h3>
+
+            <h4>1. Peer-to-Peer Payments</h4>
+            <ul>
+                <li><strong>Bill Splitting:</strong> Share restaurant bills, group gifts</li>
+                <li><strong>Family Support:</strong> Send money to relatives across Europe instantly</li>
+                <li><strong>Flatmate Expenses:</strong> Rent, utilities between roommates</li>
+                <li><strong>Emergency Transfers:</strong> Urgent money to family in another country</li>
+            </ul>
+
+            <h4>2. E-Commerce</h4>
+            <div class="info-box">
+                <strong>Online Shopping Benefits:</strong>
+                <ul>
+                    <li><strong>Instant Confirmation:</strong> Merchant receives payment immediately</li>
+                    <li><strong>Lower Fees:</strong> Cheaper than card payments for merchants</li>
+                    <li><strong>Instant Refunds:</strong> Customer gets refund in seconds, not days</li>
+                    <li><strong>Checkout Experience:</strong> Seamless bank-to-bank payment</li>
+                    <li><strong>No Chargebacks:</strong> Reduces merchant risk vs. cards</li>
+                </ul>
+            </div>
+
+            <h4>3. Bill Payments</h4>
+            <ul>
+                <li>Utility bills (electricity, water, gas)</li>
+                <li>Mobile phone and internet bills</li>
+                <li>Insurance premiums</li>
+                <li>Subscription services</li>
+                <li>Last-minute payment to avoid late fees</li>
+            </ul>
+
+            <h3>Business Use Cases</h3>
+
+            <h4>1. Supplier Payments</h4>
+            <div class="diagram">JUST-IN-TIME SUPPLIER PAYMENT:
+═══════════════════════════════════════════════════════════
+
+08:00 - Supplier delivers goods to warehouse
+08:30 - Goods receipt confirmed in ERP
+08:35 - Automatic SEPA Instant payment triggered
+08:35 - Supplier receives €45,000 payment
+08:40 - Supplier sees funds in account
+
+BENEFIT FOR SUPPLIER:
+• Immediate cash flow
+• Can fulfill next order same day
+• No waiting for batch processing
+• Working capital optimization
+
+BENEFIT FOR BUYER:
+• Just-in-time payment (no early payment)
+• Better supplier relationships
+• Potential discounts for instant payment
+• Automated reconciliation</div>
+
+            <h4>2. Customer Refunds</h4>
+            <ul>
+                <li><strong>E-commerce Returns:</strong> Instant refund improves satisfaction</li>
+                <li><strong>Service Cancellations:</strong> Immediate refund for cancelled bookings</li>
+                <li><strong>Complaint Resolution:</strong> Fast goodwill refunds</li>
+                <li><strong>Overpayment Returns:</strong> Instant correction of errors</li>
+            </ul>
+
+            <h4>3. Payroll & Gig Economy</h4>
+            <ul>
+                <li><strong>On-Demand Pay:</strong> Pay freelancers immediately upon completion</li>
+                <li><strong>Daily Wage Payments:</strong> Pay delivery drivers, gig workers daily</li>
+                <li><strong>Commission Payments:</strong> Instant sales commission</li>
+                <li><strong>Emergency Salary Advances:</strong> Help employees in need</li>
+            </ul>
+
+            <h4>4. Treasury Management</h4>
+            <div class="csm-box">
+                <strong>Corporate Treasury Benefits:</strong>
+                <ul>
+                    <li><strong>Cash Pooling:</strong> Instant intercompany transfers for liquidity</li>
+                    <li><strong>Weekend Operations:</strong> Manage cash positions on weekends</li>
+                    <li><strong>Investment Funding:</strong> Move funds to investments instantly</li>
+                    <li><strong>FX Settlement:</strong> Instant settlement for FX trades</li>
+                    <li><strong>Just-in-Time Liquidity:</strong> Minimize idle balances</li>
+                </ul>
+            </div>
+
+            <h3>Industry-Specific Use Cases</h3>
+
+            <h4>Insurance</h4>
+            <ul>
+                <li><strong>Claims Payment:</strong> Instant payout of approved claims</li>
+                <li><strong>Emergency Assistance:</strong> Immediate funds for stranded travelers</li>
+                <li><strong>Premium Refunds:</strong> Quick refund of overpaid premiums</li>
+            </ul>
+
+            <h4>Healthcare</h4>
+            <ul>
+                <li><strong>Medical Reimbursements:</strong> Instant refund of healthcare costs</li>
+                <li><strong>Private Treatment Payments:</strong> Pay for treatment immediately</li>
+                <li><strong>Pharmacy Payments:</strong> Instant payment at checkout</li>
+            </ul>
+
+            <h4>Travel & Hospitality</h4>
+            <ul>
+                <li><strong>Booking Payments:</strong> Instant confirmation for hotels, flights</li>
+                <li><strong>Cancellation Refunds:</strong> Immediate refund for cancellations</li>
+                <li><strong>Security Deposits:</strong> Instant return of deposits</li>
+                <li><strong>Commission Payments:</strong> Pay travel agents instantly</li>
+            </ul>
+
+            <h4>Real Estate</h4>
+            <ul>
+                <li><strong>Rental Deposits:</strong> Instant payment/refund of deposits</li>
+                <li><strong>Rent Payments:</strong> Pay rent on weekends/holidays</li>
+                <li><strong>Down Payments:</strong> Quick reservation of properties</li>
+            </ul>
+
+            <h3>Request-to-Pay (RTP) Integration</h3>
+            <div class="highlight">
+                <p><strong>Request-to-Pay with SEPA Instant:</strong></p>
+                <p>
+                    Request-to-Pay is an overlay service that works perfectly with SEPA Instant:
+                </p>
+                <ul>
+                    <li>Merchant sends payment request to customer</li>
+                    <li>Customer receives request in banking app</li>
+                    <li>Customer approves with one click</li>
+                    <li>SEPA Instant payment executed automatically</li>
+                    <li>Merchant receives funds in seconds</li>
+                    <li>Automatic reconciliation (linked request ID)</li>
+                </ul>
+                <p><strong>Perfect for:</strong> E-commerce, invoicing, subscriptions, POS payments</p>
+            </div>
+
+            <h3>When NOT to Use SEPA Instant</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Better Alternative</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Payment >€100,000</td>
+                        <td>Standard SEPA or TARGET2</td>
+                        <td>Exceeds instant payment limit</td>
+                    </tr>
+                    <tr>
+                        <td>Large payroll (1000s employees)</td>
+                        <td>Standard SEPA batch</td>
+                        <td>More cost-effective for bulk</td>
+                    </tr>
+                    <tr>
+                        <td>Non-urgent, non-Euro payment</td>
+                        <td>SWIFT, local systems</td>
+                        <td>SEPA Instant is EUR only</td>
+                    </tr>
+                    <tr>
+                        <td>Need payment recall option</td>
+                        <td>Standard SEPA</td>
+                        <td>Instant payments irrevocable</td>
+                    </tr>
+                    <tr>
+                        <td>Scheduled future payments</td>
+                        <td>Standard SEPA</td>
+                        <td>Instant = immediate only</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="best-practices">
+            <h2>Best Practices</h2>
+
+            <h3>For Payment Service Providers</h3>
+
+            <h4>1. System Reliability</h4>
+            <div class="info-box">
+                <strong>Uptime Requirements:</strong>
+                <ul>
+                    <li>Target 99.9%+ availability (scheme requirement)</li>
+                    <li>Redundant systems across multiple data centers</li>
+                    <li>Automated failover mechanisms</li>
+                    <li>Regular disaster recovery testing</li>
+                    <li>24/7 monitoring and support</li>
+                    <li>Incident response procedures</li>
+                </ul>
+            </div>
+
+            <h4>2. Liquidity Management</h4>
+            <ul>
+                <li><strong>Forecasting:</strong> Accurate prediction of daily flows</li>
+                <li><strong>Buffer Maintenance:</strong> 20-30% above peak requirements</li>
+                <li><strong>Auto-Replenishment:</strong> Automated liquidity transfers</li>
+                <li><strong>Real-Time Monitoring:</strong> Continuous balance tracking</li>
+                <li><strong>Alerts:</strong> Immediate notification of low balances</li>
+                <li><strong>Contingency:</strong> Backup liquidity sources</li>
+            </ul>
+
+            <h4>3. Fraud Prevention</h4>
+            <ul>
+                <li>Real-time fraud detection (within 10-second window)</li>
+                <li>Machine learning models for pattern recognition</li>
+                <li>Sanctions and PEP screening</li>
+                <li>Velocity checks and transaction limits</li>
+                <li>Device fingerprinting and behavioral analytics</li>
+                <li>Customer education on fraud risks</li>
+            </ul>
+
+            <h4>4. Customer Experience</h4>
+            <div class="csm-box">
+                <strong>UX Best Practices:</strong>
+                <ul>
+                    <li>Clear indication this is an instant payment</li>
+                    <li>Real-time payment status updates</li>
+                    <li>Immediate push notifications on completion</li>
+                    <li>Clear error messages with actionable guidance</li>
+                    <li>Beneficiary verification before sending</li>
+                    <li>Warning for irrevocability</li>
+                    <li>Transaction history with instant payment indicator</li>
+                </ul>
+            </div>
+
+            <h3>For Businesses Using SEPA Instant</h3>
+
+            <h4>1. Payment Validation</h4>
+            <div class="diagram">PAYMENT VALIDATION CHECKLIST:
+═══════════════════════════════════════════════════════════
+
+BEFORE INITIATING PAYMENT:
+☑ Verify beneficiary IBAN format
+☑ Check beneficiary name (use verification service)
+☑ Confirm amount is under €100,000
+☑ Ensure sufficient account balance
+☑ Verify this is urgent (otherwise use standard SEPA)
+☑ Double-check payment details
+☑ Understand payment is IRREVOCABLE
+
+AFTER INITIATION:
+☑ Wait for confirmation (max 10 seconds)
+☑ Save payment reference
+☑ Update accounting system
+☑ Notify beneficiary if appropriate
+☑ Keep audit trail</div>
+
+            <h4>2. Integration Approaches</h4>
+            <ul>
+                <li><strong>API Integration:</strong> Direct integration with bank's instant payment API</li>
+                <li><strong>ERP Integration:</strong> Trigger payments from ERP system</li>
+                <li><strong>Payment Hub:</strong> Use payment gateway for multiple banks</li>
+                <li><strong>Request-to-Pay:</strong> Implement RTP for automated collections</li>
+                <li><strong>File Upload:</strong> Bulk instant payments via file upload</li>
+            </ul>
+
+            <h4>3. Reconciliation</h4>
+            <ul>
+                <li>Match payments using EndToEndId reference</li>
+                <li>Real-time posting to accounting system</li>
+                <li>Separate reporting for instant vs. standard SEPA</li>
+                <li>Daily reconciliation of all instant payments</li>
+                <li>Exception handling for failed payments</li>
+            </ul>
+
+            <h4>4. Use Case Selection</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Use SEPA Instant When...</th>
+                        <th>Use Standard SEPA When...</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Urgency</td>
+                        <td>Payment needed immediately</td>
+                        <td>D+1 acceptable</td>
+                    </tr>
+                    <tr>
+                        <td>Amount</td>
+                        <td>Under €100,000</td>
+                        <td>Any amount</td>
+                    </tr>
+                    <tr>
+                        <td>Timing</td>
+                        <td>Weekend, holiday, or after hours</td>
+                        <td>Business hours, can wait</td>
+                    </tr>
+                    <tr>
+                        <td>Volume</td>
+                        <td>Low volume (< 100 payments)</td>
+                        <td>High volume (1000s)</td>
+                    </tr>
+                    <tr>
+                        <td>Recipient Need</td>
+                        <td>Beneficiary needs funds now</td>
+                        <td>Scheduled, predictable</td>
+                    </tr>
+                    <tr>
+                        <td>Cost Sensitivity</td>
+                        <td>Speed more important than cost</td>
+                        <td>Cost optimization important</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>For Consumers</h3>
+
+            <h4>Security Best Practices</h4>
+            <ul>
+                <li><strong>Verify Beneficiary:</strong> Always check name matches IBAN</li>
+                <li><strong>Beware of Scams:</strong> Be suspicious of urgent payment requests</li>
+                <li><strong>Never Rush:</strong> Take time to verify even for "instant" payments</li>
+                <li><strong>Check Details:</strong> Double-check IBAN before confirming</li>
+                <li><strong>Use Verification:</strong> Use beneficiary verification if available</li>
+                <li><strong>Keep Records:</strong> Screenshot payment confirmations</li>
+                <li><strong>Report Fraud:</strong> Contact bank immediately if suspicious</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Final Thoughts:</strong></p>
+                <p>
+                    SEPA Instant represents a major evolution in European payments, bringing real-time capability to pan-European transfers. With the EU's mandate making instant payments universally available by 2025 at no extra cost, SEPA Instant is set to become the new standard for euro payments across Europe. Understanding its capabilities, limitations, and best practices ensures businesses and consumers can leverage this powerful payment method effectively while managing the risks associated with irrevocable, real-time payments.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SEPA Instant Payments Guide. Comprehensive information about Europe's real-time payment system.</p>
+        </div>
+    </footer>
+</body>
+</html>
