@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 20022 - Complete Technical Guide</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3Ecircle%7Bfill:%231a365d%7D text%7Bfill:white;font-family:Arial,sans-serif;font-size:50px;font-weight:bold%7D%3C/style%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ctext x='50' y='70' text-anchor='middle'%3E💷%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --iso-accent: #7c3aed;
+            --iso-light: #ede9fe;
+            --code-bg: #1e293b;
+            --success-color: #059669;
+            --warning-color: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f9fafb 0%, #e8eef5 100%);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--iso-accent) 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 1rem; }
+        .subtitle { font-size: 1.3rem; opacity: 0.95; }
+        
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--iso-accent);
+            padding-left: 1.5rem;
+        }
+        h3 { font-size: 1.7rem; color: #2d3748; margin: 2rem 0 1rem; }
+        h4 { font-size: 1.4rem; color: #2d3748; margin: 1.5rem 0 1rem; font-weight: 600; }
+        p { margin: 1.2rem 0; font-size: 1.1rem; color: #4b5563; }
+        ul, ol { margin: 1.5rem 0 1.5rem 2rem; font-size: 1.1rem; }
+        
+        .info-box {
+            background: linear-gradient(135deg, var(--iso-light) 0%, #ddd6fe 100%);
+            border-left: 5px solid var(--iso-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 5px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 5px solid var(--success-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .diagram {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        
+        .xml-tag { color: #93c5fd; }
+        .xml-attr { color: #fbbf24; }
+        .xml-value { color: #6ee7b7; }
+        .xml-comment { color: #9ca3af; font-style: italic; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+        }
+        th {
+            background: var(--iso-accent);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td { padding: 0.8rem 1rem; border-bottom: 1px solid #e5e7eb; }
+        tr:hover { background: #f9fafb; }
+        
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--iso-accent);
+        }
+        .toc ul { list-style: none; }
+        .toc li { margin: 0.8rem 0; padding-left: 1.5rem; position: relative; }
+        .toc li::before { content: '►'; position: absolute; left: 0; color: var(--iso-accent); font-size: 0.8rem; }
+        .toc a { color: #1f2937; text-decoration: none; font-weight: 600; }
+        .toc a:hover { color: var(--iso-accent); }
+        
+        .message-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--iso-accent) 0%, #6d28d9 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .pain-badge { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
+        .pacs-badge { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .camt-badge { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
+        
+        footer { background: #2d3748; color: white; text-align: center; padding: 2rem; margin-top: 4rem; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            section { padding: 2rem; }
+            .code-block { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ISO 20022</h1>
+            <p class="subtitle">Universal Financial Industry Message Standard</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#what-is">What is ISO 20022?</a></li>
+                <li><a href="#why-need">Why We Need ISO 20022</a></li>
+                <li><a href="#benefits">Benefits & Advantages</a></li>
+                <li><a href="#architecture">Message Architecture</a></li>
+                <li><a href="#pain-messages">pain Messages (Payment Initiation)</a></li>
+                <li><a href="#pacs-messages">pacs Messages (Payment Clearing & Settlement)</a></li>
+                <li><a href="#camt-messages">camt Messages (Cash Management)</a></li>
+                <li><a href="#tag-reference">Complete Tag Reference</a></li>
+                <li><a href="#sepa-example">SEPA Implementation</a></li>
+                <li><a href="#cbpr-example">CBPR+ Implementation</a></li>
+                <li><a href="#chaps-example">CHAPS Implementation</a></li>
+                <li><a href="#bacs-example">BACS Migration</a></li>
+                <li><a href="#methods">Cover, Core & Adv Methods</a></li>
+                <li><a href="#challenges">Implementation Challenges</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <section id="what-is">
+            <h2>What is ISO 20022?</h2>
+            <p>
+                ISO 20022 is an <strong>international standard</strong> for electronic data interchange between financial institutions. It provides a <strong>common platform</strong> for the development of messages using a standardized XML-based methodology.
+            </p>
+
+            <h3>Core Principles</h3>
+            <div class="info-box">
+                <strong>Four Pillars of ISO 20022:</strong>
+                <ul>
+                    <li><strong>1. Business Modeling:</strong> Defines business processes and information flows</li>
+                    <li><strong>2. Message Design:</strong> Standard structure for all financial messages</li>
+                    <li><strong>3. XML Syntax:</strong> Human and machine-readable format</li>
+                    <li><strong>4. Rich Data:</strong> Extensive structured information in every message</li>
+                </ul>
+            </div>
+
+            <h3>What Makes ISO 20022 Different?</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Legacy Formats (MT, EDI)</th>
+                        <th>ISO 20022</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Format</td>
+                        <td>Fixed-width, proprietary</td>
+                        <td>XML, standardized</td>
+                    </tr>
+                    <tr>
+                        <td>Data Richness</td>
+                        <td>Limited fields, truncation</td>
+                        <td>Extensive structured data</td>
+                    </tr>
+                    <tr>
+                        <td>Character Set</td>
+                        <td>ASCII, limited characters</td>
+                        <td>Unicode, global support</td>
+                    </tr>
+                    <tr>
+                        <td>Extensibility</td>
+                        <td>Difficult to extend</td>
+                        <td>Easily extensible</td>
+                    </tr>
+                    <tr>
+                        <td>Readability</td>
+                        <td>Cryptic codes</td>
+                        <td>Self-describing tags</td>
+                    </tr>
+                    <tr>
+                        <td>Versioning</td>
+                        <td>Multiple incompatible versions</td>
+                        <td>Managed evolution</td>
+                    </tr>
+                    <tr>
+                        <td>Validation</td>
+                        <td>Custom rules</td>
+                        <td>XSD schemas</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>The ISO 20022 Repository</h3>
+            <p>
+                The <strong>ISO 20022 Registration Authority</strong> maintains a central repository containing:
+            </p>
+            <ul>
+                <li><strong>Business Components:</strong> Reusable data elements</li>
+                <li><strong>Message Definitions:</strong> Over 400 message types</li>
+                <li><strong>XSD Schemas:</strong> XML validation schemas</li>
+                <li><strong>Documentation:</strong> Usage guidelines and rules</li>
+                <li><strong>Message Examples:</strong> Reference implementations</li>
+            </ul>
+
+            <div class="diagram">ISO 20022 ECOSYSTEM:
+═══════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────┐
+│           ISO 20022 REGISTRATION AUTHORITY              │
+│                    (SWIFT/ISO)                          │
+└────────────────┬────────────────────────────────────────┘
+                 │
+    ┌────────────┼────────────┐
+    │            │            │
+┌───▼──────┐ ┌──▼────────┐ ┌▼──────────────┐
+│ Business │ │ Message   │ │ Implementation│
+│ Models   │ │ Schemas   │ │ Guidelines    │
+└──────────┘ └───────────┘ └───────────────┘
+    │            │            │
+    └────────────┼────────────┘
+                 │
+    ┌────────────┼────────────────────────┐
+    │            │                        │
+┌───▼────┐  ┌───▼─────┐  ┌──────▼──────────┐
+│ SEPA   │  │ CBPR+   │  │ National        │
+│ (EU)   │  │ (Cross  │  │ Implementations │
+│        │  │ Border) │  │ (UK, US, etc)   │
+└────────┘  └─────────┘  └─────────────────┘</div>
+        </section>
+
+        <section id="why-need">
+            <h2>Why We Need ISO 20022</h2>
+
+            <h3>1. Fragmentation Problem</h3>
+            <p>
+                Before ISO 20022, the financial industry used hundreds of different message formats:
+            </p>
+            <ul>
+                <li><strong>SWIFT MT messages</strong> for cross-border payments</li>
+                <li><strong>BACS Standard 18</strong> for UK domestic payments</li>
+                <li><strong>NACHA</strong> for US ACH payments</li>
+                <li><strong>Proprietary formats</strong> for internal systems</li>
+                <li><strong>Regional standards</strong> incompatible across borders</li>
+            </ul>
+
+            <h3>2. Data Limitations</h3>
+            <div class="warning-box">
+                <strong>Legacy Format Constraints:</strong>
+                <ul>
+                    <li><strong>Field Length Limits:</strong> Names truncated to 35 characters</li>
+                    <li><strong>Limited Remittance Info:</strong> Only 140 characters for payment details</li>
+                    <li><strong>No Structured Addresses:</strong> Address lines concatenated</li>
+                    <li><strong>Restricted Characters:</strong> No special characters or accents</li>
+                    <li><strong>Code-Based:</strong> Purpose codes instead of clear descriptions</li>
+                </ul>
+            </div>
+
+            <h3>3. Regulatory Drivers</h3>
+            <ul>
+                <li><strong>AML/KYC Requirements:</strong> Need for enhanced customer data</li>
+                <li><strong>Sanctions Screening:</strong> Requires comprehensive party information</li>
+                <li><strong>Tax Compliance:</strong> FATCA, CRS require detailed data</li>
+                <li><strong>Transparency:</strong> Regulators demand end-to-end payment tracking</li>
+                <li><strong>Consumer Protection:</strong> Clear payment purpose and beneficiary info</li>
+            </ul>
+
+            <h3>4. Business Needs</h3>
+            <ul>
+                <li><strong>Straight-Through Processing (STP):</strong> Automated reconciliation</li>
+                <li><strong>Better Cash Flow Visibility:</strong> Rich remittance information</li>
+                <li><strong>Reduced Errors:</strong> Structured data prevents misinterpretation</li>
+                <li><strong>Global Interoperability:</strong> Single standard worldwide</li>
+                <li><strong>Innovation:</strong> Platform for new payment services</li>
+            </ul>
+
+            <h3>The Transformation Journey</h3>
+            <div class="diagram">GLOBAL ISO 20022 ADOPTION TIMELINE:
+═══════════════════════════════════════════════════════════
+
+2004: ISO 20022 Standard Published
+2008: SEPA adopts ISO 20022 for European payments
+2017: SWIFT announces MT to MX migration strategy
+2020: UK CHAPS migrates to ISO 20022
+2022: SWIFT CBPR+ goes live globally
+2023: US Fedwire adopts ISO 20022
+2024: BACS begins ISO 20022 transition
+2025: SWIFT MT message retirement begins
+2027: All major payment systems on ISO 20022
+
+IMPACT: 90%+ of high-value payments worldwide</div>
+        </section>
+
+        <section id="benefits">
+            <h2>Benefits & Advantages</h2>
+
+            <h3>For Financial Institutions</h3>
+            <div class="success-box">
+                <strong>Operational Benefits:</strong>
+                <ul>
+                    <li><strong>Reduced Costs:</strong> Single format reduces conversion/mapping complexity</li>
+                    <li><strong>Higher STP Rates:</strong> Rich data enables automated processing (80%+ STP)</li>
+                    <li><strong>Better Risk Management:</strong> Enhanced sanctions and fraud screening</li>
+                    <li><strong>Simplified Integration:</strong> Common standard across systems</li>
+                    <li><strong>Future-Proof:</strong> Extensible format adapts to new requirements</li>
+                </ul>
+            </div>
+
+            <h3>For Corporates</h3>
+            <ul>
+                <li><strong>Enhanced Reconciliation:</strong> Structured remittance data (invoice numbers, PO references)</li>
+                <li><strong>Global Standardization:</strong> Same format for domestic and cross-border</li>
+                <li><strong>Better Treasury Visibility:</strong> Real-time payment tracking</li>
+                <li><strong>Reduced Exceptions:</strong> Fewer payment queries and investigations</li>
+                <li><strong>Improved Working Capital:</strong> Faster payment processing</li>
+            </ul>
+
+            <h3>For End Users</h3>
+            <ul>
+                <li><strong>Faster Payments:</strong> Quicker processing and settlement</li>
+                <li><strong>More Information:</strong> Clear payment purpose on bank statements</li>
+                <li><strong>Better Service:</strong> Fewer errors, easier dispute resolution</li>
+                <li><strong>Enhanced Security:</strong> Better fraud detection and prevention</li>
+            </ul>
+
+            <h3>Quantifiable Benefits</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Before ISO 20022</th>
+                        <th>After ISO 20022</th>
+                        <th>Improvement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>STP Rate</td>
+                        <td>60-70%</td>
+                        <td>80-95%</td>
+                        <td>+15-25%</td>
+                    </tr>
+                    <tr>
+                        <td>Manual Interventions</td>
+                        <td>20-30%</td>
+                        <td>5-10%</td>
+                        <td>-15-20%</td>
+                    </tr>
+                    <tr>
+                        <td>Reconciliation Time</td>
+                        <td>2-5 days</td>
+                        <td>Same day</td>
+                        <td>80% faster</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Queries</td>
+                        <td>15%</td>
+                        <td>3-5%</td>
+                        <td>-10%</td>
+                    </tr>
+                    <tr>
+                        <td>Data Quality</td>
+                        <td>70%</td>
+                        <td>95%</td>
+                        <td>+25%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="architecture">
+            <h2>Message Architecture</h2>
+
+            <h3>Message Categories</h3>
+            <p>
+                ISO 20022 organizes messages into <strong>Business Areas</strong>, each with a four-letter prefix:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prefix</th>
+                        <th>Business Area</th>
+                        <th>Description</th>
+                        <th>Examples</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pain</strong></td>
+                        <td>Payment Initiation</td>
+                        <td>Customer-to-bank payment instructions</td>
+                        <td>pain.001, pain.002</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs</strong></td>
+                        <td>Payment Clearing & Settlement</td>
+                        <td>Bank-to-bank payment messages</td>
+                        <td>pacs.008, pacs.002</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt</strong></td>
+                        <td>Cash Management</td>
+                        <td>Account statements, reporting</td>
+                        <td>camt.053, camt.054</td>
+                    </tr>
+                    <tr>
+                        <td><strong>acmt</strong></td>
+                        <td>Account Management</td>
+                        <td>Account opening, maintenance</td>
+                        <td>acmt.001, acmt.002</td>
+                    </tr>
+                    <tr>
+                        <td><strong>admi</strong></td>
+                        <td>Administration</td>
+                        <td>System messages</td>
+                        <td>admi.002, admi.004</td>
+                    </tr>
+                    <tr>
+                        <td><strong>reda</strong></td>
+                        <td>Reference Data</td>
+                        <td>Standing data</td>
+                        <td>reda.001, reda.002</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Message Naming Convention</h3>
+            <div class="diagram">MESSAGE IDENTIFIER FORMAT:
+═══════════════════════════════════════════════════════════
+
+Format: [prefix].[nnn].[vvv].[yyy]
+
+Example: pain.001.001.09
+
+┌──────┬─────┬─────┬─────┐
+│ pain │ 001 │ 001 │ 09  │
+└──┬───┴──┬──┴──┬──┴──┬──┘
+   │      │     │     │
+   │      │     │     └─ Version (09 = version 9)
+   │      │     └─ Variant (001 = standard)
+   │      └─ Message Function (001 = initiation)
+   └─ Business Area (pain = payment initiation)
+
+INTERPRETATION:
+pain.001.001.09 = Payment Initiation, version 9</div>
+
+            <h3>Common Message Versions</h3>
+            <ul>
+                <li><strong>Version 01-03:</strong> Early versions, mostly deprecated</li>
+                <li><strong>Version 04-06:</strong> Widely used in SEPA</li>
+                <li><strong>Version 07-08:</strong> Enhanced features, CBPR+ adoption</li>
+                <li><strong>Version 09-11:</strong> Latest versions with extended data</li>
+            </ul>
+
+            <h3>Message Structure Hierarchy</h3>
+            <div class="code-block"><span class="xml-comment">&lt;!-- Standard ISO 20022 Message Structure --&gt;</span>
+<span class="xml-tag">&lt;Document</span> <span class="xml-attr">xmlns=</span><span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:[message]"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;[MessageType]&gt;</span>
+        <span class="xml-tag">&lt;GrpHdr&gt;</span>          <span class="xml-comment">&lt;!-- Group Header (mandatory) --&gt;</span>
+            <span class="xml-comment">// Message identification, timestamps, counts</span>
+        <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+        
+        <span class="xml-tag">&lt;[PaymentInfo]&gt;</span>   <span class="xml-comment">&lt;!-- Payment Information (repeatable) --&gt;</span>
+            <span class="xml-comment">// Debtor, payment method, dates</span>
+            
+            <span class="xml-tag">&lt;[Transaction]&gt;</span> <span class="xml-comment">&lt;!-- Individual Transaction (repeatable) --&gt;</span>
+                <span class="xml-comment">// Creditor, amount, purpose, remittance info</span>
+            <span class="xml-tag">&lt;/[Transaction]&gt;</span>
+        <span class="xml-tag">&lt;/[PaymentInfo]&gt;</span>
+    <span class="xml-tag">&lt;/[MessageType]&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span></div>
+        </section>
+
+        <section id="pain-messages">
+            <h2>pain Messages<span class="message-badge pain-badge">Payment Initiation</span></h2>
+            <p>
+                The <strong>pain</strong> (Payment Initiation) messages are used by customers (corporates, individuals) to send payment instructions to their banks.
+            </p>
+
+            <h3>Key pain Message Types</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                        <th>Direction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pain.001</strong></td>
+                        <td>CustomerCreditTransferInitiation</td>
+                        <td>Initiate credit transfers (payments OUT)</td>
+                        <td>Customer → Bank</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.002</strong></td>
+                        <td>CustomerPaymentStatusReport</td>
+                        <td>Status of submitted payments</td>
+                        <td>Bank → Customer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.007</strong></td>
+                        <td>CustomerPaymentReversal</td>
+                        <td>Reverse a previous payment</td>
+                        <td>Customer → Bank</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.008</strong></td>
+                        <td>CustomerDirectDebitInitiation</td>
+                        <td>Initiate direct debit collections</td>
+                        <td>Customer → Bank</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.013</strong></td>
+                        <td>CreditorPaymentActivationRequest</td>
+                        <td>Request-to-Pay initiation</td>
+                        <td>Creditor → Bank</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.014</strong></td>
+                        <td>CreditorPaymentActivationRequestStatus</td>
+                        <td>Response to Request-to-Pay</td>
+                        <td>Bank → Creditor</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>pain.001 - CustomerCreditTransferInitiation</h3>
+            <p>
+                The <strong>most commonly used</strong> payment initiation message. Used to instruct a bank to transfer funds from customer's account to beneficiary.
+            </p>
+
+            <h4>Core Data Elements</h4>
+            <div class="code-block"><span class="xml-comment">&lt;!-- pain.001.001.09 Structure --&gt;</span>
+<span class="xml-tag">&lt;Document</span> <span class="xml-attr">xmlns=</span><span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:pain.001.001.09"</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;CstmrCdtTrfInitn&gt;</span>
+    
+    <span class="xml-comment">&lt;!-- GROUP HEADER (Mandatory) --&gt;</span>
+    <span class="xml-tag">&lt;GrpHdr&gt;</span>
+      <span class="xml-tag">&lt;MsgId&gt;</span>MSG-20240115-001<span class="xml-tag">&lt;/MsgId&gt;</span>                    <span class="xml-comment">&lt;!-- Unique message ID --&gt;</span>
+      <span class="xml-tag">&lt;CreDtTm&gt;</span>2024-01-15T14:30:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>             <span class="xml-comment">&lt;!-- Creation timestamp --&gt;</span>
+      <span class="xml-tag">&lt;NbOfTxs&gt;</span>2<span class="xml-tag">&lt;/NbOfTxs&gt;</span>                                 <span class="xml-comment">&lt;!-- Number of transactions --&gt;</span>
+      <span class="xml-tag">&lt;CtrlSum&gt;</span>1375.50<span class="xml-tag">&lt;/CtrlSum&gt;</span>                          <span class="xml-comment">&lt;!-- Total amount --&gt;</span>
+      <span class="xml-tag">&lt;InitgPty&gt;</span>                                          <span class="xml-comment">&lt;!-- Initiating party --&gt;</span>
+        <span class="xml-tag">&lt;Nm&gt;</span>ABC Company Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+        <span class="xml-tag">&lt;Id&gt;</span>
+          <span class="xml-tag">&lt;OrgId&gt;</span>
+            <span class="xml-tag">&lt;Othr&gt;</span>
+              <span class="xml-tag">&lt;Id&gt;</span>GB123456789<span class="xml-tag">&lt;/Id&gt;</span>                     <span class="xml-comment">&lt;!-- Company ID --&gt;</span>
+            <span class="xml-tag">&lt;/Othr&gt;</span>
+          <span class="xml-tag">&lt;/OrgId&gt;</span>
+        <span class="xml-tag">&lt;/Id&gt;</span>
+      <span class="xml-tag">&lt;/InitgPty&gt;</span>
+    <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="xml-comment">&lt;!-- PAYMENT INFORMATION (Can repeat) --&gt;</span>
+    <span class="xml-tag">&lt;PmtInf&gt;</span>
+      <span class="xml-tag">&lt;PmtInfId&gt;</span>PMT-BATCH-001<span class="xml-tag">&lt;/PmtInfId&gt;</span>               <span class="xml-comment">&lt;!-- Payment batch ID --&gt;</span>
+      <span class="xml-tag">&lt;PmtMtd&gt;</span>TRF<span class="xml-tag">&lt;/PmtMtd&gt;</span>                              <span class="xml-comment">&lt;!-- TRF=Transfer --&gt;</span>
+      <span class="xml-tag">&lt;NbOfTxs&gt;</span>2<span class="xml-tag">&lt;/NbOfTxs&gt;</span>
+      <span class="xml-tag">&lt;CtrlSum&gt;</span>1375.50<span class="xml-tag">&lt;/CtrlSum&gt;</span>
+      <span class="xml-tag">&lt;ReqdExctnDt&gt;</span>                                    <span class="xml-comment">&lt;!-- Requested execution date --&gt;</span>
+        <span class="xml-tag">&lt;Dt&gt;</span>2024-01-16<span class="xml-tag">&lt;/Dt&gt;</span>
+      <span class="xml-tag">&lt;/ReqdExctnDt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- DEBTOR (Payer) Information --&gt;</span>
+      <span class="xml-tag">&lt;Dbtr&gt;</span>
+        <span class="xml-tag">&lt;Nm&gt;</span>ABC Company Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+        <span class="xml-tag">&lt;PstlAdr&gt;</span>
+          <span class="xml-tag">&lt;StrtNm&gt;</span>123 Business Street<span class="xml-tag">&lt;/StrtNm&gt;</span>
+          <span class="xml-tag">&lt;TwnNm&gt;</span>London<span class="xml-tag">&lt;/TwnNm&gt;</span>
+          <span class="xml-tag">&lt;PstCd&gt;</span>SW1A 1AA<span class="xml-tag">&lt;/PstCd&gt;</span>
+          <span class="xml-tag">&lt;Ctry&gt;</span>GB<span class="xml-tag">&lt;/Ctry&gt;</span>
+        <span class="xml-tag">&lt;/PstlAdr&gt;</span>
+      <span class="xml-tag">&lt;/Dbtr&gt;</span>
+      <span class="xml-tag">&lt;DbtrAcct&gt;</span>
+        <span class="xml-tag">&lt;Id&gt;</span>
+          <span class="xml-tag">&lt;IBAN&gt;</span>GB29NWBK60161331926819<span class="xml-tag">&lt;/IBAN&gt;</span>       <span class="xml-comment">&lt;!-- Debtor account --&gt;</span>
+        <span class="xml-tag">&lt;/Id&gt;</span>
+        <span class="xml-tag">&lt;Ccy&gt;</span>GBP<span class="xml-tag">&lt;/Ccy&gt;</span>
+      <span class="xml-tag">&lt;/DbtrAcct&gt;</span>
+      <span class="xml-tag">&lt;DbtrAgt&gt;</span>
+        <span class="xml-tag">&lt;FinInstnId&gt;</span>
+          <span class="xml-tag">&lt;BICFI&gt;</span>NWBKGB2L<span class="xml-tag">&lt;/BICFI&gt;</span>                  <span class="xml-comment">&lt;!-- Debtor's bank --&gt;</span>
+        <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+      <span class="xml-tag">&lt;/DbtrAgt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- TRANSACTION 1 (Can repeat) --&gt;</span>
+      <span class="xml-tag">&lt;CdtTrfTxInf&gt;</span>
+        <span class="xml-tag">&lt;PmtId&gt;</span>
+          <span class="xml-tag">&lt;InstrId&gt;</span>INV-001-PAY<span class="xml-tag">&lt;/InstrId&gt;</span>              <span class="xml-comment">&lt;!-- Instruction ID --&gt;</span>
+          <span class="xml-tag">&lt;EndToEndId&gt;</span>E2E-INV001<span class="xml-tag">&lt;/EndToEndId&gt;</span>          <span class="xml-comment">&lt;!-- End-to-end reference --&gt;</span>
+        <span class="xml-tag">&lt;/PmtId&gt;</span>
+        <span class="xml-tag">&lt;Amt&gt;</span>
+          <span class="xml-tag">&lt;InstdAmt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>1250.00<span class="xml-tag">&lt;/InstdAmt&gt;</span>   <span class="xml-comment">&lt;!-- Amount --&gt;</span>
+        <span class="xml-tag">&lt;/Amt&gt;</span>
+        
+        <span class="xml-comment">&lt;!-- CREDITOR (Beneficiary) Information --&gt;</span>
+        <span class="xml-tag">&lt;Cdtr&gt;</span>
+          <span class="xml-tag">&lt;Nm&gt;</span>Supplier ABC Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+          <span class="xml-tag">&lt;PstlAdr&gt;</span>
+            <span class="xml-tag">&lt;StrtNm&gt;</span>45 Supplier Road<span class="xml-tag">&lt;/StrtNm&gt;</span>
+            <span class="xml-tag">&lt;TwnNm&gt;</span>Manchester<span class="xml-tag">&lt;/TwnNm&gt;</span>
+            <span class="xml-tag">&lt;PstCd&gt;</span>M1 1AA<span class="xml-tag">&lt;/PstCd&gt;</span>
+            <span class="xml-tag">&lt;Ctry&gt;</span>GB<span class="xml-tag">&lt;/Ctry&gt;</span>
+          <span class="xml-tag">&lt;/PstlAdr&gt;</span>
+        <span class="xml-tag">&lt;/Cdtr&gt;</span>
+        <span class="xml-tag">&lt;CdtrAcct&gt;</span>
+          <span class="xml-tag">&lt;Id&gt;</span>
+            <span class="xml-tag">&lt;IBAN&gt;</span>GB76BARC20000055779911<span class="xml-tag">&lt;/IBAN&gt;</span>
+          <span class="xml-tag">&lt;/Id&gt;</span>
+        <span class="xml-tag">&lt;/CdtrAcct&gt;</span>
+        
+        <span class="xml-comment">&lt;!-- REMITTANCE INFORMATION (Crucial for reconciliation) --&gt;</span>
+        <span class="xml-tag">&lt;RmtInf&gt;</span>
+          <span class="xml-tag">&lt;Ustrd&gt;</span>Payment for Invoice INV-12345<span class="xml-tag">&lt;/Ustrd&gt;</span>
+          <span class="xml-tag">&lt;Strd&gt;</span>
+            <span class="xml-tag">&lt;RfrdDocInf&gt;</span>
+              <span class="xml-tag">&lt;Tp&gt;</span>
+                <span class="xml-tag">&lt;CdOrPrtry&gt;</span>
+                  <span class="xml-tag">&lt;Cd&gt;</span>CINV<span class="xml-tag">&lt;/Cd&gt;</span>                     <span class="xml-comment">&lt;!-- Commercial Invoice --&gt;</span>
+                <span class="xml-tag">&lt;/CdOrPrtry&gt;</span>
+              <span class="xml-tag">&lt;/Tp&gt;</span>
+              <span class="xml-tag">&lt;Nb&gt;</span>INV-12345<span class="xml-tag">&lt;/Nb&gt;</span>                  <span class="xml-comment">&lt;!-- Invoice number --&gt;</span>
+            <span class="xml-tag">&lt;/RfrdDocInf&gt;</span>
+          <span class="xml-tag">&lt;/Strd&gt;</span>
+        <span class="xml-tag">&lt;/RmtInf&gt;</span>
+      <span class="xml-tag">&lt;/CdtTrfTxInf&gt;</span>
+      
+    <span class="xml-tag">&lt;/PmtInf&gt;</span>
+  <span class="xml-tag">&lt;/CstmrCdtTrfInitn&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span></div>
+
+            <h4>Key pain.001 Tags Explained</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag Path</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GrpHdr/MsgId</td>
+                        <td>Message ID</td>
+                        <td>Unique identifier for this message</td>
+                        <td>MSG-2024-001</td>
+                    </tr>
+                    <tr>
+                        <td>GrpHdr/CreDtTm</td>
+                        <td>Creation DateTime</td>
+                        <td>ISO 8601 timestamp</td>
+                        <td>2024-01-15T14:30:00</td>
+                    </tr>
+                    <tr>
+                        <td>PmtInf/PmtMtd</td>
+                        <td>Payment Method</td>
+                        <td>TRF, CHK, TRA</td>
+                        <td>TRF (Transfer)</td>
+                    </tr>
+                    <tr>
+                        <td>PmtInf/ReqdExctnDt</td>
+                        <td>Requested Execution Date</td>
+                        <td>When to execute payment</td>
+                        <td>2024-01-16</td>
+                    </tr>
+                    <tr>
+                        <td>CdtTrfTxInf/PmtId/EndToEndId</td>
+                        <td>End-to-End ID</td>
+                        <td>Unique transaction reference</td>
+                        <td>E2E-INV001</td>
+                    </tr>
+                    <tr>
+                        <td>CdtTrfTxInf/Amt/InstdAmt</td>
+                        <td>Instructed Amount</td>
+                        <td>Payment amount with currency</td>
+                        <td>1250.00 GBP</td>
+                    </tr>
+                    <tr>
+                        <td>Dbtr/Nm</td>
+                        <td>Debtor Name</td>
+                        <td>Payer name (up to 140 chars)</td>
+                        <td>ABC Company Ltd</td>
+                    </tr>
+                    <tr>
+                        <td>DbtrAcct/Id/IBAN</td>
+                        <td>Debtor IBAN</td>
+                        <td>Payer's account</td>
+                        <td>GB29NWBK60161...</td>
+                    </tr>
+                    <tr>
+                        <td>Cdtr/Nm</td>
+                        <td>Creditor Name</td>
+                        <td>Beneficiary name</td>
+                        <td>Supplier ABC Ltd</td>
+                    </tr>
+                    <tr>
+                        <td>RmtInf/Ustrd</td>
+                        <td>Unstructured Remittance</td>
+                        <td>Free text (140 chars)</td>
+                        <td>Payment for Invoice...</td>
+                    </tr>
+                    <tr>
+                        <td>RmtInf/Strd</td>
+                        <td>Structured Remittance</td>
+                        <td>Structured payment details</td>
+                        <td>Invoice INV-12345</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>pain.002 - CustomerPaymentStatusReport</h3>
+            <p>
+                Sent by the bank to inform the customer about the status of their payment instruction.
+            </p>
+
+            <div class="code-block"><span class="xml-comment">&lt;!-- pain.002 - Payment Status Response --&gt;</span>
+<span class="xml-tag">&lt;Document</span> <span class="xml-attr">xmlns=</span><span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:pain.002.001.10"</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;CstmrPmtStsRpt&gt;</span>
+    <span class="xml-tag">&lt;GrpHdr&gt;</span>
+      <span class="xml-tag">&lt;MsgId&gt;</span>STS-MSG-001<span class="xml-tag">&lt;/MsgId&gt;</span>
+      <span class="xml-tag">&lt;CreDtTm&gt;</span>2024-01-15T14:35:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>
+    <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="xml-tag">&lt;OrgnlGrpInfAndSts&gt;</span>                             <span class="xml-comment">&lt;!-- Original message status --&gt;</span>
+      <span class="xml-tag">&lt;OrgnlMsgId&gt;</span>MSG-20240115-001<span class="xml-tag">&lt;/OrgnlMsgId&gt;</span>   <span class="xml-comment">&lt;!-- Reference to pain.001 --&gt;</span>
+      <span class="xml-tag">&lt;OrgnlMsgNmId&gt;</span>pain.001.001.09<span class="xml-tag">&lt;/OrgnlMsgNmId&gt;</span>
+      <span class="xml-tag">&lt;GrpSts&gt;</span>ACCP<span class="xml-tag">&lt;/GrpSts&gt;</span>                      <span class="xml-comment">&lt;!-- ACCP = Accepted --&gt;</span>
+    <span class="xml-tag">&lt;/OrgnlGrpInfAndSts&gt;</span>
+    
+    <span class="xml-tag">&lt;OrgnlPmtInfAndSts&gt;</span>
+      <span class="xml-tag">&lt;OrgnlPmtInfId&gt;</span>PMT-BATCH-001<span class="xml-tag">&lt;/OrgnlPmtInfId&gt;</span>
+      <span class="xml-tag">&lt;TxInfAndSts&gt;</span>
+        <span class="xml-tag">&lt;OrgnlInstrId&gt;</span>INV-001-PAY<span class="xml-tag">&lt;/OrgnlInstrId&gt;</span>
+        <span class="xml-tag">&lt;OrgnlEndToEndId&gt;</span>E2E-INV001<span class="xml-tag">&lt;/OrgnlEndToEndId&gt;</span>
+        <span class="xml-tag">&lt;TxSts&gt;</span>ACSC<span class="xml-tag">&lt;/TxSts&gt;</span>                      <span class="xml-comment">&lt;!-- ACSC = Settlement Completed --&gt;</span>
+        <span class="xml-tag">&lt;AccptncDtTm&gt;</span>2024-01-15T14:32:00<span class="xml-tag">&lt;/AccptncDtTm&gt;</span>
+      <span class="xml-tag">&lt;/TxInfAndSts&gt;</span>
+    <span class="xml-tag">&lt;/OrgnlPmtInfAndSts&gt;</span>
+  <span class="xml-tag">&lt;/CstmrPmtStsRpt&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span></div>
+
+            <h4>Common Status Codes</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ACCP</td>
+                        <td>AcceptedCustomerProfile</td>
+                        <td>Payment instruction accepted</td>
+                    </tr>
+                    <tr>
+                        <td>ACSC</td>
+                        <td>AcceptedSettlementCompleted</td>
+                        <td>Payment successfully settled</td>
+                    </tr>
+                    <tr>
+                        <td>ACSP</td>
+                        <td>AcceptedSettlementInProcess</td>
+                        <td>Payment being processed</td>
+                    </tr>
+                    <tr>
+                        <td>RJCT</td>
+                        <td>Rejected</td>
+                        <td>Payment rejected</td>
+                    </tr>
+                    <tr>
+                        <td>PDNG</td>
+                        <td>Pending</td>
+                        <td>Payment pending</td>
+                    </tr>
+                    <tr>
+                        <td>CANC</td>
+                        <td>Cancelled</td>
+                        <td>Payment cancelled</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="pacs-messages">
+            <h2>pacs Messages<span class="message-badge pacs-badge">Payment Clearing & Settlement</span></h2>
+            <p>
+                The <strong>pacs</strong> (Payment Clearing and Settlement) messages are used for inter-bank payment processing and settlement.
+            </p>
+
+            <h3>Key pacs Message Types</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pacs.008</strong></td>
+                        <td>FIToFICustomerCreditTransfer</td>
+                        <td>Inter-bank credit transfer</td>
+                        <td>Bank-to-bank payment instruction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.002</strong></td>
+                        <td>FIToFIPaymentStatusReport</td>
+                        <td>Payment status notification</td>
+                        <td>Acceptance/rejection between banks</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.004</strong></td>
+                        <td>PaymentReturn</td>
+                        <td>Return of payment</td>
+                        <td>Unpaid, recall, refund</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.009</strong></td>
+                        <td>FinancialInstitutionCreditTransfer</td>
+                        <td>Bank-to-bank transfer</td>
+                        <td>Liquidity management, treasury</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.028</strong></td>
+                        <td>FIToFIPaymentStatusRequest</td>
+                        <td>Query payment status</td>
+                        <td>Investigation, tracking</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>pacs.008 - FIToFICustomerCreditTransfer</h3>
+            <p>
+                The core inter-bank payment message. When a customer initiates a payment (pain.001), the originating bank sends a pacs.008 to the beneficiary bank.
+            </p>
+
+            <div class="code-block"><span class="xml-comment">&lt;!-- pacs.008 - Inter-bank Payment Message --&gt;</span>
+<span class="xml-tag">&lt;Document</span> <span class="xml-attr">xmlns=</span><span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08"</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;FIToFICstmrCdtTrf&gt;</span>
+    <span class="xml-tag">&lt;GrpHdr&gt;</span>
+      <span class="xml-tag">&lt;MsgId&gt;</span>NWBK-20240115-001<span class="xml-tag">&lt;/MsgId&gt;</span>
+      <span class="xml-tag">&lt;CreDtTm&gt;</span>2024-01-15T14:31:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>
+      <span class="xml-tag">&lt;NbOfTxs&gt;</span>1<span class="xml-tag">&lt;/NbOfTxs&gt;</span>
+      <span class="xml-tag">&lt;TtlIntrBkSttlmAmt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>1250.00<span class="xml-tag">&lt;/TtlIntrBkSttlmAmt&gt;</span>
+      <span class="xml-tag">&lt;IntrBkSttlmDt&gt;</span>2024-01-16<span class="xml-tag">&lt;/IntrBkSttlmDt&gt;</span>        <span class="xml-comment">&lt;!-- Settlement date --&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Settlement Information --&gt;</span>
+      <span class="xml-tag">&lt;SttlmInf&gt;</span>
+        <span class="xml-tag">&lt;SttlmMtd&gt;</span>CLRG<span class="xml-tag">&lt;/SttlmMtd&gt;</span>                    <span class="xml-comment">&lt;!-- Clearing System --&gt;</span>
+        <span class="xml-tag">&lt;ClrSys&gt;</span>
+          <span class="xml-tag">&lt;Cd&gt;</span>FPS<span class="xml-tag">&lt;/Cd&gt;</span>                              <span class="xml-comment">&lt;!-- FPS, CHP (CHAPS), BAC --&gt;</span>
+        <span class="xml-tag">&lt;/ClrSys&gt;</span>
+      <span class="xml-tag">&lt;/SttlmInf&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Instructing Agent (Sending Bank) --&gt;</span>
+      <span class="xml-tag">&lt;InstgAgt&gt;</span>
+        <span class="xml-tag">&lt;FinInstnId&gt;</span>
+          <span class="xml-tag">&lt;BICFI&gt;</span>NWBKGB2L<span class="xml-tag">&lt;/BICFI&gt;</span>
+        <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+      <span class="xml-tag">&lt;/InstgAgt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Instructed Agent (Receiving Bank) --&gt;</span>
+      <span class="xml-tag">&lt;InstdAgt&gt;</span>
+        <span class="xml-tag">&lt;FinInstnId&gt;</span>
+          <span class="xml-tag">&lt;BICFI&gt;</span>BARCGB22<span class="xml-tag">&lt;/BICFI&gt;</span>
+        <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+      <span class="xml-tag">&lt;/InstdAgt&gt;</span>
+    <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="xml-tag">&lt;CdtTrfTxInf&gt;</span>
+      <span class="xml-tag">&lt;PmtId&gt;</span>
+        <span class="xml-tag">&lt;InstrId&gt;</span>NWBK-TXN-001<span class="xml-tag">&lt;/InstrId&gt;</span>
+        <span class="xml-tag">&lt;EndToEndId&gt;</span>E2E-INV001<span class="xml-tag">&lt;/EndToEndId&gt;</span>          <span class="xml-comment">&lt;!-- From pain.001 --&gt;</span>
+        <span class="xml-tag">&lt;TxId&gt;</span>NWBK-15JAN24-001<span class="xml-tag">&lt;/TxId&gt;</span>               <span class="xml-comment">&lt;!-- Bank's transaction ID --&gt;</span>
+        <span class="xml-tag">&lt;UETR&gt;</span>8c3a9e4d-2b7f-4e1a-9c5d-8b2a4f7e6d3c<span class="xml-tag">&lt;/UETR&gt;</span> <span class="xml-comment">&lt;!-- Unique ref (UUID) --&gt;</span>
+      <span class="xml-tag">&lt;/PmtId&gt;</span>
+      
+      <span class="xml-tag">&lt;IntrBkSttlmAmt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>1250.00<span class="xml-tag">&lt;/IntrBkSttlmAmt&gt;</span>
+      <span class="xml-tag">&lt;IntrBkSttlmDt&gt;</span>2024-01-16<span class="xml-tag">&lt;/IntrBkSttlmDt&gt;</span>
+      <span class="xml-tag">&lt;InstdAmt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>1250.00<span class="xml-tag">&lt;/InstdAmt&gt;</span>
+      <span class="xml-tag">&lt;ChrgBr&gt;</span>SLEV<span class="xml-tag">&lt;/ChrgBr&gt;</span>                            <span class="xml-comment">&lt;!-- Charge Bearer --&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Ultimate Debtor (Original Payer) --&gt;</span>
+      <span class="xml-tag">&lt;UltmtDbtr&gt;</span>
+        <span class="xml-tag">&lt;Nm&gt;</span>ABC Company Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+      <span class="xml-tag">&lt;/UltmtDbtr&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Debtor (Account being debited) --&gt;</span>
+      <span class="xml-tag">&lt;Dbtr&gt;</span>
+        <span class="xml-tag">&lt;Nm&gt;</span>ABC Company Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+      <span class="xml-tag">&lt;/Dbtr&gt;</span>
+      <span class="xml-tag">&lt;DbtrAcct&gt;</span>
+        <span class="xml-tag">&lt;Id&gt;</span>
+          <span class="xml-tag">&lt;IBAN&gt;</span>GB29NWBK60161331926819<span class="xml-tag">&lt;/IBAN&gt;</span>
+        <span class="xml-tag">&lt;/Id&gt;</span>
+      <span class="xml-tag">&lt;/DbtrAcct&gt;</span>
+      <span class="xml-tag">&lt;DbtrAgt&gt;</span>
+        <span class="xml-tag">&lt;FinInstnId&gt;</span>
+          <span class="xml-tag">&lt;BICFI&gt;</span>NWBKGB2L<span class="xml-tag">&lt;/BICFI&gt;</span>
+        <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+      <span class="xml-tag">&lt;/DbtrAgt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Creditor (Beneficiary) --&gt;</span>
+      <span class="xml-tag">&lt;Cdtr&gt;</span>
+        <span class="xml-tag">&lt;Nm&gt;</span>Supplier ABC Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+      <span class="xml-tag">&lt;/Cdtr&gt;</span>
+      <span class="xml-tag">&lt;CdtrAcct&gt;</span>
+        <span class="xml-tag">&lt;Id&gt;</span>
+          <span class="xml-tag">&lt;IBAN&gt;</span>GB76BARC20000055779911<span class="xml-tag">&lt;/IBAN&gt;</span>
+        <span class="xml-tag">&lt;/Id&gt;</span>
+      <span class="xml-tag">&lt;/CdtrAcct&gt;</span>
+      <span class="xml-tag">&lt;CdtrAgt&gt;</span>
+        <span class="xml-tag">&lt;FinInstnId&gt;</span>
+          <span class="xml-tag">&lt;BICFI&gt;</span>BARCGB22<span class="xml-tag">&lt;/BICFI&gt;</span>
+        <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+      <span class="xml-tag">&lt;/CdtrAgt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Remittance Information --&gt;</span>
+      <span class="xml-tag">&lt;RmtInf&gt;</span>
+        <span class="xml-tag">&lt;Ustrd&gt;</span>Payment for Invoice INV-12345<span class="xml-tag">&lt;/Ustrd&gt;</span>
+        <span class="xml-tag">&lt;Strd&gt;</span>
+          <span class="xml-tag">&lt;RfrdDocInf&gt;</span>
+            <span class="xml-tag">&lt;Tp&gt;</span><span class="xml-tag">&lt;CdOrPrtry&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>CINV<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/CdOrPrtry&gt;</span><span class="xml-tag">&lt;/Tp&gt;</span>
+            <span class="xml-tag">&lt;Nb&gt;</span>INV-12345<span class="xml-tag">&lt;/Nb&gt;</span>
+          <span class="xml-tag">&lt;/RfrdDocInf&gt;</span>
+        <span class="xml-tag">&lt;/Strd&gt;</span>
+      <span class="xml-tag">&lt;/RmtInf&gt;</span>
+    <span class="xml-tag">&lt;/CdtTrfTxInf&gt;</span>
+  <span class="xml-tag">&lt;/FIToFICstmrCdtTrf&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span></div>
+
+            <h4>Key pacs.008 Tags</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SttlmInf/SttlmMtd</td>
+                        <td>Settlement Method</td>
+                        <td>INDA, INGA, COVE (Cover method)</td>
+                    </tr>
+                    <tr>
+                        <td>SttlmInf/ClrSys</td>
+                        <td>Clearing System</td>
+                        <td>FPS, CHP (CHAPS), BAC, TGT (TARGET2)</td>
+                    </tr>
+                    <tr>
+                        <td>IntrBkSttlmAmt</td>
+                        <td>Interbank Settlement Amount</td>
+                        <td>Amount between banks</td>
+                    </tr>
+                    <tr>
+                        <td>PmtId/UETR</td>
+                        <td>Unique End-to-End Ref</td>
+                        <td>UUID for tracking (SWIFT gpi)</td>
+                    </tr>
+                    <tr>
+                        <td>ChrgBr</td>
+                        <td>Charge Bearer</td>
+                        <td>DEBT, CRED, SHAR, SLEV</td>
+                    </tr>
+                    <tr>
+                        <td>InstgAgt</td>
+                        <td>Instructing Agent</td>
+                        <td>Sending bank</td>
+                    </tr>
+                    <tr>
+                        <td>InstdAgt</td>
+                        <td>Instructed Agent</td>
+                        <td>Receiving bank</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="camt-messages">
+            <h2>camt Messages<span class="message-badge camt-badge">Cash Management</span></h2>
+            <p>
+                The <strong>camt</strong> (Cash Management) messages are used for account reporting, statements, and notifications.
+            </p>
+
+            <h3>Key camt Message Types</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>camt.053</strong></td>
+                        <td>BankToCustomerStatement</td>
+                        <td>End-of-day account statement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.052</strong></td>
+                        <td>BankToCustomerAccountReport</td>
+                        <td>Intraday account report</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.054</strong></td>
+                        <td>BankToCustomerDebitCreditNotification</td>
+                        <td>Real-time transaction notifications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.056</strong></td>
+                        <td>FIToFIPaymentCancellationRequest</td>
+                        <td>Request to cancel payment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.029</strong></td>
+                        <td>ResolutionOfInvestigation</td>
+                        <td>Response to cancellation request</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.060</strong></td>
+                        <td>AccountReportingRequest</td>
+                        <td>Request statement/report</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>camt.053 - BankToCustomerStatement</h3>
+            <div class="info-box">
+                <strong>Purpose:</strong> Provides detailed account statement with all transactions for a specific period (typically daily).
+            </div>
+
+            <div class="code-block"><span class="xml-comment">&lt;!-- camt.053 - Account Statement (simplified) --&gt;</span>
+<span class="xml-tag">&lt;Document</span> <span class="xml-attr">xmlns=</span><span class="xml-value">"urn:iso:std:iso:20022:tech:xsd:camt.053.001.08"</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;BkToCstmrStmt&gt;</span>
+    <span class="xml-tag">&lt;GrpHdr&gt;</span>
+      <span class="xml-tag">&lt;MsgId&gt;</span>STMT-20240115-001<span class="xml-tag">&lt;/MsgId&gt;</span>
+      <span class="xml-tag">&lt;CreDtTm&gt;</span>2024-01-16T07:00:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>
+    <span class="xml-tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="xml-tag">&lt;Stmt&gt;</span>
+      <span class="xml-tag">&lt;Id&gt;</span>ABC-STMT-150124<span class="xml-tag">&lt;/Id&gt;</span>
+      <span class="xml-tag">&lt;ElctrncSeqNb&gt;</span>365<span class="xml-tag">&lt;/ElctrncSeqNb&gt;</span>              <span class="xml-comment">&lt;!-- Sequential number --&gt;</span>
+      <span class="xml-tag">&lt;CreDtTm&gt;</span>2024-01-16T07:00:00<span class="xml-tag">&lt;/CreDtTm&gt;</span>
+      <span class="xml-tag">&lt;FrToDt&gt;</span>
+        <span class="xml-tag">&lt;FrDtTm&gt;</span>2024-01-15T00:00:00<span class="xml-tag">&lt;/FrDtTm&gt;</span>
+        <span class="xml-tag">&lt;ToDtTm&gt;</span>2024-01-15T23:59:59<span class="xml-tag">&lt;/ToDtTm&gt;</span>
+      <span class="xml-tag">&lt;/FrToDt&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Account Information --&gt;</span>
+      <span class="xml-tag">&lt;Acct&gt;</span>
+        <span class="xml-tag">&lt;Id&gt;</span>
+          <span class="xml-tag">&lt;IBAN&gt;</span>GB29NWBK60161331926819<span class="xml-tag">&lt;/IBAN&gt;</span>
+        <span class="xml-tag">&lt;/Id&gt;</span>
+        <span class="xml-tag">&lt;Tp&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>CACC<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/Tp&gt;</span>                <span class="xml-comment">&lt;!-- Current Account --&gt;</span>
+        <span class="xml-tag">&lt;Ccy&gt;</span>GBP<span class="xml-tag">&lt;/Ccy&gt;</span>
+        <span class="xml-tag">&lt;Ownr&gt;</span>
+          <span class="xml-tag">&lt;Nm&gt;</span>ABC Company Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+        <span class="xml-tag">&lt;/Ownr&gt;</span>
+        <span class="xml-tag">&lt;Svcr&gt;</span>
+          <span class="xml-tag">&lt;FinInstnId&gt;</span>
+            <span class="xml-tag">&lt;BICFI&gt;</span>NWBKGB2L<span class="xml-tag">&lt;/BICFI&gt;</span>
+          <span class="xml-tag">&lt;/FinInstnId&gt;</span>
+        <span class="xml-tag">&lt;/Svcr&gt;</span>
+      <span class="xml-tag">&lt;/Acct&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Balance Information --&gt;</span>
+      <span class="xml-tag">&lt;Bal&gt;</span>
+        <span class="xml-tag">&lt;Tp&gt;</span><span class="xml-tag">&lt;CdOrPrtry&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>OPBD<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/CdOrPrtry&gt;</span><span class="xml-tag">&lt;/Tp&gt;</span> <span class="xml-comment">&lt;!-- Opening Booked --&gt;</span>
+        <span class="xml-tag">&lt;Amt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>50000.00<span class="xml-tag">&lt;/Amt&gt;</span>
+        <span class="xml-tag">&lt;CdtDbtInd&gt;</span>CRDT<span class="xml-tag">&lt;/CdtDbtInd&gt;</span>                 <span class="xml-comment">&lt;!-- Credit balance --&gt;</span>
+        <span class="xml-tag">&lt;Dt&gt;</span><span class="xml-tag">&lt;Dt&gt;</span>2024-01-15<span class="xml-tag">&lt;/Dt&gt;</span><span class="xml-tag">&lt;/Dt&gt;</span>
+      <span class="xml-tag">&lt;/Bal&gt;</span>
+      
+      <span class="xml-tag">&lt;Bal&gt;</span>
+        <span class="xml-tag">&lt;Tp&gt;</span><span class="xml-tag">&lt;CdOrPrtry&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>CLBD<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/CdOrPrtry&gt;</span><span class="xml-tag">&lt;/Tp&gt;</span> <span class="xml-comment">&lt;!-- Closing Booked --&gt;</span>
+        <span class="xml-tag">&lt;Amt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>51375.50<span class="xml-tag">&lt;/Amt&gt;</span>
+        <span class="xml-tag">&lt;CdtDbtInd&gt;</span>CRDT<span class="xml-tag">&lt;/CdtDbtInd&gt;</span>
+        <span class="xml-tag">&lt;Dt&gt;</span><span class="xml-tag">&lt;Dt&gt;</span>2024-01-15<span class="xml-tag">&lt;/Dt&gt;</span><span class="xml-tag">&lt;/Dt&gt;</span>
+      <span class="xml-tag">&lt;/Bal&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Transaction Entry (Debit) --&gt;</span>
+      <span class="xml-tag">&lt;Ntry&gt;</span>
+        <span class="xml-tag">&lt;Amt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>1250.00<span class="xml-tag">&lt;/Amt&gt;</span>
+        <span class="xml-tag">&lt;CdtDbtInd&gt;</span>DBIT<span class="xml-tag">&lt;/CdtDbtInd&gt;</span>                   <span class="xml-comment">&lt;!-- Debit --&gt;</span>
+        <span class="xml-tag">&lt;Sts&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>BOOK<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/Sts&gt;</span>                    <span class="xml-comment">&lt;!-- Booked --&gt;</span>
+        <span class="xml-tag">&lt;BookgDt&gt;</span><span class="xml-tag">&lt;Dt&gt;</span>2024-01-15<span class="xml-tag">&lt;/Dt&gt;</span><span class="xml-tag">&lt;/BookgDt&gt;</span>
+        <span class="xml-tag">&lt;ValDt&gt;</span><span class="xml-tag">&lt;Dt&gt;</span>2024-01-15<span class="xml-tag">&lt;/Dt&gt;</span><span class="xml-tag">&lt;/ValDt&gt;</span>
+        
+        <span class="xml-tag">&lt;BkTxCd&gt;</span>
+          <span class="xml-tag">&lt;Domn&gt;</span>
+            <span class="xml-tag">&lt;Cd&gt;</span>PMNT<span class="xml-tag">&lt;/Cd&gt;</span>                         <span class="xml-comment">&lt;!-- Payment --&gt;</span>
+            <span class="xml-tag">&lt;Fmly&gt;</span>
+              <span class="xml-tag">&lt;Cd&gt;</span>ICDT<span class="xml-tag">&lt;/Cd&gt;</span>                       <span class="xml-comment">&lt;!-- Issued Credit Transfer --&gt;</span>
+            <span class="xml-tag">&lt;/Fmly&gt;</span>
+          <span class="xml-tag">&lt;/Domn&gt;</span>
+        <span class="xml-tag">&lt;/BkTxCd&gt;</span>
+        
+        <span class="xml-tag">&lt;NtryDtls&gt;</span>
+          <span class="xml-tag">&lt;TxDtls&gt;</span>
+            <span class="xml-tag">&lt;Refs&gt;</span>
+              <span class="xml-tag">&lt;EndToEndId&gt;</span>E2E-INV001<span class="xml-tag">&lt;/EndToEndId&gt;</span>
+              <span class="xml-tag">&lt;TxId&gt;</span>NWBK-15JAN24-001<span class="xml-tag">&lt;/TxId&gt;</span>
+            <span class="xml-tag">&lt;/Refs&gt;</span>
+            <span class="xml-tag">&lt;RltdPties&gt;</span>
+              <span class="xml-tag">&lt;Cdtr&gt;</span>
+                <span class="xml-tag">&lt;Nm&gt;</span>Supplier ABC Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+              <span class="xml-tag">&lt;/Cdtr&gt;</span>
+              <span class="xml-tag">&lt;CdtrAcct&gt;</span>
+                <span class="xml-tag">&lt;Id&gt;</span><span class="xml-tag">&lt;IBAN&gt;</span>GB76BARC20000055779911<span class="xml-tag">&lt;/IBAN&gt;</span><span class="xml-tag">&lt;/Id&gt;</span>
+              <span class="xml-tag">&lt;/CdtrAcct&gt;</span>
+            <span class="xml-tag">&lt;/RltdPties&gt;</span>
+            <span class="xml-tag">&lt;RmtInf&gt;</span>
+              <span class="xml-tag">&lt;Ustrd&gt;</span>Payment for Invoice INV-12345<span class="xml-tag">&lt;/Ustrd&gt;</span>
+            <span class="xml-tag">&lt;/RmtInf&gt;</span>
+          <span class="xml-tag">&lt;/TxDtls&gt;</span>
+        <span class="xml-tag">&lt;/NtryDtls&gt;</span>
+      <span class="xml-tag">&lt;/Ntry&gt;</span>
+      
+      <span class="xml-comment">&lt;!-- Transaction Entry (Credit) --&gt;</span>
+      <span class="xml-tag">&lt;Ntry&gt;</span>
+        <span class="xml-tag">&lt;Amt</span> <span class="xml-attr">Ccy=</span><span class="xml-value">"GBP"</span><span class="xml-tag">&gt;</span>2625.50<span class="xml-tag">&lt;/Amt&gt;</span>
+        <span class="xml-tag">&lt;CdtDbtInd&gt;</span>CRDT<span class="xml-tag">&lt;/CdtDbtInd&gt;</span>                   <span class="xml-comment">&lt;!-- Credit --&gt;</span>
+        <span class="xml-tag">&lt;Sts&gt;</span><span class="xml-tag">&lt;Cd&gt;</span>BOOK<span class="xml-tag">&lt;/Cd&gt;</span><span class="xml-tag">&lt;/Sts&gt;</span>
+        <span class="xml-tag">&lt;BookgDt&gt;</span><span class="xml-tag">&lt;Dt&gt;</span>2024-01-15<span class="xml-tag">&lt;/Dt&gt;</span><span class="xml-tag">&lt;/BookgDt&gt;</span>
+        
+        <span class="xml-tag">&lt;NtryDtls&gt;</span>
+          <span class="xml-tag">&lt;TxDtls&gt;</span>
+            <span class="xml-tag">&lt;Refs&gt;</span>
+              <span class="xml-tag">&lt;EndToEndId&gt;</span>CUST-PAY-789<span class="xml-tag">&lt;/EndToEndId&gt;</span>
+            <span class="xml-tag">&lt;/Refs&gt;</span>
+            <span class="xml-tag">&lt;RltdPties&gt;</span>
+              <span class="xml-tag">&lt;Dbtr&gt;</span>
+                <span class="xml-tag">&lt;Nm&gt;</span>Customer XYZ Ltd<span class="xml-tag">&lt;/Nm&gt;</span>
+              <span class="xml-tag">&lt;/Dbtr&gt;</span>
+            <span class="xml-tag">&lt;/RltdPties&gt;</span>
+            <span class="xml-tag">&lt;RmtInf&gt;</span>
+              <span class="xml-tag">&lt;Ustrd&gt;</span>Invoice settlement INV-98765<span class="xml-tag">&lt;/Ustrd&gt;</span>
+            <span class="xml-tag">&lt;/RmtInf&gt;</span>
+          <span class="xml-tag">&lt;/TxDtls&gt;</span>
+        <span class="xml-tag">&lt;/NtryDtls&gt;</span>
+      <span class="xml-tag">&lt;/Ntry&gt;</span>
+      
+    <span class="xml-tag">&lt;/Stmt&gt;</span>
+  <span class="xml-tag">&lt;/BkToCstmrStmt&gt;</span>
+<span class="xml-tag">&lt;/Document&gt;</span></div>
+
+            <h4>Balance Type Codes</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>OPBD</td>
+                        <td>OpeningBooked</td>
+                        <td>Opening balance (booked transactions)</td>
+                    </tr>
+                    <tr>
+                        <td>CLBD</td>
+                        <td>ClosingBooked</td>
+                        <td>Closing balance (booked transactions)</td>
+                    </tr>
+                    <tr>
+                        <td>ITBD</td>
+                        <td>InterimBooked</td>
+                        <td>Interim balance during day</td>
+                    </tr>
+                    <tr>
+                        <td>CLAV</td>
+                        <td>ClosingAvailable</td>
+                        <td>Available balance (including pending)</td>
+                    </tr>
+                    <tr>
+                        <td>FWAV</td>
+                        <td>ForwardAvailable</td>
+                        <td>Forward-dated available balance</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="tag-reference">
+            <h2>Complete Tag Reference</h2>
+            
+            <h3>Common Elements Across Messages</h3>
+            
+            <h4>1. Message Header (GrpHdr)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Element</th>
+                        <th>Type</th>
+                        <th>Mandatory</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MsgId</td>
+                        <td>Message ID</td>
+                        <td>String (35)</td>
+                        <td>Yes</td>
+                        <td>Unique message identifier</td>
+                    </tr>
+                    <tr>
+                        <td>CreDtTm</td>
+                        <td>Creation DateTime</td>
+                        <td>ISODateTime</td>
+                        <td>Yes</td>
+                        <td>Message creation timestamp</td>
+                    </tr>
+                    <tr>
+                        <td>NbOfTxs</td>
+                        <td>Number of Transactions</td>
+                        <td>Numeric</td>
+                        <td>No</td>
+                        <td>Total transaction count</td>
+                    </tr>
+                    <tr>
+                        <td>CtrlSum</td>
+                        <td>Control Sum</td>
+                        <td>Decimal</td>
+                        <td>No</td>
+                        <td>Total amount (control total)</td>
+                    </tr>
+                    <tr>
+                        <td>InitgPty</td>
+                        <td>Initiating Party</td>
+                        <td>Complex</td>
+                        <td>Yes</td>
+                        <td>Message originator</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>2. Party Identification</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Element</th>
+                        <th>Max Length</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nm</td>
+                        <td>Name</td>
+                        <td>140</td>
+                        <td>Party name</td>
+                    </tr>
+                    <tr>
+                        <td>PstlAdr/StrtNm</td>
+                        <td>Street Name</td>
+                        <td>70</td>
+                        <td>Street address</td>
+                    </tr>
+                    <tr>
+                        <td>PstlAdr/BldgNb</td>
+                        <td>Building Number</td>
+                        <td>16</td>
+                        <td>Building/house number</td>
+                    </tr>
+                    <tr>
+                        <td>PstlAdr/TwnNm</td>
+                        <td>Town Name</td>
+                        <td>35</td>
+                        <td>City/town</td>
+                    </tr>
+                    <tr>
+                        <td>PstlAdr/PstCd</td>
+                        <td>Post Code</td>
+                        <td>16</td>
+                        <td>Postal/ZIP code</td>
+                    </tr>
+                    <tr>
+                        <td>PstlAdr/Ctry</td>
+                        <td>Country</td>
+                        <td>2</td>
+                        <td>ISO 3166-1 alpha-2 code</td>
+                    </tr>
+                    <tr>
+                        <td>Id/OrgId/BICOrBEI</td>
+                        <td>BIC</td>
+                        <td>11</td>
+                        <td>Business Identifier Code</td>
+                    </tr>
+                    <tr>
+                        <td>Id/PrvtId/DtAndPlcOfBirth</td>
+                        <td>Date & Place of Birth</td>
+                        <td>Complex</td>
+                        <td>For individuals</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>3. Account Identification</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag Path</th>
+                        <th>Element</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Acct/Id/IBAN</td>
+                        <td>IBAN</td>
+                        <td>International Bank Account Number</td>
+                        <td>GB29NWBK60161331926819</td>
+                    </tr>
+                    <tr>
+                        <td>Acct/Id/Othr/Id</td>
+                        <td>Other ID</td>
+                        <td>Non-IBAN account identifier</td>
+                        <td>12345678 (UK account number)</td>
+                    </tr>
+                    <tr>
+                        <td>Acct/Id/Othr/SchmeNm/Cd</td>
+                        <td>Scheme Code</td>
+                        <td>BBAN, UPIC, etc.</td>
+                        <td>BBAN</td>
+                    </tr>
+                    <tr>
+                        <td>Acct/Tp/Cd</td>
+                        <td>Account Type</td>
+                        <td>CACC, SVGS, LOAN</td>
+                        <td>CACC (Current Account)</td>
+                    </tr>
+                    <tr>
+                        <td>Acct/Ccy</td>
+                        <td>Currency</td>
+                        <td>ISO 4217 currency code</td>
+                        <td>GBP, EUR, USD</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>4. Amount Specifications</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Element</th>
+                        <th>Usage</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>InstdAmt</td>
+                        <td>Instructed Amount</td>
+                        <td>pain.001, pacs.008</td>
+                        <td>Amount instructed by customer</td>
+                    </tr>
+                    <tr>
+                        <td>IntrBkSttlmAmt</td>
+                        <td>Interbank Settlement Amount</td>
+                        <td>pacs.008</td>
+                        <td>Amount settled between banks</td>
+                    </tr>
+                    <tr>
+                        <td>EqvtAmt</td>
+                        <td>Equivalent Amount</td>
+                        <td>All messages</td>
+                        <td>For currency conversion</td>
+                    </tr>
+                    <tr>
+                        <td>TxAmt</td>
+                        <td>Transaction Amount</td>
+                        <td>camt messages</td>
+                        <td>Amount of individual transaction</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>5. Date & Time Fields</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Element</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CreDtTm</td>
+                        <td>Creation DateTime</td>
+                        <td>ISODateTime</td>
+                        <td>2024-01-15T14:30:00.000Z</td>
+                    </tr>
+                    <tr>
+                        <td>ReqdExctnDt/Dt</td>
+                        <td>Requested Execution Date</td>
+                        <td>ISODate</td>
+                        <td>2024-01-16</td>
+                    </tr>
+                    <tr>
+                        <td>IntrBkSttlmDt</td>
+                        <td>Interbank Settlement Date</td>
+                        <td>ISODate</td>
+                        <td>2024-01-16</td>
+                    </tr>
+                    <tr>
+                        <td>BookgDt</td>
+                        <td>Booking Date</td>
+                        <td>ISODate</td>
+                        <td>2024-01-15</td>
+                    </tr>
+                    <tr>
+                        <td>ValDt</td>
+                        <td>Value Date</td>
+                        <td>ISODate</td>
+                        <td>2024-01-16</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>6. Remittance Information</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag Path</th>
+                        <th>Element</th>
+                        <th>Max Length</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RmtInf/Ustrd</td>
+                        <td>Unstructured</td>
+                        <td>140</td>
+                        <td>Free text remittance info</td>
+                    </tr>
+                    <tr>
+                        <td>RmtInf/Strd/RfrdDocInf/Nb</td>
+                        <td>Document Number</td>
+                        <td>35</td>
+                        <td>Invoice/PO number</td>
+                    </tr>
+                    <tr>
+                        <td>RmtInf/Strd/RfrdDocInf/Tp/Cd</td>
+                        <td>Document Type</td>
+                        <td>Code</td>
+                        <td>CINV, CREN, DEBN</td>
+                    </tr>
+                    <tr>
+                        <td>RmtInf/Strd/CdtrRefInf/Ref</td>
+                        <td>Creditor Reference</td>
+                        <td>35</td>
+                        <td>Structured creditor ref</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="sepa-example">
+            <h2>SEPA Implementation</h2>
+            <p>
+                SEPA (Single Euro Payments Area) was one of the first large-scale implementations of ISO 20022 for payments.
+            </p>
+
+            <h3>SEPA Credit Transfer (SCT)</h3>
+            <div class="info-box">
+                <strong>Message Used:</strong> pain.001.001.03 (and later versions)
+                <ul>
+                    <li><strong>Processing Time:</strong> D+1 (next business day)</li>
+                    <li><strong>Currency:</strong> EUR only</li>
+                    <li><strong>Coverage:</strong> 36 SEPA countries</li>
+                    <li><strong>No Amount Limit</strong></li>
+                </ul>
+            </div>
+
+            <h3>SEPA Instant Credit Transfer (SCT Inst)</h3>
+            <div class="success-box">
+                <strong>Message Used:</strong> pain.001.001.09 (version 9+)
+                <ul>
+                    <li><strong>Processing Time:</strong> Maximum 10 seconds</li>
+                    <li><strong>Availability:</strong> 24/7/365</li>
+                    <li><strong>Transaction Limit:</strong> €100,000</li>
+                    <li><strong>Settlement:</strong> Real-time via TIPS or RT1</li>
+                </ul>
+            </div>
+
+            <h3>SEPA-Specific Requirements</h3>
+            <ul>
+                <li><strong>IBAN Mandatory:</strong> All accounts must use IBAN</li>
+                <li><strong>BIC Optional:</strong> BIC can be derived from IBAN</li>
+                <li><strong>End-to-End ID:</strong> Must be unique for 90 days</li>
+                <li><strong>Charge Bearer:</strong> Must be SLEV (SER ViceLevelAgreement)</li>
+                <li><strong>Purpose Code:</strong> 4-character code for payment purpose</li>
+            </ul>
+        </section>
+
+        <section id="cbpr-example">
+            <h2>CBPR+ Implementation</h2>
+            <p>
+                CBPR+ (Cross-Border Payments and Reporting Plus) is SWIFT's implementation of ISO 20022 for cross-border payments, replacing MT messages.
+            </p>
+
+            <h3>Key CBPR+ Messages</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ISO 20022 (MX)</th>
+                        <th>Legacy MT</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>pacs.008</td>
+                        <td>MT103</td>
+                        <td>Customer credit transfer</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.009</td>
+                        <td>MT202</td>
+                        <td>Financial institution transfer</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.002</td>
+                        <td>MT199</td>
+                        <td>Payment status</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.004</td>
+                        <td>MT103/202 Return</td>
+                        <td>Payment return</td>
+                    </tr>
+                    <tr>
+                        <td>camt.056</td>
+                        <td>MT192</td>
+                        <td>Cancellation request</td>
+                    </tr>
+                    <tr>
+                        <td>camt.029</td>
+                        <td>MT196</td>
+                        <td>Resolution of investigation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>CBPR+ Enhancements</h3>
+            <div class="success-box">
+                <strong>Data Richness:</strong>
+                <ul>
+                    <li><strong>Extended Remittance:</strong> Up to 140 characters unstructured + structured fields</li>
+                    <li><strong>Full Address Data:</strong> Complete debtor and creditor addresses</li>
+                    <li><strong>UETR:</strong> Unique End-to-End Transaction Reference (UUID) for tracking</li>
+                    <li><strong>Purpose Codes:</strong> Structured payment purpose information</li>
+                    <li><strong>Regulatory Reporting:</strong> Enhanced data for compliance</li>
+                </ul>
+            </div>
+
+            <h3>SWIFT gpi Integration</h3>
+            <p>
+                CBPR+ messages support SWIFT gpi (Global Payments Innovation) features:
+            </p>
+            <ul>
+                <li><strong>Real-Time Tracking:</strong> UETR enables end-to-end payment tracking</li>
+                <li><strong>Same-Day Value:</strong> Faster cross-border settlement</li>
+                <li><strong>Transparency:</strong> Fees and FX rates visible to payer</li>
+                <li><strong>Unaltered Remittance:</strong> Full remittance info passed through</li>
+            </ul>
+        </section>
+
+        <section id="chaps-example">
+            <h2>CHAPS Implementation</h2>
+            <p>
+                UK CHAPS migrated to ISO 20022 in 2020, becoming one of the first RTGS systems to fully adopt the standard.
+            </p>
+
+            <h3>CHAPS ISO 20022 Messages</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Usage in CHAPS</th>
+                        <th>Settlement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>pacs.008</td>
+                        <td>Customer payment instruction</td>
+                        <td>Real-time RTGS</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.009</td>
+                        <td>Financial institution transfer</td>
+                        <td>Real-time RTGS</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.002</td>
+                        <td>Payment acceptance/rejection</td>
+                        <td>N/A (status only)</td>
+                    </tr>
+                    <tr>
+                        <td>camt.056</td>
+                        <td>Payment recall request</td>
+                        <td>N/A (request only)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>CHAPS-Specific Fields</h3>
+            <div class="code-block"><span class="xml-comment">&lt;!-- CHAPS pacs.008 Specific Elements --&gt;</span>
+<span class="xml-tag">&lt;SttlmInf&gt;</span>
+  <span class="xml-tag">&lt;SttlmMtd&gt;</span>INGA<span class="xml-tag">&lt;/SttlmMtd&gt;</span>                        <span class="xml-comment">&lt;!-- RTGS Settlement --&gt;</span>
+  <span class="xml-tag">&lt;ClrSys&gt;</span>
+    <span class="xml-tag">&lt;Prtry&gt;</span>CHP<span class="xml-tag">&lt;/Prtry&gt;</span>                           <span class="xml-comment">&lt;!-- CHAPS identifier --&gt;</span>
+  <span class="xml-tag">&lt;/ClrSys&gt;</span>
+<span class="xml-tag">&lt;/SttlmInf&gt;</span>
+
+<span class="xml-tag">&lt;InstrForNxtAgt&gt;</span>
+  <span class="xml-tag">&lt;Cd&gt;</span>CHQB<span class="xml-tag">&lt;/Cd&gt;</span>                                  <span class="xml-comment">&lt;!-- Cheque by beneficiary --&gt;</span>
+  <span class="xml-tag">&lt;InstrInf&gt;</span>Payment for property completion<span class="xml-tag">&lt;/InstrInf&gt;</span>
+<span class="xml-tag">&lt;/InstrForNxtAgt&gt;</span></div>
+
+            <h3>CHAPS Operating Hours</h3>
+            <ul>
+                <li><strong>Core Hours:</strong> 06:00 - 18:00 GMT/BST</li>
+                <li><strong>Operating Days:</strong> Business days only</li>
+                <li><strong>No Transaction Limit</strong></li>
+                <li><strong>Same-Day Settlement:</strong> Guaranteed if submitted before cut-off</li>
+            </ul>
+        </section>
+
+        <section id="bacs-example">
+            <h2>BACS Migration to ISO 20022</h2>
+            <p>
+                BACS is in the process of migrating from Standard 18 format to ISO 20022, planned for completion by 2024-2025.
+            </p>
+
+            <h3>BACS ISO 20022 Messages (Planned)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>BACS Usage</th>
+                        <th>Replaces</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>pain.001</td>
+                        <td>Direct Credit initiation</td>
+                        <td>Standard 18 Type 3</td>
+                    </tr>
+                    <tr>
+                        <td>pain.008</td>
+                        <td>Direct Debit initiation</td>
+                        <td>Standard 18 Type 4</td>
+                    </tr>
+                    <tr>
+                        <td>pacs.008</td>
+                        <td>Inter-bank payment</td>
+                        <td>Standard 18 submission</td>
+                    </tr>
+                    <tr>
+                        <td>pain.002</td>
+                        <td>Payment status report</td>
+                        <td>BACSTEL-IP reports</td>
+                    </tr>
+                    <tr>
+                        <td>camt.053</td>
+                        <td>Statement/report</td>
+                        <td>Standard 18 Type 8/9</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Migration Benefits for BACS</h3>
+            <div class="success-box">
+                <ul>
+                    <li><strong>Richer Data:</strong> Full creditor/debtor information vs. limited fields</li>
+                    <li><strong>Better Reconciliation:</strong> Structured remittance information</li>
+                    <li><strong>Global Alignment:</strong> Same format as SEPA, CHAPS, international systems</li>
+                    <li><strong>Enhanced Reporting:</strong> More detailed payment statuses</li>
+                    <li><strong>Improved STP:</strong> Higher straight-through processing rates</li>
+                </ul>
+            </div>
+
+            <h3>Standard 18 to ISO 20022 Mapping</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standard 18 Field</th>
+                        <th>ISO 20022 Tag</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Destination Sort Code</td>
+                        <td>CdtrAcct/Id/Othr/Id + SchmeNm</td>
+                        <td>UK sort code scheme</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Account No</td>
+                        <td>CdtrAcct/Id/Othr/Id</td>
+                        <td>UK account number</td>
+                    </tr>
+                    <tr>
+                        <td>Amount (pence)</td>
+                        <td>InstdAmt (decimal)</td>
+                        <td>£12.50 instead of 1250</td>
+                    </tr>
+                    <tr>
+                        <td>Reference (12 chars)</td>
+                        <td>RmtInf/Ustrd (140 chars)</td>
+                        <td>Much longer reference</td>
+                    </tr>
+                    <tr>
+                        <td>Account Name (10 chars)</td>
+                        <td>Cdtr/Nm (140 chars)</td>
+                        <td>Full beneficiary name</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Code</td>
+                        <td>BkTxCd or PmtTpInf</td>
+                        <td>Structured coding</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="methods">
+            <h2>Cover, Core & Adv Methods</h2>
+            <p>
+                ISO 20022 supports three different settlement methods for correspondent banking and cross-border payments.
+            </p>
+
+            <h3>1. Cover Method (SttlmMtd = COVE)</h3>
+            <div class="info-box">
+                <strong>Definition:</strong> Customer payment (pacs.008) travels separately from the cover payment (pacs.009)
+            </div>
+
+            <div class="diagram">COVER METHOD FLOW:
+═══════════════════════════════════════════════════════════
+
+CUSTOMER PAYMENT PATH:
+Customer → Bank A → Bank B → Beneficiary
+             │                  │
+             └── pacs.008 ───────┘
+                (customer payment instruction)
+
+COVER PAYMENT PATH (Separate):
+Bank A → Correspondent → Settlement → Correspondent → Bank B
+         Account                                Account
+         │                                          │
+         └────────────── pacs.009 ─────────────────┘
+            (cover payment / nostro funding)
+
+CHARACTERISTICS:
+• Two separate messages (pacs.008 + pacs.009)
+• pacs.008 has FULL customer data
+• pacs.009 is the actual funds movement
+• Used when banks don't have direct relationship
+• Common in correspondent banking</div>
+
+            <h4>Cover Method Example</h4>
+            <div class="code-block"><span class="xml-comment">&lt;!-- pacs.008 - Customer Payment (Cover Method) --&gt;</span>
+<span class="xml-tag">&lt;SttlmInf&gt;</span>
+  <span class="xml-tag">&lt;SttlmMtd&gt;</span>COVE<span class="xml-tag">&lt;/SttlmMtd&gt;</span>                        <span class="xml-comment">&lt;!-- Cover Method --&gt;</span>
+  <span class="xml-tag">&lt;InstgRmbrsmntAgt&gt;</span>                          <span class="xml-comment">&lt;!-- Instructing Agent's Correspondent --&gt;</span>
+    <span class="xml-tag">&lt;FinInstnId&gt;</span><span class="xml-tag">&lt;BICFI&gt;</span>CHASUS33<span class="xml-tag">&lt;/BICFI&gt;</span><span class="xml-tag">&lt;/FinInstnId&gt;</span>
+  <span class="xml-tag">&lt;/InstgRmbrsmntAgt&gt;</span>
+  <span class="xml-tag">&lt;InstdRmbrsmntAgt&gt;</span>                          <span class="xml-comment">&lt;!-- Instructed Agent's Correspondent --&gt;</span>
+    <span class="xml-tag">&lt;FinInstnId&gt;</span><span class="xml-tag">&lt;BICFI&gt;</span>CITIUS33<span class="xml-tag">&lt;/BICFI&gt;</span><span class="xml-tag">&lt;/FinInstnId&gt;</span>
+  <span class="xml-tag">&lt;/InstdRmbrsmntAgt&gt;</span>
+<span class="xml-tag">&lt;/SttlmInf&gt;</span>
+
+<span class="xml-comment">&lt;!-- Separate pacs.009 sent for cover payment --&gt;</span></div>
+
+            <h3>2. Core Method (Sttl MtdCLRG)</h3>
+            <div class="info-box">
+                <strong>Definition:</strong> Single message contains both customer payment instruction AND settlement information
+            </div>
+
+            <div class="diagram">CORE METHOD FLOW (Most Common):
+═══════════════════════════════════════════════════════════
+
+SINGLE MESSAGE PATH:
+Customer → Bank A ────── pacs.008 ────── → Bank B → Beneficiary
+                  (payment + settlement)
+
+SETTLEMENT:
+Bank A → Clearing System → Bank B
+         (FPS, CHAPS, ACH)
+
+CHARACTERISTICS:
+• ONE message (pacs.008 only)
+• Contains customer data AND settlement info
+• Used in domestic/regional clearing systems
+• Simpler, more efficient
+• Examples: SEPA, FPS, CHAPS, ACH</div>
+
+            <h4>Core Method Example</h4>
+            <div class="code-block"><span class="xml-comment">&lt;!-- pacs.008 - Core Method (Most Common) --&gt;</span>
+<span class="xml-tag">&lt;SttlmInf&gt;</span>
+  <span class="xml-tag">&lt;SttlmMtd&gt;</span>CLRG<span class="xml-tag">&lt;/SttlmMtd&gt;</span>                        <span class="xml-comment">&lt;!-- Clearing System --&gt;</span>
+  <span class="xml-tag">&lt;ClrSys&gt;</span>
+    <span class="xml-tag">&lt;Cd&gt;</span>FPS<span class="xml-tag">&lt;/Cd&gt;</span>                                <span class="xml-comment">&lt;!-- Faster Payments --&gt;</span>
+  <span class="xml-tag">&lt;/ClrSys&gt;</span>
+<span class="xml-tag">&lt;/SttlmInf&gt;</span>
+
+<span class="xml-comment">&lt;!-- No separate cover message needed --&gt;</span></div>
+
+            <h3>3. ADV Method (SttlmMtd = INDA/INGA)</h3>
+            <div class="info-box">
+                <strong>Definition:</strong> Settlement occurs through RTGS or direct account relationship
+            </div>
+
+            <ul>
+                <li><strong>INDA:</strong> Settlement through designated account (e.g., nostro/vostro)</li>
+                <li><strong>INGA:</strong> Settlement through Real-Time Gross Settlement (RTGS) system</li>
+            </ul>
+
+            <div class="diagram">ADV METHOD FLOW (RTGS):
+═══════════════════════════════════════════════════════════
+
+PAYMENT INSTRUCTION:
+Customer → Bank A ────── pacs.008 ────── → Bank B → Beneficiary
+                  (INGA = RTGS settlement)
+
+RTGS SETTLEMENT (Simultaneous):
+Bank A RTGS Account → Central Bank → Bank B RTGS Account
+     (-£X)             (RTGS System)        (+£X)
+
+CHARACTERISTICS:
+• Real-time gross settlement
+• Each payment settled individually
+• Immediate finality
+• Used in: CHAPS, TARGET2, Fedwire
+• No netting, no delay</div>
+
+            <h4>ADV Method Example (RTGS)</h4>
+            <div class="code-block"><span class="xml-comment">&lt;!-- pacs.008 - RTGS Settlement (CHAPS) --&gt;</span>
+<span class="xml-tag">&lt;SttlmInf&gt;</span>
+  <span class="xml-tag">&lt;SttlmMtd&gt;</span>INGA<span class="xml-tag">&lt;/SttlmMtd&gt;</span>                        <span class="xml-comment">&lt;!-- RTGS --&gt;</span>
+  <span class="xml-tag">&lt;ClrSys&gt;</span>
+    <span class="xml-tag">&lt;Prtry&gt;</span>CHP<span class="xml-tag">&lt;/Prtry&gt;</span>                          <span class="xml-comment">&lt;!-- CHAPS --&gt;</span>
+  <span class="xml-tag">&lt;/ClrSys&gt;</span>
+<span class="xml-tag">&lt;/SttlmInf&gt;</span></div>
+
+            <h3>Method Comparison</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Code</th>
+                        <th>Messages</th>
+                        <th>Use Case</th>
+                        <th>Settlement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cover</td>
+                        <td>COVE</td>
+                        <td>pacs.008 + pacs.009</td>
+                        <td>Correspondent banking, no direct relationship</td>
+                        <td>Via correspondents</td>
+                    </tr>
+                    <tr>
+                        <td>Core (Clearing)</td>
+                        <td>CLRG</td>
+                        <td>pacs.008 only</td>
+                        <td>Domestic/regional clearing systems</td>
+                        <td>Net settlement</td>
+                    </tr>
+                    <tr>
+                        <td>ADV (RTGS)</td>
+                        <td>INGA</td>
+                        <td>pacs.008 only</td>
+                        <td>High-value, time-critical</td>
+                        <td>Real-time gross</td>
+                    </tr>
+                    <tr>
+                        <td>ADV (Account)</td>
+                        <td>INDA</td>
+                        <td>pacs.008 only</td>
+                        <td>Direct account relationship</td>
+                        <td>Nostro/vostro</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="challenges">
+            <h2>Implementation Challenges</h2>
+
+            <h3>1. Technical Challenges</h3>
+            <div class="warning-box">
+                <strong>Common Issues:</strong>
+                <ul>
+                    <li><strong>XML Complexity:</strong> Steep learning curve vs. fixed-width formats</li>
+                    <li><strong>Message Size:</strong> Larger messages require more bandwidth and storage</li>
+                    <li><strong>Processing Overhead:</strong> XML parsing is computationally expensive</li>
+                    <li><strong>Validation:</strong> Complex XSD schemas and business rules</li>
+                    <li><strong>Version Management:</strong> Multiple versions in circulation simultaneously</li>
+                </ul>
+            </div>
+
+            <h3>2. Data Quality Challenges</h3>
+            <ul>
+                <li><strong>Legacy Data Mapping:</strong> Converting truncated legacy data to rich ISO 20022 fields</li>
+                <li><strong>Data Completeness:</strong> Many fields now expected that weren't captured before</li>
+                <li><strong>Character Sets:</strong> Unicode support required (legacy systems often ASCII-only)</li>
+                <li><strong>Data Validation:</strong> Stricter validation rules reject more payments</li>
+            </ul>
+
+            <h3>3. Operational Challenges</h3>
+            <ul>
+                <li><strong>Dual Running:</strong> Supporting both legacy and ISO 20022 formats during migration</li>
+                <li><strong>Testing:</strong> Comprehensive testing required for all scenarios</li>
+                <li><strong>Training:</strong> Staff need training on new message structures</li>
+                <li><strong>Reconciliation:</strong> New fields affect existing reconciliation processes</li>
+            </ul>
+
+            <h3>4. Cost Challenges</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cost Area</th>
+                        <th>Impact</th>
+                        <th>Mitigation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>System Upgrades</td>
+                        <td>High initial investment</td>
+                        <td>Phased migration approach</td>
+                    </tr>
+                    <tr>
+                        <td>Processing Costs</td>
+                        <td>Higher per-message cost</td>
+                        <td>Optimized XML processing</td>
+                    </tr>
+                    <tr>
+                        <td>Storage</td>
+                        <td>More data to store</td>
+                        <td>Compression, archival strategies</td>
+                    </tr>
+                    <tr>
+                        <td>Training</td>
+                        <td>Ongoing education</td>
+                        <td>E-learning, documentation</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="best-practices">
+            <h2>Best Practices</h2>
+
+            <h3>1. Message Design</h3>
+            <div class="success-box">
+                <strong>Golden Rules:</strong>
+                <ul>
+                    <li><strong>Use Structured Data:</strong> Prefer structured over unstructured remittance</li>
+                    <li><strong>Populate Optional Fields:</strong> More data = better STP and reconciliation</li>
+                    <li><strong>Unique References:</strong> Always provide unique EndToEndId and TxId</li>
+                    <li><strong>Complete Addresses:</strong> Provide full structured addresses when available</li>
+                    <li><strong>Purpose Codes:</strong> Use standard purpose codes for better categorization</li>
+                </ul>
+            </div>
+
+            <h3>2. Implementation Approach</h3>
+            <div class="diagram">RECOMMENDED MIGRATION PATH:
+═══════════════════════════════════════════════════════════
+
+Phase 1: PREPARATION (3-6 months)
+• Gap analysis (current vs. ISO 20022)
+• Data mapping design
+• System architecture review
+• Vendor selection
+
+Phase 2: DEVELOPMENT (6-12 months)
+• Message generation/parsing
+• Validation engine
+• Mapping/transformation layer
+• Testing environment
+
+Phase 3: TESTING (3-6 months)
+• Unit testing
+• Integration testing
+• End-to-end testing
+• User acceptance testing
+
+Phase 4: DUAL RUNNING (6-12 months)
+• Both formats supported
+• Gradual migration of volumes
+• Monitor and fix issues
+• Performance tuning
+
+Phase 5: DECOMMISSION (3-6 months)
+• Turn off legacy systems
+• Final reconciliation
+• Documentation
+• Lessons learned</div>
+
+            <h3>3. Data Quality</h3>
+            <ul>
+                <li><strong>Validate Early:</strong> Validate against XSD schema before submission</li>
+                <li><strong>Business Rules:</strong> Implement business validation beyond XSD</li>
+                <li><strong>Clean Data:</strong> Cleanse legacy data before mapping</li>
+                <li><strong>Monitor Rejections:</strong> Track and analyze rejection patterns</li>
+                <li><strong>Feedback Loops:</strong> Use pain.002/pacs.002 responses to improve quality</li>
+            </ul>
+
+            <h3>4. Performance Optimization</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Optimization Technique</th>
+                        <th>Benefit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>XML Parsing</td>
+                        <td>Use SAX or StAX parsers</td>
+                        <td>Lower memory footprint</td>
+                    </tr>
+                    <tr>
+                        <td>Validation</td>
+                        <td>Cache compiled XSD schemas</td>
+                        <td>Faster validation</td>
+                    </tr>
+                    <tr>
+                        <td>Serialization</td>
+                        <td>Use binary XML (EXI)</td>
+                        <td>Smaller message size</td>
+                    </tr>
+                    <tr>
+                        <td>Transformation</td>
+                        <td>Compile XSLT stylesheets</td>
+                        <td>Faster conversion</td>
+                    </tr>
+                    <tr>
+                        <td>Storage</td>
+                        <td>Compress historical messages</td>
+                        <td>Reduced storage costs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>5. Testing Strategy</h3>
+            <div class="info-box">
+                <strong>Comprehensive Testing:</strong>
+                <ul>
+                    <li><strong>Schema Validation:</strong> Test against official XSD schemas</li>
+                    <li><strong>Business Rules:</strong> Verify all business validation rules</li>
+                    <li><strong>End-to-End:</strong> Test complete payment flows</li>
+                    <li><strong>Error Handling:</strong> Test all rejection scenarios</li>
+                    <li><strong>Performance:</strong> Load testing with production volumes</li>
+                    <li><strong>Interoperability:</strong> Test with multiple counterparties</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusion</h2>
+            <p>
+                ISO 20022 represents a fundamental transformation in financial messaging. While the migration presents challenges, the benefits of rich data, global interoperability, and improved automation make it the clear future of payment processing.
+            </p>
+
+            <div class="success-box">
+                <strong>Key Takeaways:</strong>
+                <ul>
+                    <li>ISO 20022 provides a common language for global financial messaging</li>
+                    <li>Rich structured data enables better STP, reconciliation, and compliance</li>
+                    <li>pain messages handle customer-to-bank instructions</li>
+                    <li>pacs messages handle inter-bank settlement</li>
+                    <li>camt messages provide account reporting and cash management</li>
+                    <li>Multiple settlement methods (Cover, Core, ADV) support different use cases</li>
+                    <li>Migration requires careful planning, testing, and phased implementation</li>
+                </ul>
+            </div>
+
+            <p>
+                As SWIFT completes its migration from MT to MX messages and domestic payment systems worldwide adopt ISO 20022, understanding this standard becomes essential for anyone working in payments, treasury, or financial technology.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ISO 20022 Complete Technical Guide. Universal standard for financial messaging worldwide.</p>
+        </div>
+    </footer>
+</body>
+</html>
