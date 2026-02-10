@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACS Standard 18 Format - Complete Technical Guide</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3Ecircle%7Bfill:%231a365d%7D text%7Bfill:white;font-family:Arial,sans-serif;font-size:50px;font-weight:bold%7D%3C/style%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ctext x='50' y='70' text-anchor='middle'%3E💷%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --bacs-accent: #0891b2;
+            --bacs-light: #cffafe;
+            --code-bg: #1e293b;
+            --warning-color: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f9fafb 0%, #e8eef5 100%);
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--bacs-accent) 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 1rem; }
+        .subtitle { font-size: 1.3rem; opacity: 0.95; }
+        
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--bacs-accent);
+            padding-left: 1.5rem;
+        }
+        h3 { font-size: 1.7rem; color: #2d3748; margin: 2rem 0 1rem; }
+        h4 { font-size: 1.4rem; color: #2d3748; margin: 1.5rem 0 1rem; }
+        p { margin: 1.2rem 0; font-size: 1.1rem; color: #4b5563; }
+        ul, ol { margin: 1.5rem 0 1.5rem 2rem; font-size: 1.1rem; }
+        
+        .info-box {
+            background: linear-gradient(135deg, var(--bacs-light) 0%, #a5f3fc 100%);
+            border-left: 5px solid var(--bacs-accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 5px solid var(--warning-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .diagram {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .code-block .comment { color: #6ee7b7; }
+        .code-block .keyword { color: #fbbf24; }
+        .code-block .string { color: #93c5fd; }
+        .code-block .number { color: #f9a8d4; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+        }
+        th {
+            background: var(--bacs-accent);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        td { padding: 0.8rem 1rem; border-bottom: 1px solid #e5e7eb; }
+        tr:hover { background: #f9fafb; }
+        
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--bacs-accent);
+        }
+        .toc ul { list-style: none; }
+        .toc li { margin: 0.8rem 0; padding-left: 1.5rem; position: relative; }
+        .toc li::before { content: '▸'; position: absolute; left: 0; color: var(--bacs-accent); }
+        .toc a { color: #1f2937; text-decoration: none; font-weight: 600; }
+        .toc a:hover { color: var(--bacs-accent); }
+        
+        .record-type-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--bacs-accent) 0%, #0e7490 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .optional-badge {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+        
+        .mandatory-badge {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+        
+        footer { background: #2d3748; color: white; text-align: center; padding: 2rem; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>BACS Standard 18 Format</h1>
+            <p class="subtitle">Complete Technical Specification & Implementation Guide</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#structure">File Composition & Structure</a></li>
+                <li><a href="#volume-header">Volume Header Record (Type 0)</a></li>
+                <li><a href="#file-header">File Header Record (Type 1)</a></li>
+                <li><a href="#user-header">User Header Record (Type 2)</a></li>
+                <li><a href="#user-data">User Data Records (Type 3-7)</a></li>
+                <li><a href="#user-trailer">User Trailer Record (Type 8)</a></li>
+                <li><a href="#file-trailer">File Trailer Record (Type 9)</a></li>
+                <li><a href="#examples">Complete File Examples</a></li>
+                <li><a href="#transaction-codes">Transaction Codes</a></li>
+                <li><a href="#formatting">Field Formatting Rules</a></li>
+                <li><a href="#validation">Validation Rules</a></li>
+                <li><a href="#errors">Error Codes & Rejections</a></li>
+                <li><a href="#best-practices">Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <section id="overview">
+            <h2>Overview of Standard 18 Format</h2>
+            <p>
+                Standard 18 is the <strong>most widely used</strong> file format for BACS payments in the UK. It's a <strong>fixed-width ASCII format</strong> that ensures compatibility across all banks and BACS-approved software.
+            </p>
+
+            <h3>Key Characteristics</h3>
+            <div class="info-box">
+                <strong>Core Specifications:</strong>
+                <ul>
+                    <li><strong>Character Set:</strong> ASCII (American Standard Code for Information Interchange)</li>
+                    <li><strong>Encoding:</strong> EBCDIC also acceptable but ASCII is standard</li>
+                    <li><strong>Record Length:</strong> 120 characters per record (bytes)</li>
+                    <li><strong>File Structure:</strong> Multiple record types in a single file</li>
+                    <li><strong>File Extension:</strong> Typically <code>.bac</code>, <code>.txt</code>, or <code>.dat</code></li>
+                    <li><strong>Line Endings:</strong> CRLF (Windows) or LF (Unix) - both accepted</li>
+                </ul>
+            </div>
+
+            <h3>Why Standard 18?</h3>
+            <p>
+                Standard 18 has been the backbone of UK automated payments since the 1980s because:
+            </p>
+            <ul>
+                <li><strong>Universal Compatibility:</strong> Works with all UK banks and building societies</li>
+                <li><strong>Simple Structure:</strong> Fixed-width format is easy to generate and parse</li>
+                <li><strong>Proven Reliability:</strong> Decades of use in high-volume payment processing</li>
+                <li><strong>No Ambiguity:</strong> Every field has exact position and length</li>
+                <li><strong>Batch Efficiency:</strong> Optimized for processing millions of transactions daily</li>
+            </ul>
+        </section>
+
+        <section id="structure">
+            <h2>File Composition & Structure</h2>
+            <p>
+                A Standard 18 file consists of multiple record types arranged in a specific sequence. Not all record types are mandatory.
+            </p>
+
+            <div class="diagram">┌─────────────────────────────────────────────────────────┐
+│           STANDARD 18 FILE HIERARCHY                    │
+├─────────────────────────────────────────────────────────┤
+│ 1. VOLUME HEADER RECORD    (Type 0) - Optional          │
+│ 2. FILE HEADER RECORD      (Type 1) - MANDATORY         │
+│ 3. USER HEADER RECORD      (Type 2) - Optional          │
+│ 4. USER DATA RECORDS       (Type 3-7) - Payment Details │
+│    ├─ Type 3: Automated Credits (AC)                    │
+│    ├─ Type 4: Direct Debits (DD)                        │
+│    └─ Type 5: AUDDIS/ADDACS                             │
+│ 5. USER TRAILER RECORD     (Type 8) - Optional          │
+│ 6. FILE TRAILER RECORD     (Type 9) - MANDATORY         │
+│ 7. VOLUME TRAILER RECORD   (Type 0) - Optional          │
+└─────────────────────────────────────────────────────────┘</div>
+
+            <h3>Typical File Flow</h3>
+            <div class="code-block"><span class="comment">// Minimal BACS Standard 18 File</span>
+Type 1 - File Header <span class="string">(MANDATORY)</span>
+Type 3 - Payment Record 1
+Type 3 - Payment Record 2
+...
+Type 3 - Payment Record N
+Type 9 - File Trailer <span class="string">(MANDATORY)</span>
+
+<span class="comment">// Full Featured File</span>
+Type 0 - Volume Header <span class="string">(optional)</span>
+Type 1 - File Header <span class="string">(MANDATORY)</span>
+Type 2 - User Header <span class="string">(optional)</span>
+Type 3/4/5 - Payment Records
+Type 8 - User Trailer <span class="string">(optional but recommended)</span>
+Type 9 - File Trailer <span class="string">(MANDATORY)</span>
+Type 0 - Volume Trailer <span class="string">(optional)</span></div>
+        </section>
+
+        <section id="volume-header">
+            <h2>Volume Header Record<span class="record-type-badge optional-badge">Type 0</span><span class="record-type-badge optional-badge">Optional</span></h2>
+            <p>
+                The Volume Header was originally used for multi-file volumes on magnetic tape. It's rarely used in modern file-based submissions.
+            </p>
+
+            <h3>Record Structure</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-01</td>
+                        <td>Record Type</td>
+                        <td>1</td>
+                        <td>'0'</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>02-04</td>
+                        <td>Label Identifier</td>
+                        <td>3</td>
+                        <td>'VOL'</td>
+                        <td>VOL</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Volume Serial Number</td>
+                        <td>6</td>
+                        <td>Alphanum</td>
+                        <td>BACS01</td>
+                    </tr>
+                    <tr>
+                        <td>11-37</td>
+                        <td>Filler</td>
+                        <td>27</td>
+                        <td>Spaces</td>
+                        <td>(27 spaces)</td>
+                    </tr>
+                    <tr>
+                        <td>38-80</td>
+                        <td>Reserved</td>
+                        <td>43</td>
+                        <td>Spaces</td>
+                        <td>(43 spaces)</td>
+                    </tr>
+                    <tr>
+                        <td>81-120</td>
+                        <td>Filler</td>
+                        <td>40</td>
+                        <td>Spaces</td>
+                        <td>(40 spaces)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Note:</strong> Unless you're working with legacy tape-based systems, you can safely omit the Volume Header and Volume Trailer records.
+            </div>
+        </section>
+
+        <section id="file-header">
+            <h2>File Header Record<span class="record-type-badge mandatory-badge">Type 1</span><span class="record-type-badge mandatory-badge">MANDATORY</span></h2>
+            <p>
+                The File Header identifies the file and provides key processing information. This record is <strong>mandatory</strong> and must be the first record in every Standard 18 file (unless preceded by a Volume Header).
+            </p>
+
+            <h3>Record Structure</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 1'</td>
+                        <td>_1</td>
+                        <td>Space + digit 1</td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Priority Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>01</td>
+                        <td>01=Standard, 02=High Priority</td>
+                    </tr>
+                    <tr>
+                        <td>05-20</td>
+                        <td>Destination Bank Sort</td>
+                        <td>16</td>
+                        <td>Spaces</td>
+                        <td>(16 spaces)</td>
+                        <td>Usually blank</td>
+                    </tr>
+                    <tr>
+                        <td>21-26</td>
+                        <td>Destination Bank Name</td>
+                        <td>6</td>
+                        <td>Text</td>
+                        <td>BACS__</td>
+                        <td>Usually 'BACS' padded</td>
+                    </tr>
+                    <tr>
+                        <td>27-32</td>
+                        <td>File Sequence Number</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>000001</td>
+                        <td>Increments each submission</td>
+                    </tr>
+                    <tr>
+                        <td>33-38</td>
+                        <td>Originator ID</td>
+                        <td>6</td>
+                        <td>Alphanum</td>
+                        <td>ABC123</td>
+                        <td>Company identifier</td>
+                    </tr>
+                    <tr>
+                        <td>39-44</td>
+                        <td>Processing Date</td>
+                        <td>6</td>
+                        <td>DDMMYY</td>
+                        <td>150124</td>
+                        <td>15 Jan 2024</td>
+                    </tr>
+                    <tr>
+                        <td>45-50</td>
+                        <td>Processing Time</td>
+                        <td>6</td>
+                        <td>HHMMSS</td>
+                        <td>143000</td>
+                        <td>14:30:00 (2:30 PM)</td>
+                    </tr>
+                    <tr>
+                        <td>51-52</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>53-54</td>
+                        <td>Block Length</td>
+                        <td>2</td>
+                        <td>'00'</td>
+                        <td>00</td>
+                        <td>Legacy tape field</td>
+                    </tr>
+                    <tr>
+                        <td>55-56</td>
+                        <td>Record Length</td>
+                        <td>2</td>
+                        <td>'00'</td>
+                        <td>00</td>
+                        <td>Legacy tape field</td>
+                    </tr>
+                    <tr>
+                        <td>57-74</td>
+                        <td>Filler</td>
+                        <td>18</td>
+                        <td>Spaces</td>
+                        <td>(18 spaces)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>75-80</td>
+                        <td>File Generation Number</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>000001</td>
+                        <td>Version control</td>
+                    </tr>
+                    <tr>
+                        <td>81-120</td>
+                        <td>Filler</td>
+                        <td>40</td>
+                        <td>Spaces</td>
+                        <td>(40 spaces)</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Example File Header</h3>
+            <div class="code-block"> 1<span class="number">01</span>                  <span class="string">BACS</span>  <span class="number">000001</span><span class="string">ABC123</span><span class="number">150124143000</span>      <span class="number">00</span> <span class="number">00</span>                  <span class="number">000001</span>                                        </div>
+
+            <div class="info-box">
+                <strong>Processing Date Format:</strong>
+                <ul>
+                    <li>Format: DDMMYY (6 digits)</li>
+                    <li>Example: 150124 = 15th January 2024</li>
+                    <li>Must be today or a future business day</li>
+                    <li>BACS processes D+3 (submission day + 3 working days)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="user-header">
+            <h2>User Header Record<span class="record-type-badge optional-badge">Type 2</span><span class="record-type-badge optional-badge">Optional</span></h2>
+            <p>
+                The User Header identifies the Service User (originator) of the payments. While optional, it's recommended for proper identification and audit trails.
+            </p>
+
+            <h3>Record Structure</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 2'</td>
+                        <td>_2</td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Service User Number (SUN)</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>987654</td>
+                    </tr>
+                    <tr>
+                        <td>11-20</td>
+                        <td>File Sequence Number</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000000001</td>
+                    </tr>
+                    <tr>
+                        <td>21-46</td>
+                        <td>Company Name</td>
+                        <td>26</td>
+                        <td>Text</td>
+                        <td>ABC COMPANY LTD________</td>
+                    </tr>
+                    <tr>
+                        <td>47-74</td>
+                        <td>Filler</td>
+                        <td>28</td>
+                        <td>Spaces</td>
+                        <td>(28 spaces)</td>
+                    </tr>
+                    <tr>
+                        <td>75-80</td>
+                        <td>Processing Date</td>
+                        <td>6</td>
+                        <td>DDMMYY</td>
+                        <td>150124</td>
+                    </tr>
+                    <tr>
+                        <td>81-120</td>
+                        <td>Filler</td>
+                        <td>40</td>
+                        <td>Spaces</td>
+                        <td>(40 spaces)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Service User Number (SUN)</h3>
+            <div class="info-box">
+                <strong>About SUNs:</strong>
+                <ul>
+                    <li>Unique 6-digit identifier assigned by BACS/bank</li>
+                    <li>Required for submitting payments to BACS</li>
+                    <li>Links payments to specific organization/department</li>
+                    <li>Must be active and authorized for payment types used</li>
+                    <li>Example: 987654, 123456, 555555</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="user-data">
+            <h2>User Data Records<span class="record-type-badge">Type 3-7</span><span class="record-type-badge mandatory-badge">Payment Data</span></h2>
+            <p>
+                User Data records contain the actual payment instructions. Different record types handle different payment scenarios.
+            </p>
+
+            <h3>Type 3: Automated Credit (AC) Records</h3>
+            <p><strong>Purpose:</strong> Paying money INTO accounts (salaries, refunds, supplier payments)</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 3'</td>
+                        <td>_3</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Transaction Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>99</td>
+                        <td>Usually 99 (continuation)</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Destination Sort Code</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>123456</td>
+                        <td>Beneficiary's bank</td>
+                    </tr>
+                    <tr>
+                        <td>11-18</td>
+                        <td>Destination Account Number</td>
+                        <td>8</td>
+                        <td>Alphanum</td>
+                        <td>87654321</td>
+                        <td>Beneficiary's account</td>
+                    </tr>
+                    <tr>
+                        <td>19-20</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>21-30</td>
+                        <td>Amount</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000012500</td>
+                        <td>£125.00 in pence</td>
+                    </tr>
+                    <tr>
+                        <td>31-32</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>33-42</td>
+                        <td>Destination Account Name</td>
+                        <td>10</td>
+                        <td>Text</td>
+                        <td>J SMITH___</td>
+                        <td>Beneficiary name</td>
+                    </tr>
+                    <tr>
+                        <td>43-54</td>
+                        <td>Reference</td>
+                        <td>12</td>
+                        <td>Alphanum</td>
+                        <td>SALJAN24____</td>
+                        <td>Payment reference</td>
+                    </tr>
+                    <tr>
+                        <td>55-60</td>
+                        <td>Originating Sort Code</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>654321</td>
+                        <td>Your bank</td>
+                    </tr>
+                    <tr>
+                        <td>61-68</td>
+                        <td>Originating Account Number</td>
+                        <td>8</td>
+                        <td>Alphanum</td>
+                        <td>12345678</td>
+                        <td>Your account</td>
+                    </tr>
+                    <tr>
+                        <td>69-74</td>
+                        <td>Filler</td>
+                        <td>6</td>
+                        <td>Spaces</td>
+                        <td>______</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>75-76</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>77-78</td>
+                        <td>Transaction Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>99</td>
+                        <td>Must match pos 03-04</td>
+                    </tr>
+                    <tr>
+                        <td>79-120</td>
+                        <td>Filler</td>
+                        <td>42</td>
+                        <td>Spaces</td>
+                        <td>(42 spaces)</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Example Type 3 Record</h4>
+            <div class="code-block"> <span class="number">3</span> <span class="number">99</span><span class="number">123456</span><span class="number">87654321</span>  <span class="number">0000012500</span>  <span class="string">J SMITH</span>    <span class="string">SALJAN24</span>    <span class="number">654321</span><span class="number">12345678</span>      <span class="number">  99</span>                                          </div>
+
+            <h3>Type 4: Direct Debit (DD) Records</h3>
+            <p><strong>Purpose:</strong> Collecting money FROM accounts (subscriptions, bills, membership fees)</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 4'</td>
+                        <td>_4</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Transaction Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>17/18</td>
+                        <td>17=First, 18=Subsequent</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Destination Sort Code</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>123456</td>
+                        <td>Payer's bank</td>
+                    </tr>
+                    <tr>
+                        <td>11-18</td>
+                        <td>Destination Account Number</td>
+                        <td>8</td>
+                        <td>Alphanum</td>
+                        <td>87654321</td>
+                        <td>Payer's account</td>
+                    </tr>
+                    <tr>
+                        <td>19-20</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>21-30</td>
+                        <td>Amount</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000005999</td>
+                        <td>£59.99 in pence</td>
+                    </tr>
+                    <tr>
+                        <td>31-32</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>33-42</td>
+                        <td>Destination Account Name</td>
+                        <td>10</td>
+                        <td>Text</td>
+                        <td>J SMITH___</td>
+                        <td>Payer name</td>
+                    </tr>
+                    <tr>
+                        <td>43-54</td>
+                        <td>Reference</td>
+                        <td>12</td>
+                        <td>Alphanum</td>
+                        <td>GYM789JOHN__</td>
+                        <td>DDI reference</td>
+                    </tr>
+                    <tr>
+                        <td>55-60</td>
+                        <td>Originating Sort Code</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>654321</td>
+                        <td>Your bank</td>
+                    </tr>
+                    <tr>
+                        <td>61-68</td>
+                        <td>Originating Account Number</td>
+                        <td>8</td>
+                        <td>Alphanum</td>
+                        <td>12345678</td>
+                        <td>Your account</td>
+                    </tr>
+                    <tr>
+                        <td>69-74</td>
+                        <td>Filler</td>
+                        <td>6</td>
+                        <td>Spaces</td>
+                        <td>______</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>75-76</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>77-78</td>
+                        <td>Transaction Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>17/18</td>
+                        <td>Must match pos 03-04</td>
+                    </tr>
+                    <tr>
+                        <td>79-120</td>
+                        <td>Filler</td>
+                        <td>42</td>
+                        <td>Spaces</td>
+                        <td>(42 spaces)</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Direct Debit Requirements:</strong>
+                <ul>
+                    <li>Requires valid Direct Debit Instruction (DDI) to be in place</li>
+                    <li>Payer must have authorized the collection in advance</li>
+                    <li>Reference must match DDI reference</li>
+                    <li>Transaction code 17 for first payment, 18 for subsequent payments</li>
+                    <li>Must comply with Direct Debit Guarantee scheme rules</li>
+                </ul>
+            </div>
+
+            <h3>Type 5: AUDDIS/ADDACS Records</h3>
+            <p><strong>Purpose:</strong> Setting up or canceling Direct Debit Instructions</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 5'</td>
+                        <td>_5</td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Instruction Type</td>
+                        <td>2</td>
+                        <td>Alphanum</td>
+                        <td>0A</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Service User Number</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>987654</td>
+                    </tr>
+                    <tr>
+                        <td>11-16</td>
+                        <td>Destination Sort Code</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>123456</td>
+                    </tr>
+                    <tr>
+                        <td>17-24</td>
+                        <td>Destination Account Number</td>
+                        <td>8</td>
+                        <td>Alphanum</td>
+                        <td>87654321</td>
+                    </tr>
+                    <tr>
+                        <td>25-44</td>
+                        <td>Reference</td>
+                        <td>20</td>
+                        <td>Alphanum</td>
+                        <td>CUST001A____________</td>
+                    </tr>
+                    <tr>
+                        <td>45-46</td>
+                        <td>Instruction Code</td>
+                        <td>2</td>
+                        <td>Alphanum</td>
+                        <td>0A</td>
+                    </tr>
+                    <tr>
+                        <td>47-48</td>
+                        <td>Reason Code</td>
+                        <td>2</td>
+                        <td>Numeric</td>
+                        <td>00</td>
+                    </tr>
+                    <tr>
+                        <td>49-68</td>
+                        <td>Customer Name</td>
+                        <td>20</td>
+                        <td>Text</td>
+                        <td>JOHN SMITH__________</td>
+                    </tr>
+                    <tr>
+                        <td>69-120</td>
+                        <td>Filler</td>
+                        <td>52</td>
+                        <td>Spaces</td>
+                        <td>(52 spaces)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>AUDDIS Instruction Codes</h4>
+            <ul>
+                <li><strong>0A:</strong> New DDI setup</li>
+                <li><strong>0C:</strong> Cancel existing DDI</li>
+                <li><strong>0S:</strong> Convert to SUN (Service User Number)</li>
+            </ul>
+        </section>
+
+        <section id="user-trailer">
+            <h2>User Trailer Record<span class="record-type-badge optional-badge">Type 8</span><span class="record-type-badge optional-badge">Recommended</span></h2>
+            <p>
+                The User Trailer provides control totals for the user's transactions. While optional, it's <strong>highly recommended</strong> for data integrity and reconciliation.
+            </p>
+
+            <h3>Record Structure</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 8'</td>
+                        <td>_8</td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Service User Number</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>987654</td>
+                    </tr>
+                    <tr>
+                        <td>11-20</td>
+                        <td>Number of Type 3 Records</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000000025</td>
+                    </tr>
+                    <tr>
+                        <td>21-30</td>
+                        <td>Number of Type 4 Records</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000000100</td>
+                    </tr>
+                    <tr>
+                        <td>31-40</td>
+                        <td>Total Type 3 Value (pence)</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0001250000</td>
+                    </tr>
+                    <tr>
+                        <td>41-50</td>
+                        <td>Total Type 4 Value (pence)</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0005999000</td>
+                    </tr>
+                    <tr>
+                        <td>51-60</td>
+                        <td>Hash Total</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>61-120</td>
+                        <td>Filler</td>
+                        <td>60</td>
+                        <td>Spaces</td>
+                        <td>(60 spaces)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Hash Total Calculation</h3>
+            <div class="info-box">
+                <strong>How to Calculate Hash Total:</strong>
+                <ol>
+                    <li>Take the rightmost 6 digits of each destination account number</li>
+                    <li>Convert to numeric value (remove leading zeros)</li>
+                    <li>Sum all values</li>
+                    <li>Take rightmost 10 digits of the sum</li>
+                    <li>Left-pad with zeros to 10 digits</li>
+                </ol>
+                <p><strong>Example:</strong></p>
+                <ul>
+                    <li>Account 87654321 → 654321</li>
+                    <li>Account 98765432 → 765432</li>
+                    <li>Account 12345678 → 345678</li>
+                    <li>Sum: 654321 + 765432 + 345678 = 1765431</li>
+                    <li>Hash Total: 0001765431</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="file-trailer">
+            <h2>File Trailer Record<span class="record-type-badge mandatory-badge">Type 9</span><span class="record-type-badge mandatory-badge">MANDATORY</span></h2>
+            <p>
+                The File Trailer is the final record in every Standard 18 file (unless followed by a Volume Trailer). It provides file-level control totals.
+            </p>
+
+            <h3>Record Structure</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Positions</th>
+                        <th>Field</th>
+                        <th>Length</th>
+                        <th>Format</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-02</td>
+                        <td>Record Type</td>
+                        <td>2</td>
+                        <td>' 9'</td>
+                        <td>_9</td>
+                    </tr>
+                    <tr>
+                        <td>03-04</td>
+                        <td>Filler</td>
+                        <td>2</td>
+                        <td>Spaces</td>
+                        <td>__</td>
+                    </tr>
+                    <tr>
+                        <td>05-10</td>
+                        <td>Destination Bank Sort</td>
+                        <td>6</td>
+                        <td>Numeric</td>
+                        <td>999999</td>
+                    </tr>
+                    <tr>
+                        <td>11-20</td>
+                        <td>Number of Records in File</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000000127</td>
+                    </tr>
+                    <tr>
+                        <td>21-30</td>
+                        <td>Block Count</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>0000000001</td>
+                    </tr>
+                    <tr>
+                        <td>31-40</td>
+                        <td>Hash Total</td>
+                        <td>10</td>
+                        <td>Numeric</td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>81-120</td>
+                        <td>Filler</td>
+                        <td>80</td>
+                        <td>Spaces</td>
+                        <td>(80 spaces)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>Number of Records:</strong>
+                <ul>
+                    <li>Count includes ALL records in the file</li>
+                    <li>Includes header, data, trailer, and user records</li>
+                    <li>Does NOT include the Type 9 trailer itself</li>
+                    <li>Example: If file has 1 header + 125 payments + 1 user trailer = 127</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="examples">
+            <h2>Complete File Examples</h2>
+
+            <h3>Example 1: Salary Payment File (3 Employees)</h3>
+            <div class="code-block"><span class="comment">// File Header</span>
+<span class="keyword"> 1</span> <span class="number">01</span>                  <span class="string">BACS</span>  <span class="number">000001</span><span class="string">ABC123</span><span class="number">150124143000</span>      <span class="number">00</span> <span class="number">00</span>                  <span class="number">000001</span>                                        
+
+<span class="comment">// User Header</span>
+<span class="keyword"> 2</span>  <span class="number">987654</span><span class="number">0000000001</span><span class="string">ABC COMPANY LTD</span>                              <span class="number">150124</span>                                        
+
+<span class="comment">// Payment 1: £125.00 to J SMITH</span>
+<span class="keyword"> 3</span> <span class="number">99</span><span class="number">123456</span><span class="number">87654321</span>  <span class="number">0000012500</span>  <span class="string">J SMITH</span>    <span class="string">SALJAN24</span>    <span class="number">654321</span><span class="number">12345678</span>            <span class="number">99</span>                                          
+
+<span class="comment">// Payment 2: £200.00 to A JONES</span>
+<span class="keyword"> 3</span> <span class="number">99</span><span class="number">654321</span><span class="number">98765432</span>  <span class="number">0000020000</span>  <span class="string">A JONES</span>    <span class="string">SALJAN24</span>    <span class="number">654321</span><span class="number">12345678</span>            <span class="number">99</span>                                          
+
+<span class="comment">// Payment 3: £180.00 to R DAVIS</span>
+<span class="keyword"> 3</span> <span class="number">99</span><span class="number">234567</span><span class="number">12345678</span>  <span class="number">0000018000</span>  <span class="string">R DAVIS</span>    <span class="string">SALJAN24</span>    <span class="number">654321</span><span class="number">12345678</span>            <span class="number">99</span>                                          
+
+<span class="comment">// User Trailer (3 credits totaling £505.00)</span>
+<span class="keyword"> 8</span>  <span class="number">987654</span><span class="number">0000000003</span><span class="number">0000000000</span><span class="number">0000050500</span><span class="number">0000000000</span><span class="number">0001765431</span>                                                            
+
+<span class="comment">// File Trailer (6 records total)</span>
+<span class="keyword"> 9</span>      <span class="number">999999</span><span class="number">0000000006</span><span class="number">0000000001</span><span class="number">0001765431</span>                                                                                  </div>
+
+            <h3>Example 2: Direct Debit Collection File</h3>
+            <div class="code-block"><span class="comment">// File Header</span>
+<span class="keyword"> 1</span> <span class="number">01</span>                  <span class="string">BACS</span>  <span class="number">000001</span><span class="string">GYM999</span><span class="number">150124143000</span>      <span class="number">00</span> <span class="number">00</span>                  <span class="number">000001</span>                                        
+
+<span class="comment">// User Header</span>
+<span class="keyword"> 2</span>  <span class="number">555555</span><span class="number">0000000001</span><span class="string">FITNESSPLUS LTD</span>                              <span class="number">150124</span>                                        
+
+<span class="comment">// DD 1: £59.99 from J SMITH (First Payment)</span>
+<span class="keyword"> 4</span> <span class="number">17</span><span class="number">123456</span><span class="number">87654321</span>  <span class="number">0000005999</span>  <span class="string">J SMITH</span>    <span class="string">GYM789JOHN</span>  <span class="number">654321</span><span class="number">12345678</span>            <span class="number">17</span>                                          
+
+<span class="comment">// DD 2: £45.00 from M BROWN (Subsequent Payment)</span>
+<span class="keyword"> 4</span> <span class="number">18</span><span class="number">654321</span><span class="number">98765432</span>  <span class="number">0000004500</span>  <span class="string">M BROWN</span>    <span class="string">GYM789MARY</span>  <span class="number">654321</span><span class="number">12345678</span>            <span class="number">18</span>                                          
+
+<span class="comment">// DD 3: £35.00 from T WILSON (First Payment)</span>
+<span class="keyword"> 4</span> <span class="number">17</span><span class="number">234567</span><span class="number">12345678</span>  <span class="number">0000003500</span>  <span class="string">T WILSON</span>   <span class="string">GYM789TOM</span>   <span class="number">654321</span><span class="number">12345678</span>            <span class="number">17</span>                                          
+
+<span class="comment">// User Trailer (3 debits totaling £104.99)</span>
+<span class="keyword"> 8</span>  <span class="number">555555</span><span class="number">0000000000</span><span class="number">0000000003</span><span class="number">0000000000</span><span class="number">0000010499</span><span class="number">0001765431</span>                                                            
+
+<span class="comment">// File Trailer (6 records total)</span>
+<span class="keyword"> 9</span>      <span class="number">999999</span><span class="number">0000000006</span><span class="number">0000000001</span><span class="number">0001765431</span>                                                                                  </div>
+
+            <h3>Example 3: Mixed File (Credits + Debits)</h3>
+            <div class="code-block"><span class="comment">// File with both AC (credits) and DD (debits)</span>
+<span class="keyword"> 1</span> <span class="number">01</span>                  <span class="string">BACS</span>  <span class="number">000001</span><span class="string">MIX001</span><span class="number">150124143000</span>      <span class="number">00</span> <span class="number">00</span>                  <span class="number">000001</span>                                        
+<span class="keyword"> 2</span>  <span class="number">888888</span><span class="number">0000000001</span><span class="string">UTILITY COMPANY LTD</span>                          <span class="number">150124</span>                                        
+
+<span class="comment">// Refund credits</span>
+<span class="keyword"> 3</span> <span class="number">99</span><span class="number">123456</span><span class="number">11111111</span>  <span class="number">0000002500</span>  <span class="string">CUST A</span>     <span class="string">REFUND001</span>   <span class="number">654321</span><span class="number">88888888</span>            <span class="number">99</span>                                          
+<span class="keyword"> 3</span> <span class="number">99</span><span class="number">234567</span><span class="number">22222222</span>  <span class="number">0000001500</span>  <span class="string">CUST B</span>     <span class="string">REFUND002</span>   <span class="number">654321</span><span class="number">88888888</span>            <span class="number">99</span>                                          
+
+<span class="comment">// Bill collections</span>
+<span class="keyword"> 4</span> <span class="number">18</span><span class="number">345678</span><span class="number">33333333</span>  <span class="number">0000008500</span>  <span class="string">CUST C</span>     <span class="string">BILL789</span>     <span class="number">654321</span><span class="number">88888888</span>            <span class="number">18</span>                                          
+<span class="keyword"> 4</span> <span class="number">17</span><span class="number">456789</span><span class="number">44444444</span>  <span class="number">0000012500</span>  <span class="string">CUST D</span>     <span class="string">BILL790</span>     <span class="number">654321</span><span class="number">88888888</span>            <span class="number">17</span>                                          
+
+<span class="comment">// User Trailer (2 credits £40, 2 debits £210)</span>
+<span class="keyword"> 8</span>  <span class="number">888888</span><span class="number">0000000002</span><span class="number">0000000002</span><span class="number">0000004000</span><span class="number">0000021000</span><span class="number">0000110000</span>                                                            
+<span class="keyword"> 9</span>      <span class="number">999999</span><span class="number">0000000007</span><span class="number">0000000001</span><span class="number">0000110000</span>                                                                                  </div>
+        </section>
+
+        <section id="transaction-codes">
+            <h2>Transaction Codes Reference</h2>
+
+            <h3>For Type 3 (Automated Credit) Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>99</td>
+                        <td>Continuation Record</td>
+                        <td>Standard for most AC payments (salaries, refunds)</td>
+                    </tr>
+                    <tr>
+                        <td>01-49</td>
+                        <td>Various Credit Types</td>
+                        <td>Rarely used - bank specific</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td>Internally Generated</td>
+                        <td>System-initiated credits</td>
+                    </tr>
+                    <tr>
+                        <td>51</td>
+                        <td>Same Branch Transfer</td>
+                        <td>Between accounts at same branch</td>
+                    </tr>
+                    <tr>
+                        <td>52-98</td>
+                        <td>Bank Specific</td>
+                        <td>Consult your bank</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>For Type 4 (Direct Debit) Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>When to Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>First Payment (AUDDIS)</td>
+                        <td>First DD collection under AUDDIS instruction</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>First Payment (Non-AUDDIS)</td>
+                        <td>First DD collection under paper/non-AUDDIS DDI</td>
+                    </tr>
+                    <tr>
+                        <td>18</td>
+                        <td>Subsequent Payment</td>
+                        <td>All payments after the first</td>
+                    </tr>
+                    <tr>
+                        <td>19</td>
+                        <td>Re-presented</td>
+                        <td>DD being re-presented after unpaid return</td>
+                    </tr>
+                    <tr>
+                        <td>0N</td>
+                        <td>New Instruction</td>
+                        <td>First payment under new non-AUDDIS DDI</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Important:</strong> The transaction code appears TWICE in each payment record:
+                <ul>
+                    <li>Positions 03-04 (near the start)</li>
+                    <li>Positions 77-78 (near the end)</li>
+                    <li>Both occurrences MUST match exactly</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="formatting">
+            <h2>Field Formatting Rules</h2>
+
+            <h3>Amount Field (Positions 21-30)</h3>
+            <div class="info-box">
+                <strong>Format: 10 digits, right-justified, zero-padded, in pence</strong>
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Amount (£)</th>
+                            <th>Pence</th>
+                            <th>Field Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>£0.99</td>
+                            <td>99</td>
+                            <td>0000000099</td>
+                        </tr>
+                        <tr>
+                            <td>£125.00</td>
+                            <td>12500</td>
+                            <td>0000012500</td>
+                        </tr>
+                        <tr>
+                            <td>£59.99</td>
+                            <td>5999</td>
+                            <td>0000005999</td>
+                        </tr>
+                        <tr>
+                            <td>£1,250.50</td>
+                            <td>125050</td>
+                            <td>0001250500</td>
+                        </tr>
+                        <tr>
+                            <td>£99,999.99</td>
+                            <td>9999999</td>
+                            <td>0009999999</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 1rem;"><strong>Rules:</strong></p>
+                <ul>
+                    <li>NO decimal point</li>
+                    <li>NO comma separators</li>
+                    <li>NO currency symbols</li>
+                    <li>Must be positive (no minus sign)</li>
+                    <li>Maximum: £99,999,999.99 (9999999999)</li>
+                </ul>
+            </div>
+
+            <h3>Account Number Format (Positions 11-18 & 61-68)</h3>
+            <div class="diagram">UK ACCOUNT NUMBER RULES:
+═══════════════════════════════════════════════════════
+
+Standard: 8 digits
+Format:   Right-justified, left-padded with zeros
+
+EXAMPLES:
+Input        → Field Value
+87654321     → 87654321
+12345        → 00012345
+1234567      → 01234567
+1            → 00000001
+
+BUILDING SOCIETIES:
+Some may use alphanumeric
+Example: AB123456 → AB123456
+
+VALIDATION:
+• First digit usually cannot be 0 (for most banks)
+• Must be valid account number format
+• Check with sort code validator</div>
+
+            <h3>Sort Code Format (Positions 05-10 & 55-60)</h3>
+            <div class="diagram">UK SORT CODE RULES:
+═══════════════════════════════════════════════════════
+
+Format:   6 digits only, NO hyphens
+Display:  Usually shown as 12-34-56
+Storage:  Must be 123456
+
+EXAMPLES:
+Display      → Field Value
+12-34-56     → 123456
+40-47-62     → 404762
+08-92-99     → 089299
+20-00-00     → 200000
+
+VALIDATION:
+• Must be exactly 6 digits
+• Must be valid/active UK sort code
+• Leading zeros are significant</div>
+
+            <h3>Reference Field (Positions 43-54)</h3>
+            <div class="info-box">
+                <strong>Format: 12 characters, alphanumeric, left-justified</strong>
+                <p><strong>Good Examples:</strong></p>
+                <ul>
+                    <li><code>SALJAN24____</code> - Salary January 2024</li>
+                    <li><code>INV789456___</code> - Invoice number</li>
+                    <li><code>REFUND12345_</code> - Refund reference</li>
+                    <li><code>DD123456____</code> - Direct Debit reference</li>
+                    <li><code>MEMBERSHIP01</code> - Membership payment</li>
+                </ul>
+                <p><strong>Rules:</strong></p>
+                <ul>
+                    <li>Must be unique and meaningful</li>
+                    <li>Alphanumeric characters only (A-Z, 0-9)</li>
+                    <li>Spaces allowed but not recommended</li>
+                    <li>Should help identify payment on bank statement</li>
+                    <li>For DD: Must match DDI reference exactly</li>
+                </ul>
+            </div>
+
+            <h3>Text Fields (Names, Company Names)</h3>
+            <div class="warning-box">
+                <strong>Character Set:</strong>
+                <ul>
+                    <li>ASCII characters only</li>
+                    <li>Uppercase recommended for consistency</li>
+                    <li>No special characters (£, €, ©, ®, etc.)</li>
+                    <li>Hyphens and apostrophes generally acceptable</li>
+                    <li>Left-justified, right-padded with spaces</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <code>JOHN SMITH__ (10 chars) → "JOHN SMITH  "</code>
+            </div>
+
+            <h3>Date Fields (DDMMYY)</h3>
+            <div class="diagram">DATE FORMAT: DDMMYY (6 digits)
+═══════════════════════════════════════════════════════
+
+Format:   Day + Month + Year (2 digits each)
+
+EXAMPLES:
+Date             → Field Value
+15 Jan 2024      → 150124
+01 Dec 2024      → 011224
+23 Feb 2025      → 230225
+31 Mar 2024      → 310324
+
+VALIDATION:
+• Must be valid calendar date
+• Processing date must be today or future
+• Consider BACS D+3 processing cycle</div>
+
+            <h3>Time Fields (HHMMSS)</h3>
+            <div class="diagram">TIME FORMAT: HHMMSS (6 digits)
+═══════════════════════════════════════════════════════
+
+Format:   Hour + Minute + Second (24-hour clock)
+
+EXAMPLES:
+Time             → Field Value
+2:30 PM          → 143000
+9:15 AM          → 091500
+Midnight         → 000000
+11:59 PM         → 235900
+
+NOTES:
+• Always 24-hour format
+• Pad single digits with leading zero</div>
+        </section>
+
+        <section id="validation">
+            <h2>Validation Rules</h2>
+
+            <h3>Bank-Side Validation</h3>
+            <p>When you submit a Standard 18 file, the bank/BACS will perform these validations:</p>
+
+            <h4>1. Record Type Validation</h4>
+            <ul>
+                <li>Must be valid type: 0, 1, 2, 3, 4, 5, 8, or 9</li>
+                <li>Must be in correct sequence</li>
+                <li>Type 1 (File Header) must be present</li>
+                <li>Type 9 (File Trailer) must be present</li>
+            </ul>
+
+            <h4>2. Field Format Validation</h4>
+            <ul>
+                <li>Numeric fields must contain only digits 0-9</li>
+                <li>Amount fields must be 10 digits</li>
+                <li>Sort codes must be 6 digits</li>
+                <li>Account numbers must be 8 characters</li>
+                <li>No invalid characters in text fields</li>
+            </ul>
+
+            <h4>3. Date & Time Validation</h4>
+            <ul>
+                <li>Processing date must be valid calendar date</li>
+                <li>Processing date cannot be in the past</li>
+                <li>Must account for bank holidays and weekends</li>
+                <li>Consider BACS D+3 processing cycle</li>
+            </ul>
+
+            <h4>4. Account Validation</h4>
+            <ul>
+                <li>Sort code must be valid and active</li>
+                <li>Account number format must be valid for sort code</li>
+                <li>Modulus checking may be applied</li>
+                <li>Account status checks (for Direct Debits)</li>
+            </ul>
+
+            <h4>5. Amount Validation</h4>
+            <ul>
+                <li>Must be greater than zero</li>
+                <li>Must not exceed maximum limits</li>
+                <li>For DD: Must comply with DDI amount limits</li>
+            </ul>
+
+            <h4>6. Control Total Validation</h4>
+            <ul>
+                <li>User Trailer (Type 8) totals must match data records</li>
+                <li>File Trailer (Type 9) record count must be accurate</li>
+                <li>Hash totals must match calculations</li>
+            </ul>
+
+            <h3>Pre-Submission Checklist</h3>
+            <div class="info-box">
+                <strong>Before submitting your file:</strong>
+                <ol>
+                    <li>✓ Every record is exactly 120 characters</li>
+                    <li>✓ Record types are in correct sequence (1→2→3/4/5→8→9)</li>
+                    <li>✓ All numeric fields are right-justified, zero-padded</li>
+                    <li>✓ All text fields are left-justified, space-padded</li>
+                    <li>✓ Amounts are in pence (no decimals)</li>
+                    <li>✓ Sort codes are 6 digits (no hyphens)</li>
+                    <li>✓ Account numbers are 8 characters</li>
+                    <li>✓ Processing date is valid and not in past</li>
+                    <li>✓ User Trailer totals match data records</li>
+                    <li>✓ File Trailer record count is accurate</li>
+                    <li>✓ Hash totals calculated correctly</li>
+                    <li>✓ Transaction codes appear in both positions</li>
+                    <li>✓ For DD: Valid DDI exists for each transaction</li>
+                    <li>✓ File saved in ASCII format</li>
+                    <li>✓ File extension is .bac, .txt, or .dat</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="errors">
+            <h2>Error Codes & Rejections</h2>
+
+            <h3>Common File Rejection Reasons</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Resolution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invalid Record Type</td>
+                        <td>Unrecognized record type character</td>
+                        <td>Check positions 01-02 of each record</td>
+                    </tr>
+                    <tr>
+                        <td>Incorrect Record Length</td>
+                        <td>Record not exactly 120 characters</td>
+                        <td>Ensure all records are 120 chars with proper padding</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid Characters</td>
+                        <td>Non-ASCII or special characters</td>
+                        <td>Remove £, €, ©, etc. Use only ASCII</td>
+                    </tr>
+                    <tr>
+                        <td>Date Error</td>
+                        <td>Past date or invalid date</td>
+                        <td>Use today or future business day (DDMMYY format)</td>
+                    </tr>
+                    <tr>
+                        <td>Sequence Error</td>
+                        <td>Missing or out-of-order records</td>
+                        <td>Ensure 1→2→3/4/5→8→9 sequence</td>
+                    </tr>
+                    <tr>
+                        <td>Total Mismatch</td>
+                        <td>User trailer doesn't match data</td>
+                        <td>Recalculate count and amounts</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid Sort Code</td>
+                        <td>Sort code doesn't exist or inactive</td>
+                        <td>Verify sort code with bank validator</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid Amount</td>
+                        <td>Zero, negative, or non-numeric</td>
+                        <td>Ensure positive amount in pence format</td>
+                    </tr>
+                    <tr>
+                        <td>Missing Header/Trailer</td>
+                        <td>Type 1 or Type 9 missing</td>
+                        <td>Add mandatory file header and trailer</td>
+                    </tr>
+                    <tr>
+                        <td>Hash Total Error</td>
+                        <td>Calculated hash doesn't match</td>
+                        <td>Recalculate using account numbers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Transaction-Level Rejections</h3>
+            <p>Even if the file is accepted, individual transactions may be rejected:</p>
+            <ul>
+                <li><strong>Account Closed:</strong> Destination account no longer active</li>
+                <li><strong>Account Transfer:</strong> Account moved to different bank</li>
+                <li><strong>Refer to Payer:</strong> Account has specific restrictions</li>
+                <li><strong>No DDI:</strong> Direct Debit Instruction not found/cancelled</li>
+                <li><strong>DDI Cancelled:</strong> Customer cancelled the mandate</li>
+                <li><strong>Amount Limit Exceeded:</strong> Exceeds DDI amount limit</li>
+                <li><strong>Account Does Not Accept DD:</strong> Account type restriction</li>
+            </ul>
+
+            <h3>Example Error Notification</h3>
+            <div class="code-block"><span class="comment">// Typical error report from bank</span>
+<span class="keyword">File:</span> 987654_150124_0001.bac
+<span class="keyword">Status:</span> <span class="string">REJECTED</span>
+<span class="keyword">Error Count:</span> <span class="number">3</span>
+
+<span class="keyword">Error 1:</span>
+  <span class="string">Line:</span> 4
+  <span class="string">Type:</span> Invalid Sort Code
+  <span class="string">Field:</span> Positions 05-10
+  <span class="string">Value:</span> 999999
+  <span class="string">Message:</span> Sort code does not exist
+
+<span class="keyword">Error 2:</span>
+  <span class="string">Line:</span> 7
+  <span class="string">Type:</span> Amount Error
+  <span class="string">Field:</span> Positions 21-30
+  <span class="string">Value:</span> 000000000A
+  <span class="string">Message:</span> Non-numeric character in amount field
+
+<span class="keyword">Error 3:</span>
+  <span class="string">Line:</span> 12 (Type 8)
+  <span class="string">Type:</span> Total Mismatch
+  <span class="string">Message:</span> Type 3 count (25) does not match actual (27)
+
+<span class="keyword">Action Required:</span> Correct errors and resubmit file</div>
+        </section>
+
+        <section id="best-practices">
+            <h2>Best Practices</h2>
+
+            <h3>1. File Generation</h3>
+            <div class="info-box">
+                <strong>Software Development:</strong>
+                <ul>
+                    <li>Use templates with exact field positions</li>
+                    <li>Implement strict field validation before writing</li>
+                    <li>Use fixed-width file writers (not CSV)</li>
+                    <li>Pad fields correctly (zero for numeric, space for text)</li>
+                    <li>Calculate control totals automatically</li>
+                    <li>Generate hash totals programmatically</li>
+                    <li>Save in pure ASCII (no UTF-8 BOM)</li>
+                </ul>
+            </div>
+
+            <h3>2. Testing Strategy</h3>
+            <ul>
+                <li><strong>Start Small:</strong> Test with 1-2 transactions first</li>
+                <li><strong>Use Test SUN:</strong> Get a test Service User Number</li>
+                <li><strong>Validate Locally:</strong> Use validation tools before submission</li>
+                <li><strong>Check with Bank:</strong> Many banks offer validation services</li>
+                <li><strong>Test Rejections:</strong> Deliberately create errors to test handling</li>
+                <li><strong>End-to-End Testing:</strong> Test full cycle including confirmations</li>
+            </ul>
+
+            <h3>3. Data Quality</h3>
+            <div class="warning-box">
+                <strong>Critical Checks:</strong>
+                <ul>
+                    <li>✓ Verify sort codes using official validator</li>
+                    <li>✓ Validate account numbers with modulus checking</li>
+                    <li>✓ Cross-reference beneficiary names with accounts</li>
+                    <li>✓ Ensure references are unique and traceable</li>
+                    <li>✓ Double-check amounts (common source of errors)</li>
+                    <li>✓ Remove duplicate transactions</li>
+                    <li>✓ Verify DDIs exist before submitting DDs</li>
+                </ul>
+            </div>
+
+            <h3>4. File Handling</h3>
+            <ul>
+                <li><strong>Naming Convention:</strong> Use consistent, dated filenames</li>
+                <li><strong>Version Control:</strong> Keep submitted files for audit</li>
+                <li><strong>Backup:</strong> Retain copies of all submission files</li>
+                <li><strong>Audit Trail:</strong> Log all file generations and submissions</li>
+                <li><strong>Reconciliation:</strong> Match submissions with bank confirmations</li>
+            </ul>
+
+            <h3>5. Security</h3>
+            <div class="info-box">
+                <strong>Data Protection:</strong>
+                <ul>
+                    <li>Encrypt files in transit and at rest</li>
+                    <li>Use secure file transfer protocols (SFTP, FTPS)</li>
+                    <li>Implement access controls on file generation</li>
+                    <li>Require dual authorization for high-value batches</li>
+                    <li>Mask sensitive data in logs</li>
+                    <li>Comply with GDPR and data protection regulations</li>
+                </ul>
+            </div>
+
+            <h3>6. Error Handling</h3>
+            <ul>
+                <li>Parse and log all rejection notifications</li>
+                <li>Implement automated alerts for failed submissions</li>
+                <li>Maintain error database for pattern analysis</li>
+                <li>Have correction workflow for rejected payments</li>
+                <li>Document all errors and resolutions</li>
+            </ul>
+
+            <h3>7. Reconciliation Process</h3>
+            <div class="diagram">DAILY RECONCILIATION WORKFLOW:
+═══════════════════════════════════════════════════════
+
+1. SUBMISSION STAGE:
+   • Generate file with unique ID
+   • Record transaction count and totals
+   • Submit to bank via secure channel
+   • Save submitted file
+
+2. CONFIRMATION STAGE:
+   • Receive bank acceptance/rejection
+   • Match against submission records
+   • Flag any discrepancies
+
+3. PROCESSING STAGE (D+3):
+   • Receive transaction-level confirmations
+   • Match against original submission
+   • Identify failed transactions
+
+4. RECONCILIATION:
+   • Compare totals: Submitted vs Processed
+   • Investigate variances
+   • Update accounting systems
+   • Retry failed transactions
+
+5. AUDIT:
+   • Archive all files and confirmations
+   • Generate reconciliation report
+   • Review exceptions</div>
+
+            <h3>8. Migration to Modern Standards</h3>
+            <p>While Standard 18 remains widely used, consider these future-proofing steps:</p>
+            <ul>
+                <li><strong>Parallel Processing:</strong> Generate both Standard 18 and ISO 20022</li>
+                <li><strong>API Integration:</strong> Explore bank APIs for real-time submission</li>
+                <li><strong>Validation Services:</strong> Use cloud-based validation before submission</li>
+                <li><strong>Monitoring:</strong> Watch for bank announcements on format changes</li>
+                <li><strong>Modular Design:</strong> Keep format logic separate for easy updates</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Summary</h2>
+            <p>
+                BACS Standard 18 format has been the backbone of UK automated payments for decades. Its fixed-width structure, while appearing archaic, provides unambiguous data representation and has proven its reliability through billions of transactions.
+            </p>
+            <p>
+                Key takeaways:
+            </p>
+            <ul>
+                <li><strong>Precision is Critical:</strong> Every character position matters</li>
+                <li><strong>Validation is Essential:</strong> Check everything before submission</li>
+                <li><strong>Testing Saves Time:</strong> Test thoroughly with small files first</li>
+                <li><strong>Documentation Helps:</strong> Keep detailed records and audit trails</li>
+                <li><strong>Follow Standards:</strong> Adhere strictly to the 120-character format</li>
+            </ul>
+            <p>
+                While newer standards like ISO 20022 are emerging, Standard 18's simplicity and universal support ensure it will remain relevant for years to come. Understanding this format is essential for anyone working with UK payment processing systems.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BACS Standard 18 Format Guide. Complete technical specification for UK payment file format.</p>
+        </div>
+    </footer>
+</body>
+</html>
