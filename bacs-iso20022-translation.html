@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACS Standard 18 to ISO 20022 Translation Layer</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3Ecircle%7Bfill:%231a365d%7D text%7Bfill:white;font-family:Arial,sans-serif;font-size:50px;font-weight:bold%7D%3C/style%3E%3Ccircle cx='50' cy='50' r='48'/%3E%3Ctext x='50' y='70' text-anchor='middle'%3E💷%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-800: #1f2937;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 { font-size: 3rem; margin-bottom: 0.5rem; font-weight: 800; }
+        .subtitle { font-size: 1.25rem; opacity: 0.95; font-weight: 400; }
+        
+        nav.toc {
+            background: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+        }
+        
+        nav.toc h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.5rem; }
+        nav.toc ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem; }
+        nav.toc li { padding-left: 1.5rem; position: relative; }
+        nav.toc li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
+        nav.toc a { color: var(--gray-800); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        nav.toc a:hover { color: var(--primary); }
+        
+        section {
+            background: white;
+            padding: 3rem;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--primary);
+            font-weight: 700;
+        }
+        
+        h3 { 
+            color: var(--gray-800); 
+            font-size: 1.5rem; 
+            margin: 2rem 0 1rem;
+            font-weight: 700;
+        }
+        
+        h4 { 
+            color: var(--gray-800); 
+            font-size: 1.25rem; 
+            margin: 1.5rem 0 1rem;
+            font-weight: 600;
+        }
+        
+        p { margin: 1rem 0; font-size: 1.05rem; line-height: 1.7; }
+        ul, ol { margin: 1rem 0 1rem 2rem; }
+        li { margin: 0.5rem 0; }
+        
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .flow-diagram {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            position: relative;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+        
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .tag { color: #93c5fd; }
+        .attr { color: #fbbf24; }
+        .value { color: #6ee7b7; }
+        .comment { color: #94a3b8; font-style: italic; }
+        .text { color: #e5e7eb; }
+        .fixed { color: #fde68a; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td { padding: 0.875rem 1rem; border-bottom: 1px solid #e5e7eb; }
+        tr:hover { background: var(--gray-50); }
+        tr:last-child td { border-bottom: none; }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .comparison > div {
+            background: var(--gray-100);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .comparison h4 { margin-top: 0; }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-s18 { background: #fef3c7; color: #92400e; }
+        .badge-iso { background: #dbeafe; color: #1e40af; }
+        .badge-new { background: #d1fae5; color: #065f46; }
+        
+        .step-container {
+            counter-reset: step-counter;
+            margin: 2rem 0;
+        }
+        
+        .step {
+            counter-increment: step-counter;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            padding-left: 5rem;
+        }
+        
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .step h4 { margin-top: 0; color: var(--primary); }
+        
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .comparison { grid-template-columns: 1fr; gap: 1rem; }
+            nav.toc ul { grid-template-columns: 1fr; }
+            .step { padding-left: 1.5rem; }
+            .step::before { position: static; transform: none; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>BACS Translation Layer</h1>
+            <p class="subtitle">Standard 18 to ISO 20022 Message Translation & Enrichment</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="toc">
+            <h2>Contents</h2>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#architecture">Translation Architecture</a></li>
+                <li><a href="#messages">ISO 20022 Messages Used</a></li>
+                <li><a href="#mapping">Field Mapping</a></li>
+                <li><a href="#enrichment">Data Enrichment</a></li>
+                <li><a href="#formatting">Data Formatting</a></li>
+                <li><a href="#examples">Complete Examples</a></li>
+                <li><a href="#challenges">Challenges & Solutions</a></li>
+            </ul>
+        </nav>
+
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                The BACS translation layer is a critical middleware component that bridges the gap between the legacy <strong>Standard 18 fixed-width format</strong> and the modern <strong>ISO 20022 XML-based messaging standard</strong>. This translation enables BACS to modernize its infrastructure while maintaining backward compatibility with existing service users.
+            </p>
+
+            <h3>Why Translation is Needed</h3>
+            <div class="info-box">
+                <strong>Key Drivers:</strong>
+                <ul>
+                    <li><strong>Industry Migration:</strong> Global payment systems moving to ISO 20022</li>
+                    <li><strong>Data Richness:</strong> ISO 20022 carries significantly more information</li>
+                    <li><strong>Interoperability:</strong> Seamless integration with other UK and international systems</li>
+                    <li><strong>Future-Proofing:</strong> Extensible format supports new requirements</li>
+                    <li><strong>Regulatory Compliance:</strong> Enhanced data for AML, sanctions screening</li>
+                </ul>
+            </div>
+
+            <h3>Translation Scope</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standard 18 Type</th>
+                        <th>Payment Type</th>
+                        <th>ISO 20022 Message(s)</th>
+                        <th>Direction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Type 3</td>
+                        <td>Automated Credits (AC)</td>
+                        <td>pain.001 → pacs.008</td>
+                        <td>Inbound & Outbound</td>
+                    </tr>
+                    <tr>
+                        <td>Type 4</td>
+                        <td>Direct Debits (DD)</td>
+                        <td>pain.008 → pacs.003</td>
+                        <td>Inbound & Outbound</td>
+                    </tr>
+                    <tr>
+                        <td>Type 5</td>
+                        <td>AUDDIS/ADDACS</td>
+                        <td>pain.009, pain.010, pain.011</td>
+                        <td>Bidirectional</td>
+                    </tr>
+                    <tr>
+                        <td>Type 8/9</td>
+                        <td>Reports/Statements</td>
+                        <td>camt.053, pain.002</td>
+                        <td>Outbound</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="architecture">
+            <h2>Translation Architecture</h2>
+
+            <h3>High-Level Flow</h3>
+            <div class="flow-diagram">┌─────────────────────────────────────────────────────────────────────────┐
+│                        BACS TRANSLATION LAYER                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+INPUT SIDE (Standard 18):
+┌──────────────┐
+│ Service User │ ──→ Standard 18 File (.bac)
+└──────────────┘          │
+                          ▼
+                    ┌─────────────┐
+                    │   PARSER    │  ◄── Fixed-width parsing
+                    │  (Standard  │      120 chars/record
+                    │     18)     │
+                    └─────────────┘
+                          │
+                          ▼
+                    ┌─────────────┐
+                    │ VALIDATION  │  ◄── Format validation
+                    │   ENGINE    │      Business rules
+                    └─────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      TRANSLATION ENGINE                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                 │
+│  │   MAPPING    │→ │  ENRICHMENT  │→ │  FORMATTING  │                 │
+│  │    LAYER     │  │    LAYER     │  │    LAYER     │                 │
+│  └──────────────┘  └──────────────┘  └──────────────┘                 │
+│         │                 │                  │                          │
+│         ├─ Field Map      ├─ Sort Code→BIC  ├─ Currency format         │
+│         ├─ Data Extract   ├─ Account→IBAN   ├─ Date/Time ISO 8601     │
+│         └─ Type Conv.     ├─ Bank Lookup    └─ Amount decimals         │
+│                           └─ Address Data                               │
+└─────────────────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                    ┌─────────────┐
+                    │   ISO 20022 │  ◄── XML generation
+                    │  GENERATOR  │      Schema validation
+                    └─────────────┘
+                          │
+                          ▼
+OUTPUT SIDE (ISO 20022):
+┌──────────────┐
+│ pain.001     │ ──→ Customer Payment Initiation
+│ pacs.008     │ ──→ Inter-bank Payment
+│ camt.053     │ ──→ Account Statement
+└──────────────┘</div>
+
+            <h3>Translation Process Steps</h3>
+            <div class="step-container">
+                <div class="step">
+                    <h4>Parse Standard 18</h4>
+                    <p>Read fixed-width file, extract fields based on position (1-120 chars per record), identify record types (1,2,3,4,5,8,9)</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Validate Input</h4>
+                    <p>Check record lengths, validate numeric fields, verify sort codes, ensure data integrity, apply business rules</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Map Fields</h4>
+                    <p>Extract data from fixed positions, map to ISO 20022 tags, handle data type conversions, create hierarchical structure</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Enrich Data</h4>
+                    <p>Lookup BIC from sort code, derive IBAN from account number, retrieve bank names, add address information, populate party identifiers</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Format Data</h4>
+                    <p>Convert amounts (pence → decimal), format dates (DDMMYY → ISO 8601), apply character encoding (ASCII → UTF-8), structure addresses</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Generate XML</h4>
+                    <p>Build ISO 20022 message structure, populate all mandatory fields, add optional enhanced data, validate against XSD schema</p>
+                </div>
+                
+                <div class="step">
+                    <h4>Validate Output</h4>
+                    <p>XSD schema validation, business rule checks, verify message completeness, ensure compliance with BACS/UK standards</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="messages">
+            <h2>ISO 20022 Messages Used</h2>
+
+            <h3>Inbound Payments (Customer to BACS)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                        <th>Standard 18 Equivalent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pain.001</strong></td>
+                        <td>CustomerCreditTransferInitiation</td>
+                        <td>Direct Credit instructions from customers</td>
+                        <td>Type 3 records (AC)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.008</strong></td>
+                        <td>CustomerDirectDebitInitiation</td>
+                        <td>Direct Debit collection instructions</td>
+                        <td>Type 4 records (DD)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.009</strong></td>
+                        <td>MandateInitiationRequest</td>
+                        <td>Direct Debit Instruction setup</td>
+                        <td>Type 5 (0A - New AUDDIS)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.010</strong></td>
+                        <td>MandateAmendmentRequest</td>
+                        <td>DDI amendment</td>
+                        <td>Type 5 (0S - Amendment)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pain.011</strong></td>
+                        <td>MandateCancellationRequest</td>
+                        <td>DDI cancellation</td>
+                        <td>Type 5 (0C - Cancel)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Clearing & Settlement (BACS Internal)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pacs.008</strong></td>
+                        <td>FIToFICustomerCreditTransfer</td>
+                        <td>Inter-bank credit transfer processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.003</strong></td>
+                        <td>FIToFICustomerDirectDebit</td>
+                        <td>Inter-bank direct debit processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.002</strong></td>
+                        <td>FIToFIPaymentStatusReport</td>
+                        <td>Payment acceptance/rejection notifications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pacs.004</strong></td>
+                        <td>PaymentReturn</td>
+                        <td>Unpaid/returned payment notification</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Reporting (BACS to Customer)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Message</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                        <th>Standard 18 Equivalent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>pain.002</strong></td>
+                        <td>CustomerPaymentStatusReport</td>
+                        <td>Payment submission status</td>
+                        <td>Acceptance/rejection reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.053</strong></td>
+                        <td>BankToCustomerStatement</td>
+                        <td>Transaction statement/report</td>
+                        <td>Type 8/9 reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>camt.054</strong></td>
+                        <td>BankToCustomerDebitCreditNotification</td>
+                        <td>Real-time transaction notification</td>
+                        <td>Enhanced reporting (new)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="mapping">
+            <h2>Field Mapping</h2>
+
+            <h3>Standard 18 Type 3 (AC) → pain.001/pacs.008 Mapping</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standard 18 Field</th>
+                        <th>Position</th>
+                        <th>ISO 20022 Tag</th>
+                        <th>Transformation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Record Type</td>
+                        <td>01-02</td>
+                        <td>Not mapped</td>
+                        <td>Used to determine message type</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Code</td>
+                        <td>03-04</td>
+                        <td>BkTxCd or PmtTpInf</td>
+                        <td>Mapped to ISO codes</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Sort Code</td>
+                        <td>05-10</td>
+                        <td>CdtrAgt/FinInstnId/BICFI<br>CdtrAcct/Id/Othr/SchmeNm</td>
+                        <td>Lookup BIC, preserve sort code</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Account No</td>
+                        <td>11-18</td>
+                        <td>CdtrAcct/Id/Othr/Id</td>
+                        <td>Left-pad zeros removed, validate</td>
+                    </tr>
+                    <tr>
+                        <td>Amount (pence)</td>
+                        <td>21-30</td>
+                        <td>InstdAmt</td>
+                        <td>÷100 for decimal (1250 → 12.50)</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Account Name</td>
+                        <td>33-42</td>
+                        <td>Cdtr/Nm</td>
+                        <td>Trim spaces, title case</td>
+                    </tr>
+                    <tr>
+                        <td>Reference</td>
+                        <td>43-54</td>
+                        <td>RmtInf/Ustrd</td>
+                        <td>Trim spaces, encode UTF-8</td>
+                    </tr>
+                    <tr>
+                        <td>Originating Sort Code</td>
+                        <td>55-60</td>
+                        <td>DbtrAgt/FinInstnId/BICFI</td>
+                        <td>Lookup BIC from sort code</td>
+                    </tr>
+                    <tr>
+                        <td>Originating Account No</td>
+                        <td>61-68</td>
+                        <td>DbtrAcct/Id/Othr/Id</td>
+                        <td>Format and validate</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Standard 18 Type 4 (DD) → pain.008/pacs.003 Mapping</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standard 18 Field</th>
+                        <th>Position</th>
+                        <th>ISO 20022 Tag</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Transaction Code</td>
+                        <td>03-04</td>
+                        <td>DrctDbtTx/MndtRltdInf</td>
+                        <td>17→First payment, 18→Subsequent</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Sort Code</td>
+                        <td>05-10</td>
+                        <td>DbtrAgt/FinInstnId/BICFI</td>
+                        <td>Debtor bank (being debited)</td>
+                    </tr>
+                    <tr>
+                        <td>Destination Account No</td>
+                        <td>11-18</td>
+                        <td>DbtrAcct/Id/Othr/Id</td>
+                        <td>Payer's account</td>
+                    </tr>
+                    <tr>
+                        <td>Amount</td>
+                        <td>21-30</td>
+                        <td>InstdAmt</td>
+                        <td>Convert pence to decimal</td>
+                    </tr>
+                    <tr>
+                        <td>Reference</td>
+                        <td>43-54</td>
+                        <td>DrctDbtTx/MndtRltdInf/MndtId<br>RmtInf/Ustrd</td>
+                        <td>DDI reference + payment reference</td>
+                    </tr>
+                    <tr>
+                        <td>Originating Sort Code</td>
+                        <td>55-60</td>
+                        <td>CdtrAgt/FinInstnId/BICFI</td>
+                        <td>Creditor bank (collecting)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="enrichment">
+            <h2>Data Enrichment</h2>
+            <p>
+                The translation layer enriches Standard 18's limited data with additional information required by ISO 20022.
+            </p>
+
+            <h3>Enrichment Sources</h3>
+            <div class="step-container">
+                <div class="step">
+                    <h4>BIC Lookup from Sort Code</h4>
+                    <p>
+                        <strong>Source:</strong> UK Bank Directory / BACS Sort Code Database<br>
+                        <strong>Mapping:</strong> Sort Code (6 digits) → BIC (8 or 11 chars)<br>
+                        <strong>Example:</strong> 60-16-13 → NWBKGB2L
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h4>Bank Name & Address</h4>
+                    <p>
+                        <strong>Source:</strong> Bank Master Data Repository<br>
+                        <strong>Data Added:</strong> Bank name, address, clearing participant ID<br>
+                        <strong>Example:</strong> "National Westminster Bank Plc, 135 Bishopsgate, London"
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h4>IBAN Construction (Optional)</h4>
+                    <p>
+                        <strong>Process:</strong> Calculate from sort code + account number<br>
+                        <strong>Format:</strong> GB + 2-digit check + sort code + account number<br>
+                        <strong>Example:</strong> 60-16-13 + 31926819 → GB29NWBK60161331926819
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h4>Service User Information</h4>
+                    <p>
+                        <strong>Source:</strong> BACS Service User Registry<br>
+                        <strong>Data Added:</strong> Full company name, address, contact details, SUN status<br>
+                        <strong>Example:</strong> SUN 123456 → "ABC Payroll Services Ltd"
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h4>Scheme & Clearing Info</h4>
+                    <p>
+                        <strong>Added Fields:</strong> Clearing system code (BAC), settlement method (CLRG), service level (BACS)<br>
+                        <strong>Purpose:</strong> ISO 20022 routing and processing instructions
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h4>Unique Transaction References</h4>
+                    <p>
+                        <strong>Generated:</strong> Message ID, Transaction ID, End-to-End ID, UETR (optional)<br>
+                        <strong>Format:</strong> Structured identifiers for tracking<br>
+                        <strong>Example:</strong> E2E ID = BACS-20240115-123456-001
+                    </p>
+                </div>
+            </div>
+
+            <h3>Enrichment Example</h3>
+            <div class="comparison">
+                <div>
+                    <h4>Standard 18 Input <span class="badge badge-s18">Limited Data</span></h4>
+                    <div class="code-block" data-lang="Standard 18">
+<span class="fixed">Sort Code:      </span><span class="value">601613</span>
+<span class="fixed">Account Number: </span><span class="value">31926819</span>
+<span class="fixed">Account Name:   </span><span class="value">J SMITH</span>
+<span class="fixed">Amount:         </span><span class="value">0000125000</span> <span class="comment">(£1,250.00)</span></div>
+                </div>
+                
+                <div>
+                    <h4>ISO 20022 Output <span class="badge badge-iso">Enriched Data</span></h4>
+                    <div class="code-block" data-lang="ISO 20022">
+<span class="tag">&lt;CdtrAgt&gt;</span>
+  <span class="tag">&lt;FinInstnId&gt;</span>
+    <span class="tag">&lt;BICFI&gt;</span><span class="value">NWBKGB2L</span><span class="tag">&lt;/BICFI&gt;</span> <span class="badge badge-new">ENRICHED</span>
+    <span class="tag">&lt;Nm&gt;</span><span class="value">National Westminster Bank</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-new">ENRICHED</span>
+  <span class="tag">&lt;/FinInstnId&gt;</span>
+<span class="tag">&lt;/CdtrAgt&gt;</span>
+<span class="tag">&lt;CdtrAcct&gt;</span>
+  <span class="tag">&lt;Id&gt;</span>
+    <span class="tag">&lt;IBAN&gt;</span><span class="value">GB29NWBK60161331926819</span><span class="tag">&lt;/IBAN&gt;</span> <span class="badge badge-new">ENRICHED</span>
+    <span class="tag">&lt;Othr&gt;</span>
+      <span class="tag">&lt;Id&gt;</span><span class="value">31926819</span><span class="tag">&lt;/Id&gt;</span>
+      <span class="tag">&lt;SchmeNm&gt;</span>
+        <span class="tag">&lt;Cd&gt;</span><span class="value">BBAN</span><span class="tag">&lt;/Cd&gt;</span>
+      <span class="tag">&lt;/SchmeNm&gt;</span>
+    <span class="tag">&lt;/Othr&gt;</span>
+  <span class="tag">&lt;/Id&gt;</span>
+<span class="tag">&lt;/CdtrAcct&gt;</span>
+<span class="tag">&lt;Cdtr&gt;</span><span class="tag">&lt;Nm&gt;</span><span class="value">J SMITH</span><span class="tag">&lt;/Nm&gt;</span><span class="tag">&lt;/Cdtr&gt;</span>
+<span class="tag">&lt;InstdAmt</span> <span class="attr">Ccy=</span><span class="value">"GBP"</span><span class="tag">&gt;</span><span class="value">1250.00</span><span class="tag">&lt;/InstdAmt&gt;</span> <span class="badge badge-new">FORMATTED</span></div>
+                </div>
+            </div>
+
+            <h3>Enrichment Data Matrix</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Element</th>
+                        <th>In Standard 18?</th>
+                        <th>In ISO 20022?</th>
+                        <th>Enrichment Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sort Code</td>
+                        <td>✓ Yes</td>
+                        <td>✓ Yes (as Othr/Id)</td>
+                        <td>Direct copy</td>
+                    </tr>
+                    <tr>
+                        <td>BIC</td>
+                        <td>✗ No</td>
+                        <td>✓ Yes (mandatory)</td>
+                        <td>Database lookup from sort code</td>
+                    </tr>
+                    <tr>
+                        <td>Account Number</td>
+                        <td>✓ Yes</td>
+                        <td>✓ Yes</td>
+                        <td>Format validation, trim</td>
+                    </tr>
+                    <tr>
+                        <td>IBAN</td>
+                        <td>✗ No</td>
+                        <td>○ Optional</td>
+                        <td>Calculate from sort code + account</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Name</td>
+                        <td>✗ No</td>
+                        <td>○ Optional</td>
+                        <td>Lookup from bank directory</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Address</td>
+                        <td>✗ No</td>
+                        <td>○ Optional</td>
+                        <td>Lookup from bank directory</td>
+                    </tr>
+                    <tr>
+                        <td>Party Name</td>
+                        <td>✓ Limited (10 chars)</td>
+                        <td>✓ Full (140 chars)</td>
+                        <td>Expand if additional data available</td>
+                    </tr>
+                    <tr>
+                        <td>Party Address</td>
+                        <td>✗ No</td>
+                        <td>○ Optional</td>
+                        <td>Lookup from service user registry</td>
+                    </tr>
+                    <tr>
+                        <td>Currency</td>
+                        <td>✗ Implied (GBP)</td>
+                        <td>✓ Yes (mandatory)</td>
+                        <td>Add GBP explicitly</td>
+                    </tr>
+                    <tr>
+                        <td>Message ID</td>
+                        <td>✗ No</td>
+                        <td>✓ Yes (mandatory)</td>
+                        <td>Generate unique identifier</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction ID</td>
+                        <td>✗ No</td>
+                        <td>✓ Yes</td>
+                        <td>Generate from batch + sequence</td>
+                    </tr>
+                    <tr>
+                        <td>Clearing System</td>
+                        <td>✗ Implied (BACS)</td>
+                        <td>✓ Yes</td>
+                        <td>Add "BAC" code</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="formatting">
+            <h2>Data Formatting</h2>
+
+            <h3>Amount Conversion</h3>
+            <div class="comparison">
+                <div>
+                    <h4>Standard 18 Format</h4>
+                    <ul>
+                        <li><strong>Format:</strong> 10-digit integer (pence)</li>
+                        <li><strong>Example:</strong> 0000125000</li>
+                        <li><strong>Meaning:</strong> 125000 pence = £1,250.00</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>ISO 20022 Format</h4>
+                    <ul>
+                        <li><strong>Format:</strong> Decimal with currency attribute</li>
+                        <li><strong>Example:</strong> &lt;InstdAmt Ccy="GBP"&gt;1250.00&lt;/InstdAmt&gt;</li>
+                        <li><strong>Conversion:</strong> Divide by 100, format to 2 decimals</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block" data-lang="Conversion Logic">
+<span class="comment">// Amount Conversion Algorithm</span>
+Standard18Amount = <span class="value">"0000125000"</span>
+<span class="tag">Step 1:</span> ParseInt → <span class="value">125000</span>
+<span class="tag">Step 2:</span> Divide by 100 → <span class="value">1250.00</span>
+<span class="tag">Step 3:</span> Format to 2 decimals → <span class="value">"1250.00"</span>
+<span class="tag">Step 4:</span> Add currency → <span class="value">&lt;InstdAmt Ccy="GBP"&gt;1250.00&lt;/InstdAmt&gt;</span></div>
+
+            <h3>Date & Time Formatting</h3>
+            <div class="comparison">
+                <div>
+                    <h4>Standard 18 Date</h4>
+                    <ul>
+                        <li><strong>Format:</strong> DDMMYY (6 digits)</li>
+                        <li><strong>Example:</strong> 150124</li>
+                        <li><strong>Meaning:</strong> 15th January 2024</li>
+                        <li><strong>Time:</strong> HHMMSS (143000 = 14:30:00)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>ISO 20022 Date/Time</h4>
+                    <ul>
+                        <li><strong>Format:</strong> ISO 8601 (YYYY-MM-DD)</li>
+                        <li><strong>Example:</strong> 2024-01-15</li>
+                        <li><strong>DateTime:</strong> 2024-01-15T14:30:00</li>
+                        <li><strong>Timezone:</strong> Can include +00:00 for UTC</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Character Encoding</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Standard 18</th>
+                        <th>ISO 20022</th>
+                        <th>Transformation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Character Set</td>
+                        <td>ASCII (7-bit)</td>
+                        <td>UTF-8 (Unicode)</td>
+                        <td>Encode to UTF-8</td>
+                    </tr>
+                    <tr>
+                        <td>Special Characters</td>
+                        <td>Limited (A-Z, 0-9, spaces)</td>
+                        <td>Full Unicode support</td>
+                        <td>Preserve all characters</td>
+                    </tr>
+                    <tr>
+                        <td>Accents</td>
+                        <td>Not supported</td>
+                        <td>Supported (é, ñ, ü, etc.)</td>
+                        <td>Enable if source data available</td>
+                    </tr>
+                    <tr>
+                        <td>Name Length</td>
+                        <td>10 characters</td>
+                        <td>140 characters</td>
+                        <td>Expand if additional data available</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Reference Field Handling</h3>
+            <div class="warning-box">
+                <strong>Reference Mapping Complexity:</strong>
+                <ul>
+                    <li><strong>Standard 18:</strong> Single 12-character reference field</li>
+                    <li><strong>ISO 20022:</strong> Multiple reference fields (EndToEndId, TxId, InstrId)</li>
+                    <li><strong>Strategy:</strong> Use Standard 18 reference as EndToEndId, generate additional IDs as needed</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="examples">
+            <h2>Complete Translation Examples</h2>
+
+            <h3>Example 1: Direct Credit (Type 3 → pain.001 → pacs.008)</h3>
+            
+            <h4>Input: Standard 18 Type 3 Record</h4>
+            <div class="code-block" data-lang="Standard 18">
+<span class="comment">// Positions: 1234567890123456789012345678901234567890...120</span>
+<span class="fixed"> 3 9960161331926819  0000125000  J SMITH    SALJAN24    65432112345678      99</span>
+
+<span class="comment">// Field Breakdown:</span>
+<span class="tag">01-02:</span> <span class="value"> 3</span>                <span class="comment">Record Type (space + 3)</span>
+<span class="tag">03-04:</span> <span class="value">99</span>                <span class="comment">Transaction Code</span>
+<span class="tag">05-10:</span> <span class="value">601613</span>            <span class="comment">Destination Sort Code</span>
+<span class="tag">11-18:</span> <span class="value">31926819</span>          <span class="comment">Destination Account Number</span>
+<span class="tag">21-30:</span> <span class="value">0000125000</span>        <span class="comment">Amount (£1,250.00 in pence)</span>
+<span class="tag">33-42:</span> <span class="value">J SMITH   </span>        <span class="comment">Account Name (padded)</span>
+<span class="tag">43-54:</span> <span class="value">SALJAN24    </span>      <span class="comment">Reference (padded)</span>
+<span class="tag">55-60:</span> <span class="value">654321</span>            <span class="comment">Originating Sort Code</span>
+<span class="tag">61-68:</span> <span class="value">12345678</span>          <span class="comment">Originating Account Number</span>
+<span class="tag">77-78:</span> <span class="value">99</span>                <span class="comment">Transaction Code (repeated)</span></div>
+
+            <h4>Output: ISO 20022 pain.001</h4>
+            <div class="code-block" data-lang="XML">
+<span class="tag">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;Document</span> <span class="attr">xmlns=</span><span class="value">"urn:iso:std:iso:20022:tech:xsd:pain.001.001.09"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;CstmrCdtTrfInitn&gt;</span>
+    
+    <span class="comment">&lt;!-- GROUP HEADER --&gt;</span>
+    <span class="tag">&lt;GrpHdr&gt;</span>
+      <span class="tag">&lt;MsgId&gt;</span><span class="text">BACS-20240115-654321-001</span><span class="tag">&lt;/MsgId&gt;</span> <span class="badge badge-new">GENERATED</span>
+      <span class="tag">&lt;CreDtTm&gt;</span><span class="text">2024-01-15T14:30:00</span><span class="tag">&lt;/CreDtTm&gt;</span> <span class="badge badge-new">FORMATTED</span>
+      <span class="tag">&lt;NbOfTxs&gt;</span><span class="text">1</span><span class="tag">&lt;/NbOfTxs&gt;</span>
+      <span class="tag">&lt;CtrlSum&gt;</span><span class="text">1250.00</span><span class="tag">&lt;/CtrlSum&gt;</span> <span class="badge badge-new">CONVERTED</span>
+      <span class="tag">&lt;InitgPty&gt;</span>
+        <span class="tag">&lt;Nm&gt;</span><span class="text">ABC Company Ltd</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-new">ENRICHED</span>
+      <span class="tag">&lt;/InitgPty&gt;</span>
+    <span class="tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="comment">&lt;!-- PAYMENT INFORMATION --&gt;</span>
+    <span class="tag">&lt;PmtInf&gt;</span>
+      <span class="tag">&lt;PmtInfId&gt;</span><span class="text">BATCH-20240115-001</span><span class="tag">&lt;/PmtInfId&gt;</span> <span class="badge badge-new">GENERATED</span>
+      <span class="tag">&lt;PmtMtd&gt;</span><span class="text">TRF</span><span class="tag">&lt;/PmtMtd&gt;</span>
+      <span class="tag">&lt;ReqdExctnDt&gt;</span>
+        <span class="tag">&lt;Dt&gt;</span><span class="text">2024-01-18</span><span class="tag">&lt;/Dt&gt;</span> <span class="badge badge-new">D+3</span>
+      <span class="tag">&lt;/ReqdExctnDt&gt;</span>
+      
+      <span class="comment">&lt;!-- DEBTOR (Originator) --&gt;</span>
+      <span class="tag">&lt;Dbtr&gt;</span>
+        <span class="tag">&lt;Nm&gt;</span><span class="text">ABC Company Ltd</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-new">ENRICHED</span>
+      <span class="tag">&lt;/Dbtr&gt;</span>
+      <span class="tag">&lt;DbtrAcct&gt;</span>
+        <span class="tag">&lt;Id&gt;</span>
+          <span class="tag">&lt;IBAN&gt;</span><span class="text">GB82HBUK40127612345678</span><span class="tag">&lt;/IBAN&gt;</span> <span class="badge badge-new">GENERATED</span>
+          <span class="tag">&lt;Othr&gt;</span>
+            <span class="tag">&lt;Id&gt;</span><span class="text">12345678</span><span class="tag">&lt;/Id&gt;</span> <span class="badge badge-s18">FROM S18</span>
+            <span class="tag">&lt;SchmeNm&gt;</span>
+              <span class="tag">&lt;Cd&gt;</span><span class="text">BBAN</span><span class="tag">&lt;/Cd&gt;</span>
+            <span class="tag">&lt;/SchmeNm&gt;</span>
+            <span class="tag">&lt;Issr&gt;</span><span class="text">GBDSC</span><span class="tag">&lt;/Issr&gt;</span> <span class="comment">&lt;!-- UK Domestic Sort Code --&gt;</span>
+          <span class="tag">&lt;/Othr&gt;</span>
+        <span class="tag">&lt;/Id&gt;</span>
+        <span class="tag">&lt;Ccy&gt;</span><span class="text">GBP</span><span class="tag">&lt;/Ccy&gt;</span> <span class="badge badge-new">ADDED</span>
+      <span class="tag">&lt;/DbtrAcct&gt;</span>
+      <span class="tag">&lt;DbtrAgt&gt;</span>
+        <span class="tag">&lt;FinInstnId&gt;</span>
+          <span class="tag">&lt;BICFI&gt;</span><span class="text">HBUKGB4B</span><span class="tag">&lt;/BICFI&gt;</span> <span class="badge badge-new">LOOKUP: 654321→BIC</span>
+          <span class="tag">&lt;Nm&gt;</span><span class="text">HSBC UK Bank Plc</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-new">ENRICHED</span>
+        <span class="tag">&lt;/FinInstnId&gt;</span>
+      <span class="tag">&lt;/DbtrAgt&gt;</span>
+      
+      <span class="comment">&lt;!-- CREDIT TRANSFER TRANSACTION --&gt;</span>
+      <span class="tag">&lt;CdtTrfTxInf&gt;</span>
+        <span class="tag">&lt;PmtId&gt;</span>
+          <span class="tag">&lt;InstrId&gt;</span><span class="text">INSTR-20240115-001</span><span class="tag">&lt;/InstrId&gt;</span> <span class="badge badge-new">GENERATED</span>
+          <span class="tag">&lt;EndToEndId&gt;</span><span class="text">SALJAN24</span><span class="tag">&lt;/EndToEndId&gt;</span> <span class="badge badge-s18">FROM S18</span>
+        <span class="tag">&lt;/PmtId&gt;</span>
+        
+        <span class="tag">&lt;Amt&gt;</span>
+          <span class="tag">&lt;InstdAmt</span> <span class="attr">Ccy=</span><span class="value">"GBP"</span><span class="tag">&gt;</span><span class="text">1250.00</span><span class="tag">&lt;/InstdAmt&gt;</span> <span class="badge badge-new">125000÷100</span>
+        <span class="tag">&lt;/Amt&gt;</span>
+        
+        <span class="comment">&lt;!-- CREDITOR (Beneficiary) --&gt;</span>
+        <span class="tag">&lt;Cdtr&gt;</span>
+          <span class="tag">&lt;Nm&gt;</span><span class="text">J SMITH</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-s18">FROM S18 (trimmed)</span>
+        <span class="tag">&lt;/Cdtr&gt;</span>
+        <span class="tag">&lt;CdtrAcct&gt;</span>
+          <span class="tag">&lt;Id&gt;</span>
+            <span class="tag">&lt;IBAN&gt;</span><span class="text">GB29NWBK60161331926819</span><span class="tag">&lt;/IBAN&gt;</span> <span class="badge badge-new">GENERATED</span>
+            <span class="tag">&lt;Othr&gt;</span>
+              <span class="tag">&lt;Id&gt;</span><span class="text">31926819</span><span class="tag">&lt;/Id&gt;</span> <span class="badge badge-s18">FROM S18</span>
+              <span class="tag">&lt;SchmeNm&gt;</span>
+                <span class="tag">&lt;Cd&gt;</span><span class="text">BBAN</span><span class="tag">&lt;/Cd&gt;</span>
+              <span class="tag">&lt;/SchmeNm&gt;</span>
+            <span class="tag">&lt;/Othr&gt;</span>
+          <span class="tag">&lt;/Id&gt;</span>
+        <span class="tag">&lt;/CdtrAcct&gt;</span>
+        <span class="tag">&lt;CdtrAgt&gt;</span>
+          <span class="tag">&lt;FinInstnId&gt;</span>
+            <span class="tag">&lt;BICFI&gt;</span><span class="text">NWBKGB2L</span><span class="tag">&lt;/BICFI&gt;</span> <span class="badge badge-new">LOOKUP: 601613→BIC</span>
+            <span class="tag">&lt;Nm&gt;</span><span class="text">National Westminster Bank Plc</span><span class="tag">&lt;/Nm&gt;</span> <span class="badge badge-new">ENRICHED</span>
+          <span class="tag">&lt;/FinInstnId&gt;</span>
+        <span class="tag">&lt;/CdtrAgt&gt;</span>
+        
+        <span class="comment">&lt;!-- REMITTANCE INFORMATION --&gt;</span>
+        <span class="tag">&lt;RmtInf&gt;</span>
+          <span class="tag">&lt;Ustrd&gt;</span><span class="text">SALJAN24</span><span class="tag">&lt;/Ustrd&gt;</span> <span class="badge badge-s18">FROM S18 (reference)</span>
+        <span class="tag">&lt;/RmtInf&gt;</span>
+      <span class="tag">&lt;/CdtTrfTxInf&gt;</span>
+      
+    <span class="tag">&lt;/PmtInf&gt;</span>
+  <span class="tag">&lt;/CstmrCdtTrfInitn&gt;</span>
+<span class="tag">&lt;/Document&gt;</span></div>
+
+            <h4>Output: ISO 20022 pacs.008 (Inter-bank)</h4>
+            <div class="code-block" data-lang="XML">
+<span class="tag">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;Document</span> <span class="attr">xmlns=</span><span class="value">"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;FIToFICstmrCdtTrf&gt;</span>
+    
+    <span class="tag">&lt;GrpHdr&gt;</span>
+      <span class="tag">&lt;MsgId&gt;</span><span class="text">BACS-IB-20240115-001</span><span class="tag">&lt;/MsgId&gt;</span>
+      <span class="tag">&lt;CreDtTm&gt;</span><span class="text">2024-01-15T14:31:00</span><span class="tag">&lt;/CreDtTm&gt;</span>
+      <span class="tag">&lt;NbOfTxs&gt;</span><span class="text">1</span><span class="tag">&lt;/NbOfTxs&gt;</span>
+      <span class="tag">&lt;TtlIntrBkSttlmAmt</span> <span class="attr">Ccy=</span><span class="value">"GBP"</span><span class="tag">&gt;</span><span class="text">1250.00</span><span class="tag">&lt;/TtlIntrBkSttlmAmt&gt;</span>
+      <span class="tag">&lt;IntrBkSttlmDt&gt;</span><span class="text">2024-01-18</span><span class="tag">&lt;/IntrBkSttlmDt&gt;</span> <span class="comment">&lt;!-- D+3 settlement --&gt;</span>
+      
+      <span class="comment">&lt;!-- SETTLEMENT INFO --&gt;</span>
+      <span class="tag">&lt;SttlmInf&gt;</span>
+        <span class="tag">&lt;SttlmMtd&gt;</span><span class="text">CLRG</span><span class="tag">&lt;/SttlmMtd&gt;</span> <span class="badge badge-new">ADDED</span>
+        <span class="tag">&lt;ClrSys&gt;</span>
+          <span class="tag">&lt;Prtry&gt;</span><span class="text">BAC</span><span class="tag">&lt;/Prtry&gt;</span> <span class="badge badge-new">BACS Clearing</span>
+        <span class="tag">&lt;/ClrSys&gt;</span>
+      <span class="tag">&lt;/SttlmInf&gt;</span>
+      
+      <span class="tag">&lt;InstgAgt&gt;</span>
+        <span class="tag">&lt;FinInstnId&gt;</span>
+          <span class="tag">&lt;BICFI&gt;</span><span class="text">HBUKGB4B</span><span class="tag">&lt;/BICFI&gt;</span>
+        <span class="tag">&lt;/FinInstnId&gt;</span>
+      <span class="tag">&lt;/InstgAgt&gt;</span>
+      <span class="tag">&lt;InstdAgt&gt;</span>
+        <span class="tag">&lt;FinInstnId&gt;</span>
+          <span class="tag">&lt;BICFI&gt;</span><span class="text">NWBKGB2L</span><span class="tag">&lt;/BICFI&gt;</span>
+        <span class="tag">&lt;/FinInstnId&gt;</span>
+      <span class="tag">&lt;/InstdAgt&gt;</span>
+    <span class="tag">&lt;/GrpHdr&gt;</span>
+    
+    <span class="tag">&lt;CdtTrfTxInf&gt;</span>
+      <span class="tag">&lt;PmtId&gt;</span>
+        <span class="tag">&lt;EndToEndId&gt;</span><span class="text">SALJAN24</span><span class="tag">&lt;/EndToEndId&gt;</span>
+        <span class="tag">&lt;TxId&gt;</span><span class="text">BACS-TXN-20240115-001</span><span class="tag">&lt;/TxId&gt;</span> <span class="badge badge-new">GENERATED</span>
+      <span class="tag">&lt;/PmtId&gt;</span>
+      <span class="tag">&lt;IntrBkSttlmAmt</span> <span class="attr">Ccy=</span><span class="value">"GBP"</span><span class="tag">&gt;</span><span class="text">1250.00</span><span class="tag">&lt;/IntrBkSttlmAmt&gt;</span>
+      <span class="tag">&lt;InstdAmt</span> <span class="attr">Ccy=</span><span class="value">"GBP"</span><span class="tag">&gt;</span><span class="text">1250.00</span><span class="tag">&lt;/InstdAmt&gt;</span>
+      <span class="tag">&lt;ChrgBr&gt;</span><span class="text">SLEV</span><span class="tag">&lt;/ChrgBr&gt;</span> <span class="badge badge-new">ADDED</span>
+      
+      <span class="tag">&lt;Dbtr&gt;</span><span class="tag">&lt;Nm&gt;</span><span class="text">ABC Company Ltd</span><span class="tag">&lt;/Nm&gt;</span><span class="tag">&lt;/Dbtr&gt;</span>
+      <span class="tag">&lt;DbtrAcct&gt;</span>
+        <span class="tag">&lt;Id&gt;</span>
+          <span class="tag">&lt;IBAN&gt;</span><span class="text">GB82HBUK40127612345678</span><span class="tag">&lt;/IBAN&gt;</span>
+        <span class="tag">&lt;/Id&gt;</span>
+      <span class="tag">&lt;/DbtrAcct&gt;</span>
+      <span class="tag">&lt;DbtrAgt&gt;</span>
+        <span class="tag">&lt;FinInstnId&gt;</span><span class="tag">&lt;BICFI&gt;</span><span class="text">HBUKGB4B</span><span class="tag">&lt;/BICFI&gt;</span><span class="tag">&lt;/FinInstnId&gt;</span>
+      <span class="tag">&lt;/DbtrAgt&gt;</span>
+      
+      <span class="tag">&lt;Cdtr&gt;</span><span class="tag">&lt;Nm&gt;</span><span class="text">J SMITH</span><span class="tag">&lt;/Nm&gt;</span><span class="tag">&lt;/Cdtr&gt;</span>
+      <span class="tag">&lt;CdtrAcct&gt;</span>
+        <span class="tag">&lt;Id&gt;</span>
+          <span class="tag">&lt;IBAN&gt;</span><span class="text">GB29NWBK60161331926819</span><span class="tag">&lt;/IBAN&gt;</span>
+        <span class="tag">&lt;/Id&gt;</span>
+      <span class="tag">&lt;/CdtrAcct&gt;</span>
+      <span class="tag">&lt;CdtrAgt&gt;</span>
+        <span class="tag">&lt;FinInstnId&gt;</span><span class="tag">&lt;BICFI&gt;</span><span class="text">NWBKGB2L</span><span class="tag">&lt;/BICFI&gt;</span><span class="tag">&lt;/FinInstnId&gt;</span>
+      <span class="tag">&lt;/CdtrAgt&gt;</span>
+      
+      <span class="tag">&lt;RmtInf&gt;</span>
+        <span class="tag">&lt;Ustrd&gt;</span><span class="text">SALJAN24</span><span class="tag">&lt;/Ustrd&gt;</span>
+      <span class="tag">&lt;/RmtInf&gt;</span>
+    <span class="tag">&lt;/CdtTrfTxInf&gt;</span>
+    
+  <span class="tag">&lt;/FIToFICstmrCdtTrf&gt;</span>
+<span class="tag">&lt;/Document&gt;</span></div>
+
+            <h3>Translation Summary</h3>
+            <div class="success-box">
+                <strong>What Happened in Translation:</strong>
+                <table style="background: white; margin-top: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Process</th>
+                            <th>Action</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parsing</td>
+                            <td>Extracted fields from positions 1-120</td>
+                            <td>Structured data extracted</td>
+                        </tr>
+                        <tr>
+                            <td>BIC Lookup</td>
+                            <td>601613 → NWBKGB2L, 654321 → HBUKGB4B</td>
+                            <td>Bank identification added</td>
+                        </tr>
+                        <tr>
+                            <td>IBAN Generation</td>
+                            <td>Calculated from sort code + account</td>
+                            <td>IBANs created for both accounts</td>
+                        </tr>
+                        <tr>
+                            <td>Amount Conversion</td>
+                            <td>0000125000 ÷ 100 = 1250.00</td>
+                            <td>Decimal amount with currency</td>
+                        </tr>
+                        <tr>
+                            <td>Date Formatting</td>
+                            <td>DDMMYY → ISO 8601 (YYYY-MM-DD)</td>
+                            <td>Standard date format</td>
+                        </tr>
+                        <tr>
+                            <td>ID Generation</td>
+                            <td>Created MsgId, InstrId, TxId</td>
+                            <td>Unique tracking references</td>
+                        </tr>
+                        <tr>
+                            <td>Enrichment</td>
+                            <td>Added bank names, settlement info, clearing codes</td>
+                            <td>Complete payment message</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="challenges">
+            <h2>Challenges & Solutions</h2>
+
+            <h3>1. Data Loss Prevention</h3>
+            <div class="warning-box">
+                <strong>Challenge:</strong> Standard 18 has limited fields that must map to richer ISO 20022 structure
+                <br><br>
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Maintain both IBAN and sort code/account number in ISO 20022 messages</li>
+                    <li>Store original Standard 18 data in proprietary extension fields if needed</li>
+                    <li>Use reversible transformations to enable round-trip conversion</li>
+                </ul>
+            </div>
+
+            <h3>2. Character Set Conversion</h3>
+            <div class="warning-box">
+                <strong>Challenge:</strong> Standard 18 uses ASCII; ISO 20022 uses UTF-8
+                <br><br>
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Validate and sanitize input to remove non-ASCII characters</li>
+                    <li>Apply character encoding conversion (ASCII → UTF-8)</li>
+                    <li>Handle edge cases (names with accents, special characters)</li>
+                </ul>
+            </div>
+
+            <h3>3. Reference Mapping</h3>
+            <div class="warning-box">
+                <strong>Challenge:</strong> Single 12-char reference in S18 vs multiple references in ISO 20022
+                <br><br>
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Use Standard 18 reference as EndToEndId (preserved end-to-end)</li>
+                    <li>Generate unique InstrId and TxId for tracking</li>
+                    <li>Maintain mapping table for reconciliation</li>
+                </ul>
+            </div>
+
+            <h3>4. Backward Compatibility</h3>
+            <div class="info-box">
+                <strong>Requirement:</strong> Support both formats during transition period
+                <br><br>
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Dual-format submission acceptance (Standard 18 AND ISO 20022)</li>
+                    <li>Automatic translation for Standard 18 submissions</li>
+                    <li>Native ISO 20022 processing for new submissions</li>
+                    <li>Reverse translation for legacy systems requiring Standard 18 output</li>
+                </ul>
+            </div>
+
+            <h3>5. Performance Optimization</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Challenge</th>
+                        <th>Impact</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>XML Generation Overhead</td>
+                        <td>Slower than fixed-width parsing</td>
+                        <td>Use efficient XML libraries, template caching</td>
+                    </tr>
+                    <tr>
+                        <td>BIC Lookup Latency</td>
+                        <td>Database calls for each transaction</td>
+                        <td>Cache sort code→BIC mappings in memory</td>
+                    </tr>
+                    <tr>
+                        <td>Large File Processing</td>
+                        <td>Memory constraints</td>
+                        <td>Stream processing, batch optimization</td>
+                    </tr>
+                    <tr>
+                        <td>Validation Overhead</td>
+                        <td>XSD validation is CPU-intensive</td>
+                        <td>Compiled schema caching, async validation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>6. Data Quality Management</h3>
+            <div class="success-box">
+                <strong>Best Practices:</strong>
+                <ul>
+                    <li><strong>Pre-Translation Validation:</strong> Validate Standard 18 before translation</li>
+                    <li><strong>Enrichment Validation:</strong> Verify BIC lookups, IBAN calculations</li>
+                    <li><strong>Post-Translation Validation:</strong> XSD schema validation, business rules</li>
+                    <li><strong>Error Handling:</strong> Clear error messages, rollback capability</li>
+                    <li><strong>Logging:</strong> Comprehensive audit trail of transformations</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Conclusion</h2>
+            <p>
+                The BACS translation layer serves as a critical bridge between legacy and modern payment systems. By intelligently mapping, enriching, and formatting data, it enables:
+            </p>
+            <ul>
+                <li><strong>Seamless Migration:</strong> Gradual transition without disrupting existing users</li>
+                <li><strong>Enhanced Data Quality:</strong> Richer information for better processing</li>
+                <li><strong>Future Compatibility:</strong> Alignment with global payment standards</li>
+                <li><strong>Operational Efficiency:</strong> Automated processing with minimal manual intervention</li>
+            </ul>
+            
+            <div class="info-box" style="margin-top: 2rem;">
+                <strong>Key Takeaways:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Translation involves <strong>three layers:</strong> Mapping, Enrichment, and Formatting</li>
+                    <li><strong>BIC lookup</strong> and <strong>IBAN generation</strong> are critical enrichment steps</li>
+                    <li><strong>Amount conversion</strong> (pence to decimal) and <strong>date formatting</strong> ensure compatibility</li>
+                    <li>Multiple <strong>ISO 20022 messages</strong> (pain.001, pacs.008, camt.053) replace Standard 18 records</li>
+                    <li><strong>Backward compatibility</strong> maintained through dual-format support</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 BACS Translation Layer Guide. Bridging Legacy and Modern Payment Standards.</p>
+        </div>
+    </footer>
+</body>
+</html>
