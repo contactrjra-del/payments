@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Payment Processing Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-left: 4px solid #667eea;
+            padding-left: 12px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .key-points {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .key-points ul {
+            margin-left: 20px;
+        }
+        .key-points li {
+            margin: 8px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        strong {
+            color: #764ba2;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Card Payment Processing: Comprehensive Overview</h1>
+
+        <div class="section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h2 style="margin-top: 0;">Table of Contents</h2>
+            <div style="column-count: 2; column-gap: 30px;">
+                <div style="margin-bottom: 8px;"><a href="#section1" style="color: #667eea; text-decoration: none;">1. Key Players in Payment Ecosystem</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section2" style="color: #667eea; text-decoration: none;">2. Transaction Flow</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section3" style="color: #667eea; text-decoration: none;">3. Card Authentication Methods</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section4" style="color: #667eea; text-decoration: none;">4. EMV Chip Technology</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section5" style="color: #667eea; text-decoration: none;">5. Card Present vs Card Not Present</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section6" style="color: #667eea; text-decoration: none;">6. Tokenization & Detokenization</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section7" style="color: #667eea; text-decoration: none;">7. Mobile Payments</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section8" style="color: #667eea; text-decoration: none;">8. Security Framework</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section9" style="color: #667eea; text-decoration: none;">9. Additional Important Topics</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section10" style="color: #667eea; text-decoration: none;">10. Card Payment Certifications</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section11" style="color: #667eea; text-decoration: none;">11. Certification Testing Process</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section12" style="color: #667eea; text-decoration: none;">12. API Testing in Card Payments</a></div>
+                <div style="margin-bottom: 8px;"><a href="#section13" style="color: #667eea; text-decoration: none;">13. Emerging Trends</a></div>
+            </div>
+        </div>
+
+        <div class="section" id="section1">
+            <h2>1. Key Players in Payment Ecosystem</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Acquirer (Acquiring Bank)</h3>
+                    <ul>
+                        <li>Merchant's bank/payment processor</li>
+                        <li>Routes transactions to card networks</li>
+                        <li>Settles funds to merchant accounts</li>
+                        <li>Assumes chargeback risk</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Issuer (Issuing Bank)</h3>
+                    <ul>
+                        <li>Cardholder's bank</li>
+                        <li>Authorizes/declines transactions</li>
+                        <li>Manages credit limits & fraud rules</li>
+                        <li>Transfers funds to acquirer</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="section2">
+            <h2>2. Transaction Flow</h2>
+            <div class="flow-diagram">
+1. CARDHOLDER → presents card at merchant
+2. MERCHANT → sends transaction to ACQUIRER
+3. ACQUIRER → routes to CARD NETWORK (Visa/Mastercard/Amex)
+4. CARD NETWORK → forwards to ISSUER
+5. ISSUER → authenticates & authorizes/declines
+6. Response flows back: ISSUER → NETWORK → ACQUIRER → MERCHANT
+7. Settlement (T+1 to T+3): Funds move ISSUER → NETWORK → ACQUIRER → MERCHANT
+            </div>
+        </div>
+
+        <div class="section" id="section3">
+            <h2>3. Card Authentication Methods</h2>
+            <div class="key-points">
+                <ul>
+                    <li><strong>PIN (Personal Identification Number):</strong> Offline/online PIN verification, common in EMV chip transactions</li>
+                    <li><strong>Signature:</strong> Traditional method, being phased out for most transactions</li>
+                    <li><strong>CVV/CVC:</strong> 3-4 digit code on card for CNP transactions</li>
+                    <li><strong>3D Secure (3DS):</strong> Visa Secure, Mastercard Identity Check - additional authentication layer</li>
+                    <li><strong>Biometric:</strong> Fingerprint, face recognition for mobile payments</li>
+                    <li><strong>Dynamic CVV:</strong> Changing security codes on digital/physical cards</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section4">
+            <h2>4. EMV Chip Technology</h2>
+            <h3>EMV Scenarios & Processing</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Chip & PIN:</strong> Most secure - cardholder verification via PIN</li>
+                    <li><strong>Chip & Signature:</strong> Chip authentication with signature verification</li>
+                    <li><strong>Contactless/NFC:</strong> Tap-to-pay under transaction limits</li>
+                    <li><strong>Fallback to Magstripe:</strong> When chip fails (higher fraud risk)</li>
+                    <li><strong>Offline vs Online:</strong> Offline uses issuer scripts; online connects to issuer in real-time</li>
+                    <li><strong>Dynamic Data:</strong> Each transaction generates unique cryptogram preventing cloning</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section5">
+            <h2>5. Card Present vs Card Not Present</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Card Present (CP)</h3>
+                    <ul>
+                        <li><strong>Environment:</strong> Physical retail, POS terminals</li>
+                        <li><strong>Methods:</strong> Chip, magstripe, contactless</li>
+                        <li><strong>Verification:</strong> PIN, signature, biometric</li>
+                        <li><strong>Fraud Risk:</strong> Lower (physical card present)</li>
+                        <li><strong>Interchange:</strong> Lower rates</li>
+                        <li><strong>Liability:</strong> Typically with issuer (EMV shift)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Card Not Present (CNP)</h3>
+                    <ul>
+                        <li><strong>Environment:</strong> E-commerce, phone orders, recurring</li>
+                        <li><strong>Methods:</strong> Manual entry, saved cards, tokens</li>
+                        <li><strong>Verification:</strong> CVV, AVS, 3DS, device fingerprinting</li>
+                        <li><strong>Fraud Risk:</strong> Higher (no physical verification)</li>
+                        <li><strong>Interchange:</strong> Higher rates</li>
+                        <li><strong>Liability:</strong> Typically with merchant</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="section6">
+            <h2>6. Tokenization & Detokenization</h2>
+            <h3>Tokenization Process</h3>
+            <div class="flow-diagram">
+1. Card PAN (Primary Account Number) entered
+2. Payment gateway/processor generates unique token
+3. Token stored in merchant system
+4. Original PAN stored in secure token vault
+5. Token used for subsequent transactions
+6. PCI compliance scope reduced significantly
+            </div>
+            
+            <h3>Detokenization Process</h3>
+            <div class="flow-diagram">
+1. Merchant submits token for transaction
+2. Token service provider validates token
+3. Original PAN retrieved from secure vault
+4. PAN sent to payment network for processing
+5. Token remains in merchant system for future use
+            </div>
+            
+            <div class="key-points">
+                <strong>Token Types:</strong>
+                <ul>
+                    <li><strong>Payment Tokens:</strong> Network tokens (Visa, Mastercard) for recurring payments</li>
+                    <li><strong>Gateway Tokens:</strong> Processor-specific tokens</li>
+                    <li><strong>Mobile Wallet Tokens:</strong> Apple Pay, Google Pay device-specific tokens</li>
+                    <li><strong>Benefits:</strong> Reduced PCI scope, enhanced security, prevents data breaches</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section7">
+            <h2>7. Mobile Payments</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Wallet-Based (NFC)</h3>
+                    <ul>
+                        <li>Apple Pay, Google Pay, Samsung Pay</li>
+                        <li>Tokenized card credentials</li>
+                        <li>Biometric authentication</li>
+                        <li>Device-specific tokens</li>
+                        <li>Works at contactless terminals</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>QR Code & App-Based</h3>
+                    <ul>
+                        <li>Merchant/customer presented QR</li>
+                        <li>Popular in Asia (Alipay, WeChat)</li>
+                        <li>Lower infrastructure requirements</li>
+                        <li>In-app payment SDKs</li>
+                        <li>Direct bank account linking</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="key-points">
+                <strong>Mobile Payment Security Features:</strong>
+                <ul>
+                    <li>Tokenization replacing actual card numbers</li>
+                    <li>Dynamic transaction cryptograms</li>
+                    <li>Device fingerprinting & risk analysis</li>
+                    <li>Biometric authentication (Touch ID, Face ID)</li>
+                    <li>Secure Element (SE) or Host Card Emulation (HCE)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section8">
+            <h2>8. Security Framework</h2>
+            
+            <h3>PCI DSS Compliance</h3>
+            <div class="key-points">
+                <ul>
+                    <li>12 requirements across 6 goals for securing cardholder data</li>
+                    <li>Network security, access controls, encryption</li>
+                    <li>Regular testing and monitoring</li>
+                    <li>4 levels based on transaction volume</li>
+                </ul>
+            </div>
+
+            <h3>Fraud Prevention Mechanisms</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Real-Time Controls</h3>
+                    <ul>
+                        <li>CVV/AVS verification</li>
+                        <li>Velocity checks</li>
+                        <li>Geolocation matching</li>
+                        <li>Device fingerprinting</li>
+                        <li>Behavioral biometrics</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Advanced Technologies</h3>
+                    <ul>
+                        <li>Machine learning fraud models</li>
+                        <li>Neural networks for pattern detection</li>
+                        <li>Consortium data sharing</li>
+                        <li>Risk scoring engines</li>
+                        <li>Real-time rule engines</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Encryption Standards</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>TLS 1.2+:</strong> Secure data transmission</li>
+                    <li><strong>AES-256:</strong> Data at rest encryption</li>
+                    <li><strong>P2PE (Point-to-Point Encryption):</strong> End-to-end encryption from terminal</li>
+                    <li><strong>Tokenization:</strong> Replacing sensitive data with non-sensitive equivalents</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section9">
+            <h2>9. Additional Important Topics</h2>
+            
+            <h3>Authorization vs Settlement</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Authorization:</strong> Real-time approval/decline, holds funds</li>
+                    <li><strong>Clearing:</strong> Transaction details exchanged between parties</li>
+                    <li><strong>Settlement:</strong> Actual fund transfer (typically T+1 to T+3 days)</li>
+                    <li><strong>Batch Processing:</strong> End-of-day transaction submission</li>
+                </ul>
+            </div>
+
+            <h3>Chargebacks & Disputes</h3>
+            <div class="key-points">
+                <ul>
+                    <li>Cardholder disputes transaction with issuer</li>
+                    <li>Reason codes: fraud, processing errors, consumer disputes</li>
+                    <li>Merchant has limited time to respond with evidence</li>
+                    <li>High chargeback ratios can lead to penalties/termination</li>
+                </ul>
+            </div>
+
+            <h3>Strong Customer Authentication (SCA)</h3>
+            <div class="key-points">
+                <ul>
+                    <li>EU regulation requiring two-factor authentication</li>
+                    <li>Knowledge (password), possession (device), inherence (biometric)</li>
+                    <li>Exemptions for low-value, recurring, trusted beneficiaries</li>
+                    <li>3DS 2.0 primary implementation method</li>
+                </ul>
+            </div>
+
+            <h3>Network Tokens vs Gateway Tokens</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Network Tokens:</strong> Issued by card networks, work across acquirers, support auto-updates</li>
+                    <li><strong>Gateway Tokens:</strong> Processor-specific, limited portability, faster implementation</li>
+                    <li>Both reduce PCI scope and enhance security</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section10">
+            <h2>10. Card Payment Certifications</h2>
+            
+            <h3>PCI DSS Certification</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Level 1:</strong> 6M+ transactions/year - Annual onsite audit by QSA</li>
+                    <li><strong>Level 2:</strong> 1M-6M transactions/year - Annual SAQ + quarterly network scans</li>
+                    <li><strong>Level 3:</strong> 20K-1M e-commerce transactions/year - Annual SAQ</li>
+                    <li><strong>Level 4:</strong> Under 20K e-commerce or 1M total - Annual SAQ</li>
+                    <li><strong>SAQ Types:</strong> A (redirect), A-EP (e-commerce), D (all others)</li>
+                </ul>
+            </div>
+
+            <h3>EMV Certifications</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Terminal Certifications</h3>
+                    <ul>
+                        <li><strong>EMVCo Type Approval:</strong> Chip reading, contactless</li>
+                        <li><strong>L1 (Physical):</strong> Electrical/mechanical interface</li>
+                        <li><strong>L2 (Protocol):</strong> Transaction flow, data exchange</li>
+                        <li><strong>L3 (Application):</strong> Payment brand specific (Visa, MC)</li>
+                        <li><strong>Contactless L1/L2:</strong> NFC specifications</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Card/Device Certifications</h3>
+                    <ul>
+                        <li><strong>EMV Card Certification:</strong> Chip OS, applet testing</li>
+                        <li><strong>Payment Brand Approval:</strong> Visa, Mastercard, Amex specs</li>
+                        <li><strong>Mobile Wallet Certification:</strong> Token provisioning</li>
+                        <li><strong>Common Criteria (CC):</strong> Security evaluation</li>
+                        <li><strong>FIPS 140-2/3:</strong> Cryptographic module validation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Payment Brand Certifications</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Visa:</strong> ADVT (Acquirer Device Validation Toolkit), VAS certification</li>
+                    <li><strong>Mastercard:</strong> M-TIP (Mastercard Terminal Integration Process), MDES</li>
+                    <li><strong>American Express:</strong> Terminal certification, ExpressPay contactless</li>
+                    <li><strong>Discover:</strong> D-PAS (Discover Payment Application Specification)</li>
+                    <li><strong>Payment Facilitator:</strong> Third-party processor registration requirements</li>
+                </ul>
+            </div>
+
+            <h3>Regional & Security Certifications</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>PCI PTS (PIN Transaction Security):</strong> PIN pad/POS device approval</li>
+                    <li><strong>PCI P2PE:</strong> Point-to-point encryption solution validation</li>
+                    <li><strong>PA-DSS (deprecated):</strong> Replaced by PCI Secure Software Standard</li>
+                    <li><strong>3DS Server Certification:</strong> EMVCo 3DS compliance</li>
+                    <li><strong>ISO 27001:</strong> Information security management</li>
+                    <li><strong>SOC 2 Type II:</strong> Service organization controls audit</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section11">
+            <h2>11. Certification Testing Process</h2>
+            
+            <h3>EMV Testing Phases</h3>
+            <div class="flow-diagram">
+Phase 1: Pre-Certification (Internal Testing)
+  → Functional testing against EMV specs
+  → Test card scenarios (contact/contactless)
+  → Kernel testing, application selection
+  
+Phase 2: Lab Testing (Accredited Test House)
+  → L1 Physical layer tests
+  → L2 Protocol compliance tests
+  → L3 Application layer tests
+  → Contactless/NFC certification
+  
+Phase 3: Payment Brand Testing
+  → Brand-specific requirements
+  → Online/offline authorization
+  → Decline scenarios, fallback testing
+  → Certification approval & listing
+  
+Phase 4: Field Testing & Deployment
+  → Pilot deployment
+  → Real-world transaction monitoring
+  → Performance validation
+            </div>
+
+            <h3>PCI DSS Testing Requirements</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Vulnerability Scans:</strong> Quarterly ASV (Approved Scanning Vendor) scans</li>
+                    <li><strong>Penetration Testing:</strong> Annual internal/external pen tests</li>
+                    <li><strong>Security Assessments:</strong> QSA (Qualified Security Assessor) audits</li>
+                    <li><strong>Network Segmentation:</strong> Validation of CDE (Cardholder Data Environment) isolation</li>
+                    <li><strong>Code Review:</strong> Application security testing for custom software</li>
+                    <li><strong>Remediation:</strong> Fix findings before attestation</li>
+                </ul>
+            </div>
+
+            <h3>Testing Environments & Tools</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Test Cards & Simulators</h3>
+                    <ul>
+                        <li>Physical EMV test cards (various profiles)</li>
+                        <li>Virtual test card numbers</li>
+                        <li>Issuer simulators (approval/decline scenarios)</li>
+                        <li>Network simulators (Visa, Mastercard)</li>
+                        <li>HSM (Hardware Security Module) for crypto</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Test Scenarios</h3>
+                    <ul>
+                        <li>Happy path transactions</li>
+                        <li>Decline scenarios (insufficient funds, expired)</li>
+                        <li>Fallback testing (chip to magstripe)</li>
+                        <li>Timeout & error handling</li>
+                        <li>Reversal & void transactions</li>
+                        <li>Currency conversion testing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Certification Timeline</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>POS Terminal EMV:</strong> 4-8 months (all levels + brands)</li>
+                    <li><strong>Payment Gateway:</strong> 3-6 months (PCI + brand integrations)</li>
+                    <li><strong>Mobile Wallet:</strong> 6-12 months (tokenization + device certification)</li>
+                    <li><strong>PCI DSS Compliance:</strong> 3-12 months (depending on remediation scope)</li>
+                    <li><strong>Recertification:</strong> Typically required every 1-3 years or with major updates</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="section12">
+            <h2>12. API Testing in Card Payments</h2>
+            
+            <h3>Payment API Types</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Authorization APIs</h3>
+                    <ul>
+                        <li>Payment authorization/capture</li>
+                        <li>Refund/void transactions</li>
+                        <li>Pre-authorization (hotels, rentals)</li>
+                        <li>Incremental authorization</li>
+                        <li>Real-time decline reasons</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Tokenization APIs</h3>
+                    <ul>
+                        <li>Token creation (PAN to token)</li>
+                        <li>Token lifecycle management</li>
+                        <li>Detokenization (token to PAN)</li>
+                        <li>Network token provisioning</li>
+                        <li>Token update notifications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>API Testing Methodology</h3>
+            <div class="flow-diagram">
+1. Functional Testing
+   → Validate request/response formats (JSON/XML)
+   → Test all API endpoints
+   → Positive & negative test cases
+   → Error code validation
+   
+2. Security Testing
+   → TLS/SSL certificate validation
+   → API key/OAuth token authentication
+   → Encryption validation (in-transit/at-rest)
+   → SQL injection, XSS prevention
+   → Rate limiting & throttling
+   
+3. Performance Testing
+   → Load testing (concurrent transactions)
+   → Stress testing (peak scenarios)
+   → Response time validation (&lt;2-3 seconds)
+   → Throughput testing (TPS capacity)
+   
+4. Integration Testing
+   → End-to-end transaction flow
+   → Multi-system integration (gateway, processor, bank)
+   → Webhook/callback testing
+   → Idempotency testing
+            </div>
+
+            <h3>Key API Test Scenarios</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Authorization Success:</strong> Valid card, sufficient funds, approved transaction</li>
+                    <li><strong>Decline Scenarios:</strong> Insufficient funds, invalid CVV, expired card, fraud decline</li>
+                    <li><strong>Network Errors:</strong> Timeout handling, retry logic, circuit breaker patterns</li>
+                    <li><strong>Idempotency:</strong> Duplicate transaction prevention with idempotency keys</li>
+                    <li><strong>Webhook Delivery:</strong> Payment status updates, retry mechanisms</li>
+                    <li><strong>3DS Flow:</strong> Challenge/frictionless flow, authentication response handling</li>
+                    <li><strong>Tokenization:</strong> Create, retrieve, update, delete tokens</li>
+                    <li><strong>Reconciliation:</strong> Settlement reports, batch processing</li>
+                </ul>
+            </div>
+
+            <h3>API Testing Tools</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Manual Testing</h3>
+                    <ul>
+                        <li><strong>Postman:</strong> API request building & collections</li>
+                        <li><strong>Swagger/OpenAPI:</strong> API documentation & testing</li>
+                        <li><strong>cURL:</strong> Command-line API testing</li>
+                        <li><strong>Insomnia:</strong> REST/GraphQL client</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Automated Testing</h3>
+                    <ul>
+                        <li><strong>JMeter:</strong> Load & performance testing</li>
+                        <li><strong>REST Assured:</strong> Java API testing framework</li>
+                        <li><strong>Pytest:</strong> Python testing framework</li>
+                        <li><strong>Newman:</strong> Postman CLI runner for CI/CD</li>
+                        <li><strong>Gatling:</strong> Performance testing tool</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>API Security Testing Checklist</h3>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Authentication:</strong> API key rotation, OAuth 2.0, JWT validation</li>
+                    <li><strong>Authorization:</strong> Role-based access control (RBAC), scope validation</li>
+                    <li><strong>Input Validation:</strong> Parameter sanitization, data type validation</li>
+                    <li><strong>Rate Limiting:</strong> DDoS protection, request throttling</li>
+                    <li><strong>Encryption:</strong> TLS 1.2+, sensitive data masking in logs</li>
+                    <li><strong>PCI Compliance:</strong> No PAN in URLs/logs, tokenization enforcement</li>
+                    <li><strong>Error Handling:</strong> No sensitive data in error messages</li>
+                    <li><strong>CORS:</strong> Proper cross-origin resource sharing configuration</li>
+                </ul>
+            </div>
+
+            <h3>Sandbox vs Production Testing</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>Sandbox Environment</h3>
+                    <ul>
+                        <li>Test card numbers provided by processor</li>
+                        <li>Simulated authorization responses</li>
+                        <li>No real money movement</li>
+                        <li>Full API feature parity</li>
+                        <li>Used for development & UAT</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Production Testing</h3>
+                    <ul>
+                        <li>Real card transactions (small amounts)</li>
+                        <li>Smoke testing post-deployment</li>
+                        <li>Monitoring & alerting validation</li>
+                        <li>Synthetic transaction monitoring</li>
+                        <li>Immediate refund of test transactions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="section13">
+            <h2>13. Emerging Trends</h2>
+            <div class="key-points">
+                <ul>
+                    <li><strong>Biometric Cards:</strong> Fingerprint sensors embedded in cards</li>
+                    <li><strong>Cryptocurrency Integration:</strong> Crypto-to-fiat at point of sale</li>
+                    <li><strong>BNPL (Buy Now Pay Later):</strong> Alternative payment methods at checkout</li>
+                    <li><strong>Open Banking:</strong> Account-to-account payments, reducing card dependency</li>
+                    <li><strong>AI Fraud Detection:</strong> Advanced machine learning models</li>
+                    <li><strong>Passwordless Authentication:</strong> FIDO standards, passkeys</li>
+                    <li><strong>Real-Time Payments:</strong> ISO 20022 messaging, instant settlement</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #666; font-size: 0.9em;">
+            <p><strong>Note:</strong> This overview provides high-level concepts. Actual implementation varies by region, network, and specific payment processor requirements.</p>
+        </div>
+    </div>
+</body>
+</html>
